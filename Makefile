@@ -75,8 +75,10 @@ config/nginx.in/nginx.conf:
 
 testing-framework: robotframework
 
-robotframework: /usr/local/bin/pybot
+robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg
 
 /usr/local/bin/pybot:
 	sudo easy_install robotframework
 
+/usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg:
+	sudo easy_install robotframework-seleniumlibrary
