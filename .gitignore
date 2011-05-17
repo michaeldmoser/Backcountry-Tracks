@@ -1,2 +1,3 @@
 *.deb
 config/nginx
+config/riak
