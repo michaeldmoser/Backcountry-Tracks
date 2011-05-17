@@ -1,5 +1,5 @@
 
-dev-environ: install-services services-dev-config
+dev-environ: install-services services-dev-config testing-framework
 	
 services-dev-config: django nginx-config riak-config
 
@@ -72,4 +72,11 @@ config/nginx.in/nginx.conf:
 /srv/www:
 	sudo mkdir /srv/www
 	sudo chown -R `whoami`:`whoami` /srv/www
+
+testing-framework: robotframework
+
+robotframework: /usr/local/bin/pybot
+
+/usr/local/bin/pybot:
+	sudo easy_install robotframework
 
