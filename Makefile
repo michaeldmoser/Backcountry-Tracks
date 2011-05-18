@@ -5,6 +5,9 @@ services-dev-config: django nginx-config riak-config
 
 install-services: install-rabbitmq install-riak install-nginx
 
+unittest: tests/bin/run-unittests.py
+	python tests/bin/run-unittests.py
+
 install-rabbitmq: /usr/sbin/rabbitmq-server
 
 /usr/sbin/rabbitmq-server: /usr/bin/erl
@@ -82,3 +85,6 @@ robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robo
 
 /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg:
 	sudo easy_install robotframework-seleniumlibrary
+
+tests/bin/run-unittests.py:
+
