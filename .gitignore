@@ -1,3 +1,5 @@
 *.deb
+*.pyc
+*.egg-info
 config/nginx
 config/riak

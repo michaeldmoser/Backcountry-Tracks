@@ -8,6 +8,9 @@ install-services: install-rabbitmq install-riak install-nginx
 unittest: testing/bin/run-unittests.py
 	python testing/bin/run-unittests.py
 
+systest: testing/system
+	cd testing/system && sudo python setup.py test
+
 install-rabbitmq: /usr/sbin/rabbitmq-server
 
 /usr/sbin/rabbitmq-server: /usr/bin/erl
