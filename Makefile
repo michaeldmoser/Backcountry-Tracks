@@ -82,7 +82,7 @@ config/nginx.in/nginx.conf:
 	sudo mkdir /srv/www
 	sudo chown -R `whoami`:`whoami` /srv/www
 
-testing-framework: robotframework
+testing-framework: robotframework systemtests integrationtests
 
 robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg
 
@@ -93,4 +93,15 @@ robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robo
 	sudo easy_install robotframework-seleniumlibrary
 
 testing/bin/run-unittests.py:
+
+systemtests: testing/system/setup.py
+	cd testing/system && sudo python setup.py develop
+
+testing/system/setup.py:
+
+integrationtests: testing/integration/setup.py
+	cd testing/integration && sudo python setup.py develop
+
+testing/integration/setup.py:
+
 
