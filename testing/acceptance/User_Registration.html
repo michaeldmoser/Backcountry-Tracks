@@ -86,6 +86,11 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="test_Fill out registration form and submit">Fill out registration form and submit</a></td>
+<td>[Documentation]</td>
+<td colspan="3">This test cases handles the UATs for both ticket #18 (User registration) and #19 (Completing registration)</td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Goto the site's home page</td>
 <td></td>
 <td></td>
@@ -136,6 +141,34 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>The user should receive an email regarding completing their registration</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The email should contain a link to complete the registration</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Go to the link in the email</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The page should indicate registration is complete</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The page should also contain a login form</td>
 <td></td>
 <td></td>
 <td></td>
@@ -296,8 +329,106 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_The user should receive an email regarding completing their registration">The user should receive an email regarding completing their registration</a></td>
+<td>Verify registration email receive</td>
 <td></td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The email should contain a link to complete the registration">The email should contain a link to complete the registration</a></td>
+<td>Verify email register link</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Go to the link in the email">Go to the link in the email</a></td>
+<td>${register_link}=</td>
+<td>Get register email link</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Go to</td>
+<td>${register_link}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait until page loaded</td>
+<td>2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The page should indicate registration is complete">The page should indicate registration is complete</a></td>
+<td>Page should contain</td>
+<td>Thank you</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain</td>
+<td>registration</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain </td>
+<td>completed</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The page should also contain a login form">The page should also contain a login form</a></td>
+<td>Page should contain text field</td>
+<td>email</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain textfield</td>
+<td>password</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain button</td>
+<td>Login</td>
 <td></td>
 <td></td>
 </tr>
