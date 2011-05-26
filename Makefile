@@ -94,12 +94,16 @@ robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robo
 
 testing/bin/run-unittests.py:
 
-systemtests: testing/system/setup.py
+systemtests: testing/system/TripPlannerSystemTesting.egg-info testing/system/setup.py
+
+testing/system/TripPlannerSystemTesting.egg-info:
 	cd testing/system && sudo python setup.py develop
 
 testing/system/setup.py:
 
-integrationtests: testing/integration/setup.py
+integrationtests: testing/integration/TripPlannerIntegrationTesting.egg-info testing/integration/setup.py
+	
+testing/integration/TripPlannerIntegrationTesting.egg-info:
 	cd testing/integration && sudo python setup.py develop
 
 testing/integration/setup.py:
