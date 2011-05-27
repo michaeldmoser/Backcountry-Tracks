@@ -1,0 +1,26 @@
+hostname: {{ hostname }}
+
+trailhead_url: http://{{ hostname }}/app
+
+trailhead:
+    pidfile: /var/run/tripplanner/trailhead.pid
+
+users:
+    albert:
+        first_name: Albert
+        last_name: Corley
+        email: albert.corley@example.com
+        birthdate: "1979-06-23"
+        password: "Test1234!"
+    ramona:
+        first_name: Ramona
+        last_name: Mcknight
+        email: ramona.mcknight@example.com
+        birthdate: "1982-07-30"
+        password: "Test1234!"
+    douglas:
+        first_name: Douglas
+        last_name: Mcdowell
+        email: douglas.mcdowell@example.com
+        birthdate: "1952-04-20"
+        password: "Test1234!"

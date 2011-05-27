@@ -1,5 +1,6 @@
 *.deb
 *.pyc
 *.egg-info
+*.yaml
 config/nginx
 config/riak

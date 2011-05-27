@@ -1,9 +1,24 @@
 
-dev-environ: install-services services-dev-config testing-framework
+dev-environ: install-dependencies install-infrastructure install-services infrastructure-dev-config testing-framework
 	
-services-dev-config: django nginx-config riak-config
+infrastructure-dev-config: django nginx-config riak-config
 
-install-services: install-rabbitmq install-riak install-nginx
+install-infrastructure: install-rabbitmq install-riak install-nginx
+
+install-services: install-trailhead varrun
+
+install-dependencies: install-libyaml
+
+install-libyaml: /usr/lib/libyaml.so /usr/include/yaml.h /usr/include/python2.7/Python.h
+
+/usr/include/python2.7/Python.h:
+	sudo aptitude install python-dev
+
+/usr/lib/libyaml.so:
+	sudo aptitude install libyaml-0-2
+
+/usr/include/yaml.h:
+	sudo aptitude install libyaml-dev
 
 unittest: testing/bin/run-unittests.py
 	python testing/bin/run-unittests.py
@@ -11,7 +26,7 @@ unittest: testing/bin/run-unittests.py
 systest: testing/system
 	cd testing/system && sudo python setup.py test
 
-inttest: testing/integration
+inttest: unittest testing/integration
 	cd testing/integration && sudo python setup.py test
 
 install-rabbitmq: /usr/sbin/rabbitmq-server
@@ -78,11 +93,22 @@ config/nginx/nginx.conf: /usr/sbin/nginx /usr/local/lib/python2.7/dist-packages/
 
 config/nginx.in/nginx.conf:
 
-/srv/www:
-	sudo mkdir /srv/www
+/srv/www: htdocs
+	sudo ln -sf `pwd`/htdocs /srv/www
 	sudo chown -R `whoami`:`whoami` /srv/www
 
-testing-framework: robotframework systemtests integrationtests
+testing-framework: robotframework tptesting systemtests integrationtests tptesting-config
+
+tptesting-config: /etc/tptesting.yaml
+
+/etc/tptesting.yaml: testing/etc/tptesting.yaml
+	sudo ln -sf `pwd`/testing/etc/tptesting.yaml /etc/tptesting.yaml
+
+testing/etc/tptesting.yaml:
+	python testing/bin/build-testing-yaml.py
+
+tptesting.yaml: 
+	python testing/bin/build-testing-yaml.py
 
 robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg
 
@@ -100,6 +126,7 @@ testing/system/TripPlannerSystemTesting.egg-info:
 	cd testing/system && sudo python setup.py develop
 
 testing/system/setup.py:
+	cd testing/system && sudo python setup.py develop
 
 integrationtests: testing/integration/TripPlannerIntegrationTesting.egg-info testing/integration/setup.py
 	
@@ -107,5 +134,28 @@ testing/integration/TripPlannerIntegrationTesting.egg-info:
 	cd testing/integration && sudo python setup.py develop
 
 testing/integration/setup.py:
+	cd testing/integration && sudo python setup.py develop
+
+tptesting: testing/TripPlannerTestingLib/TripPlannerTestingLib.egg-info testing/TripPlannerTestingLib/setup.py
+
+testing/TripPlannerTestingLib/TripPlannerTestingLib.egg-info:
+	cd testing/TripPlannerTestingLib && sudo python setup.py develop
+
+testing/TripPlannerTestingLib/setup.py:
+	cd testing/TripPlannerTestingLib && sudo python setup.py develop
+
+install-trailhead: services/TrailHead/setup.py services/TrailHead/TrailHead.egg-info
+
+services/TrailHead/trailhead/setup.py:
+	cd services/TrailHead && sudo python setup.py develop
+	
+services/TrailHead/TrailHead.egg-info:
+	cd services/TrailHead && sudo python setup.py develop
+
+varrun: /var/run/tripplanner
+
+/var/run/tripplanner:
+	sudo mkdir /var/run/tripplanner
+	sudo chown `whoami` /var/run/tripplanner
 
 
