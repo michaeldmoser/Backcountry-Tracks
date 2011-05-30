@@ -3,6 +3,8 @@ from grizzled.os import daemonize
 from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
 
+from trailhead.register import RegisterHandler
+
 class RootHandler(RequestHandler):
     def get(self):
         pass
@@ -23,6 +25,7 @@ class TrailHead(object):
         application = self.__tornado_web()
         app = application([
             (r'/', RootHandler),
+            (r'/app/register', RegisterHandler),
             ])
         app.listen(8080)
 

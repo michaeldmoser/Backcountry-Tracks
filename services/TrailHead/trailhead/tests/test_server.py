@@ -3,6 +3,7 @@ import unittest
 from tptesting import environment
 
 from trailhead.server import TrailHead, RootHandler
+from trailhead.register import RegisterHandler
 
 class TrailHeadStub(TrailHead):
     def __init__(self):
@@ -108,8 +109,13 @@ class TestTrailHeadTornado(unittest.TestCase):
 
     def test_adds_root_handler(self):
         """Adds a root handler to Tornado"""
-        expected_routes = [(r'/', RootHandler)]
-        self.assertEquals(expected_routes, self.testtrailhead.routes)
+        expected_route = (r'/', RootHandler)
+        routes = self.testtrailhead.routes
+
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
 
     def test_listens_on_port_8080(self):
         '''Setup to listen on port 8080'''
@@ -119,7 +125,15 @@ class TestTrailHeadTornado(unittest.TestCase):
         '''Needs to start the tornado io loop'''
         assert(self.testtrailhead.start_called)
 
+    def test_adds_register_handler(self):
+        '''Add a register handler to Tornado'''
+        expected_route = (r'/app/register', RegisterHandler)
+        routes = self.testtrailhead.routes
 
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
 
 if __name__ == '__main__':
     unittest.main()

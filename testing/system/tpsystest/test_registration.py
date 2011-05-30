@@ -36,11 +36,8 @@ class TestSubmitRegistration(unittest.TestCase):
             except urllib2.HTTPError, e:
                 self.fail(str(e))
 
-            content_type = response.headers['Content-Type']
-            self.assertEquals(content_type, 'application/json')
-
             status_code = response.code
-            self.assertEquals(status_code, 204)
+            self.assertEquals(status_code, 202)
 
             response_data = json.loads(response.read())
             self.assertEquals(len(response_data), 0)
