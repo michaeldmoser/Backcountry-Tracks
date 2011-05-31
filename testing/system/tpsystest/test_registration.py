@@ -39,7 +39,7 @@ class TestSubmitRegistration(unittest.TestCase):
             status_code = response.code
             self.assertEquals(status_code, 202)
 
-            response_data = json.loads(response.read())
+            response_data = response.read()
             self.assertEquals(len(response_data), 0)
 
         utils.try_until(1, assert_valid_response)

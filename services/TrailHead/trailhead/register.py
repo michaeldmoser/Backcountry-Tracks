@@ -2,5 +2,5 @@ from tornado.web import RequestHandler
 
 class RegisterHandler(RequestHandler):
     def post(self):
-        pass
+        self.set_status(202)
 
