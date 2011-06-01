@@ -5,5 +5,8 @@ setup(
     version = '0.1',
     packages = ['tpsystest'],
     test_suite = 'tpsystest',
+    install_requires = [
+        'riak'
+        ]
     )
         

@@ -4,6 +4,7 @@ import os
 from os import path
 
 from usertemplate import UserTemplate
+import riak
 
 class TpEnvironment(object):
 
@@ -61,6 +62,16 @@ class TpEnvironment(object):
                 os.kill(pid, 9)
             except OSError:
                 pass
+
+    def get_database(self, bucket_name):
+        '''
+        Returns a Riak bucket instance. bucket_name is the name of the bucket to use
+        '''
+        client = riak.RiakClient()
+        bucket = client.bucket(bucket_name)
+
+        return bucket
+
 
 def create():
     # TODO: reading in the config file needs to be cached. Especially for unittesting
