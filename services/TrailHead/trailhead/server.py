@@ -1,8 +1,4 @@
-from grizzled.os import daemonize
-
-from tornado.ioloop import IOLoop
 from tornado.web import Application, RequestHandler
-
 from trailhead.register import RegisterHandler
 
 class RootHandler(RequestHandler):
@@ -11,23 +7,25 @@ class RootHandler(RequestHandler):
 
 class TrailHead(object):
 
-    def __daemonize(self, no_close=False, pidfile=None):
-        return daemonize(no_close=no_close, pidfile=pidfile)
-
-    def __tornado_web(self):
-        return Application
-
-    def __tornado_io_loop(self):
-        return IOLoop
+    def __init__(self, daemonizer=None, ioloop=None, webapp=None, mqclient=None, 
+            pidfile=None):
+        self.daemonize = daemonizer
+        self.ioloop = ioloop
+        self.webapp = webapp
+        self.mqclient = mqclient
+        self.pidfile = pidfile
 
     def run(self):
-        self.__daemonize(pidfile='/var/run/tripplanner/trailhead.pid')
-        application = self.__tornado_web()
-        app = application([
-            (r'/', RootHandler),
-            (r'/app/register', RegisterHandler),
-            ])
-        app.listen(8080)
+        daemon_context = self.daemonize(pidfile=self.pidfile)
 
-        ioloop = self.__tornado_io_loop()
-        ioloop.instance().start()
+        with daemon_context:
+            app = self.webapp([
+                (r'/', RootHandler),
+                (r'/app/register', RegisterHandler),
+                ])
+            app.listen(8080)
+
+            self.ioloop_instance = self.ioloop.IOLoop.instance()
+            app.mq = self.mqclient
+            self.ioloop_instance.add_timeout(1000, app.mq.connect)
+            self.ioloop_instance.start()

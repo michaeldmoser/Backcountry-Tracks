@@ -1,5 +1,5 @@
-from server import TrailHead
+from trailhead.injectors import application
 
 def main():
-    trailhead = TrailHead()
+    trailhead = application()
     trailhead.run()
