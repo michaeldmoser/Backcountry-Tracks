@@ -1,5 +1,5 @@
 
-class UserTemplate(object):
+class UserTemplate(dict):
     '''
     UserTemplate instances store information about standard users used
     in testing the system.
@@ -13,28 +13,24 @@ class UserTemplate(object):
 
     '''
 
-    def __init__(self, user):
-        '''
-        user:: is a dict() with keys matching the properties
-        '''
-        self.__user = user
-
     def __get_first_name(self):
-        return self.__user['first_name']
+        return self['first_name']
     first_name = property(fget=__get_first_name)
 
     def __get_last_name(self):
-        return self.__user['last_name']
+        return self['last_name']
     last_name = property(fget=__get_last_name)
 
     def __get_email(self):
-        return self.__user['email']
+        return self['email']
     email = property(fget=__get_email)
 
     def __get_birthdate(self):
-        return self.__user['birthdate']
+        return self['birthdate']
     birthdate = property(fget=__get_birthdate)
 
     def __get_password(self):
-        return self.__user['password']
+        return self['password']
     password = property(fget=__get_password)
+
+

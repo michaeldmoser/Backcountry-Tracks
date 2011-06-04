@@ -11,7 +11,8 @@ class TestRegisterHandler(unittest.TestCase):
         self.environ = environment.create()
         self.environ.make_pristine()
 
-        subprocess.call(('trailhead', 'start'))
+        self.environ.start_rabbitmq()
+        self.environ.start_trailhead()
 
     def tearDown(self):
         self.environ.teardown()

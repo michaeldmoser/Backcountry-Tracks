@@ -53,11 +53,13 @@ class TestSubmitRegistration(unittest.TestCase):
                 self.fail(str(e))
         utils.try_until(1, submit_registration)
 
-        user_bucket = self.environ.get_database('users')
-        albert_user = user_bucket.get(self.albert.email)
-        albert_data = albert_user.get_data()
+        def check_registration_stored():
+            user_bucket = self.environ.get_database('users')
+            albert_user = user_bucket.get(self.albert.email)
+            albert_data = albert_user.get_data()
 
-        self.assertEquals(albert_data, self.register_data)
+            self.assertEquals(albert_data, self.register_data)
+        utils.try_until(1, check_registration_stored)
 
 if __name__ == '__main__':
     unittest.main()
