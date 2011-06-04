@@ -16,6 +16,5 @@ class RegisterHandler(RequestHandler):
                 body = self.request.body,
                 properties = properties
                 )
-
         self.set_status(202)
 

@@ -8,27 +8,21 @@ import urllib2
 from usertemplate import UserTemplate
 import riak
 
-def wait_for_start(check_if_started, exception_class):
-    '''
-    Repeatedly call check_if_started for upto 10 seconds. check_if_started 
-    should raise and exception exception_class which will be caught. If
-    either the 10 seconds has elapsed or an exception that is not exception_class
-    is raised this function will fail.
-    '''
+import subprocess
 
-    current_time = 0
-    for timed in range(10):
-        try:
-            check_if_started()
-        except exception_class:
-            time.sleep(0.1)
-            current_time += 0.1
+from .adventurer import AdventurerEnvironment
+from .riakenv import RiakEnvironment
+from .utils import wait_for_start
+
 
 class TpEnvironment(object):
 
     def __init__(self, config):
         self.__config = config
         self.devnull = open('/dev/null', 'a')
+
+        self.adventurer = AdventurerEnvironment(self)
+        self.riak = RiakEnvironment(self)
 
     def __getattr__(self, name):
         if self.__config.has_key(name):
@@ -40,6 +34,10 @@ class TpEnvironment(object):
 
         raise AttributeError("No attribute: %s" % name)
 
+    def get_config_for(self, service):
+        '''Retrieves a section of the tptesting.yaml file'''
+        return self.__config[service]
+
     def make_pristine(self):
         '''
         Stops all running services and removes all data from the services 
@@ -48,12 +46,16 @@ class TpEnvironment(object):
         self.kill_processes()
         self.remove_pid_files()
 
+        self.adventurer.make_pristine()
+        self.riak.make_pristine()
+
     def bringup_infrastructure(self):
         '''
         Starts all services which should be running for a functional system
         '''
         self.start_rabbitmq()
-        self.start_riak()
+        self.riak.start()
+        self.adventurer.start()
         self.start_trailhead()
 
     def teardown(self):
@@ -75,7 +77,8 @@ class TpEnvironment(object):
         Shutdowns all services
         '''
         self.stop_trailhead()
-        self.stop_riak()
+        self.adventurer.stop()
+        self.riak.stop()
         self.stop_rabbitmq()
 
     def start_rabbitmq(self):
@@ -112,33 +115,6 @@ class TpEnvironment(object):
                 os.kill(pid, 9)
             except OSError:
                 pass
-
-    def start_riak(self):
-        '''
-        Start the riak server
-        '''
-        subprocess.call(['/etc/init.d/riak', 'start'], 
-                stdout=self.devnull, stderr=self.devnull)
-        def check_riak_start():
-            urllib2.urlopen("http://localhost:8089/")
-        wait_for_start(check_riak_start, urllib2.URLError)
-
-    def stop_riak(self):
-        '''
-        Stop the riak server
-        '''
-        subprocess.call(['/etc/init.d/riak', 'stop'], 
-                stdout=self.devnull, stderr=self.devnull)
-
-    def get_database(self, bucket_name):
-        '''
-        Returns a Riak bucket instance. bucket_name is the name of the bucket to use
-        '''
-        client = riak.RiakClient()
-        bucket = client.bucket(bucket_name)
-
-        return bucket
-
 
 def create():
     # TODO: reading in the config file needs to be cached. Especially for unittesting
