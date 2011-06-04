@@ -20,6 +20,8 @@ install-libyaml: /usr/lib/libyaml.so /usr/include/yaml.h /usr/include/python2.7/
 /usr/include/yaml.h:
 	sudo aptitude install libyaml-dev
 
+test: inttest systest
+
 unittest: testing/bin/run-unittests.py
 	python testing/bin/run-unittests.py
 
