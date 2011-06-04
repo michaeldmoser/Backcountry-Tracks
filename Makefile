@@ -20,10 +20,11 @@ install-libyaml: /usr/lib/libyaml.so /usr/include/yaml.h /usr/include/python2.7/
 /usr/include/yaml.h:
 	sudo aptitude install libyaml-dev
 
-test: inttest systest
+test: testing/bin/run_make_test
+	sudo testing/bin/run_make_test
 
-unittest: testing/bin/run-unittests.py
-	python testing/bin/run-unittests.py
+unittest: testing/bin/run_unittests.py
+	python testing/bin/run_unittests.py
 
 systest: testing/system
 	cd testing/system && sudo python setup.py test
@@ -120,7 +121,9 @@ robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robo
 /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg:
 	sudo easy_install robotframework-seleniumlibrary
 
-testing/bin/run-unittests.py:
+testing/bin/run_unittests.py:
+
+testing/bin/run_make_test:
 
 systemtests: testing/system/TripPlannerSystemTesting.egg-info testing/system/setup.py
 

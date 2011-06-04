@@ -28,6 +28,7 @@ class TpEnvironment(object):
 
     def __init__(self, config):
         self.__config = config
+        self.devnull = open('/dev/null', 'a')
 
     def __getattr__(self, name):
         if self.__config.has_key(name):
@@ -81,19 +82,22 @@ class TpEnvironment(object):
         '''
         Starts the rabbitmq server
         '''
-        subprocess.call(['/etc/init.d/rabbitmq-server', 'start'])
+        subprocess.call(['/etc/init.d/rabbitmq-server', 'start'], 
+                stdout=self.devnull, stderr=self.devnull)
 
     def stop_rabbitmq(self):
         '''
         Stops the rabbitmq server
         '''
-        subprocess.call(['/etc/init.d/rabbitmq-server', 'stop'])
+        subprocess.call(['/etc/init.d/rabbitmq-server', 'stop'], 
+                stdout=self.devnull, stderr=self.devnull)
 
     def start_trailhead(self):
         '''
         Starts the trailhead application server
         '''
-        subprocess.call(['trailhead', 'start'])
+        subprocess.call(['trailhead', 'start'], 
+                stdout=self.devnull, stderr=self.devnull)
         def check_trailhead_start():
             urllib2.urlopen("http://localhost:8080/")
         wait_for_start(check_trailhead_start, urllib2.URLError)
@@ -113,7 +117,8 @@ class TpEnvironment(object):
         '''
         Start the riak server
         '''
-        subprocess.call(['/etc/init.d/riak', 'start'])
+        subprocess.call(['/etc/init.d/riak', 'start'], 
+                stdout=self.devnull, stderr=self.devnull)
         def check_riak_start():
             urllib2.urlopen("http://localhost:8089/")
         wait_for_start(check_riak_start, urllib2.URLError)
@@ -122,7 +127,8 @@ class TpEnvironment(object):
         '''
         Stop the riak server
         '''
-        subprocess.call(['/etc/init.d/riak', 'stop'])
+        subprocess.call(['/etc/init.d/riak', 'stop'], 
+                stdout=self.devnull, stderr=self.devnull)
 
     def get_database(self, bucket_name):
         '''
