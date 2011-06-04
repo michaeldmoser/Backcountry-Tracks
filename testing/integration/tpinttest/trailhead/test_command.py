@@ -11,6 +11,7 @@ class TestScript(unittest.TestCase):
     def setUp(self):
         self.environ = environment.create()
         self.environ.make_pristine()
+        self.environ.start_rabbitmq()
 
         subprocess.call(('trailhead', 'start'))
 

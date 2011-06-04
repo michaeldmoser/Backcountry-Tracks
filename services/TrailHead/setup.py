@@ -8,7 +8,8 @@ setup(
     install_requires = '''
         tornado
         pika
-        grizzled-python
+        python-daemon
+        lockfile
     ''',
     entry_points = {
         'console_scripts': ['trailhead = trailhead.script:main']
