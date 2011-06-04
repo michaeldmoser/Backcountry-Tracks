@@ -5,7 +5,7 @@ infrastructure-dev-config: django nginx-config riak-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-services: install-trailhead varrun
+install-services: install-trailhead install-adventurer varrun
 
 install-dependencies: install-libyaml
 
@@ -156,6 +156,14 @@ services/TrailHead/trailhead/setup.py:
 	
 services/TrailHead/TrailHead.egg-info:
 	cd services/TrailHead && sudo python setup.py develop
+
+install-adventurer: services/Adventurer/setup.py services/Adventurer/Adventurer.egg-info
+
+services/Adventurer/setup.py:
+	cd services/Adventurer && sudo python setup.py develop
+
+services/Adventurer/Adventurer.egg-info:
+	cd services/Adventurer && sudo python setup.py develop
 
 varrun: /var/run/tripplanner
 

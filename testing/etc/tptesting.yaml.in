@@ -6,6 +6,9 @@ trailhead_url: http://{{ hostname }}/app
 trailhead:
     pidfile: /var/run/tripplanner/trailhead.pid
 
+riak:
+    datadir: '/srv/riak/bitcask/'
+
 users:
     albert:
         first_name: Albert
@@ -25,3 +28,7 @@ users:
         email: douglas.mcdowell@example.com
         birthdate: "1952-04-20"
         password: "Test1234!"
+
+adventurer:
+    start: ['adventurer', 'start']
+    stop: ['adventurer', 'stop']
