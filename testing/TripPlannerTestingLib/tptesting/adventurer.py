@@ -1,5 +1,6 @@
 import subprocess
 from os import path
+import os
 
 class AdventurerEnvironment(object):
     def __init__(self, environment):
@@ -11,9 +12,24 @@ class AdventurerEnvironment(object):
                 stderr=self.environment.devnull)
 
     def stop(self):
-        subprocess.check_call(self.config['stop'], stdout=self.environment.devnull, 
-                stderr=self.environment.devnull)
+        if not path.exists(self.config['pidfile']):
+            return
+
+        pid = open(self.config['pidfile'], 'r').read()
+        os.kill(int(pid), 9)
+
+# comming soon...
+        #subprocess.check_call(self.config['stop'], stdout=self.environment.devnull, 
+        #        stderr=self.environment.devnull)
 
     def make_pristine(self):
         self.stop()
+
+    def remove_pidfile(self):
+        if not path.exists(self.config['pidfile']):
+            return
+
+        os.unlink(self.config['pidfile'])
+
+
 

@@ -32,3 +32,4 @@ users:
 adventurer:
     start: ['adventurer', 'start']
     stop: ['adventurer', 'stop']
+    pidfile: '/var/run/tripplanner/adventurer.pid'
