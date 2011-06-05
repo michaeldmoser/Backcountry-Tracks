@@ -1,5 +1,6 @@
 import unittest
 import json
+from os import path
 
 import pika.adapters
 import pika.connection
@@ -27,9 +28,25 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
 
         cls.albert = cls.environ.albert
 
+        adventurer_config = cls.environ.get_config_for('adventurer')
+        cls.pidfile_path = adventurer_config['pidfile']
+
     @classmethod
     def tearDownClass(self):
         self.environ.teardown()
+
+    def test_daemonized_process(self):
+        '''We should have a running process with a pidfile'''
+        def check_for_pidfile():
+            assert path.exists(self.pidfile_path), 'PID file does not exist'
+        utils.try_until(1, check_for_pidfile)
+
+        pid = open(self.pidfile_path, 'r').read().strip()
+        cmdline_path = path.join('/proc', pid, 'cmdline')
+        assert path.exists(cmdline_path), 'Could not find the process'
+
+        cmdline = open(cmdline_path, 'r').read()
+        assert '/usr/local/bin/adventurer' in cmdline, 'Not the correct process'
 
     def test_retrieves_and_saves_regitrations(self):
         """Service should retrieve registrations from rabbitmq and save to riak"""

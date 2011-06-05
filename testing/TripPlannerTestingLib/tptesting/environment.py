@@ -72,6 +72,8 @@ class TpEnvironment(object):
         if path.exists(self.trailhead['pidfile']):
             os.unlink(self.trailhead['pidfile'])
 
+        self.adventurer.remove_pidfile()
+
     def kill_processes(self):
         '''
         Shutdowns all services

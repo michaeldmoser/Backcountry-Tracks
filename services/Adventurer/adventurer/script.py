@@ -1,3 +1,6 @@
+import injectors
 
 def main():
-    pass
+    adventurer = injectors.application()
+    adventurer.run()
+
