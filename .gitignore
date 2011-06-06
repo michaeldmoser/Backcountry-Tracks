@@ -5,3 +5,6 @@
 *.swp
 config/nginx
 config/riak
+log.html
+output.xml
+report.html
