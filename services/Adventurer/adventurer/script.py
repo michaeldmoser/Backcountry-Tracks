@@ -1,6 +1,6 @@
 import injectors
 
 def main():
-    adventurer = injectors.application()
+    adventurer = injectors.controller()
     adventurer.run()
 

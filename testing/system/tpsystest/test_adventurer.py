@@ -22,6 +22,17 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
         mq_conn = pika.BlockingConnection(mq_params)
         channel = mq_conn.channel()
         channel.exchange_declare(exchange='registration', type='topic')
+        channel.queue_declare(
+                queue = 'registrations',
+                durable = False,
+                exclusive = False,
+                auto_delete = True
+                )
+        channel.queue_bind(
+                exchange = 'registration',
+                queue = 'registrations',
+                routing_key = 'registration.register'
+                )
         cls.channel = channel
 
         cls.environ.adventurer.start()

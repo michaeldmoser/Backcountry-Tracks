@@ -1,8 +1,14 @@
 import unittest
 
-from adventurer.service import Application
+import json
+from pika import frame, spec
+import pika
 
-class TestApplicationDaemon(unittest.TestCase):
+from tptesting import environment
+
+from adventurer.service import Controller
+
+class TestControllerDaemon(unittest.TestCase):
     def setUp(self):
         class DaemonContextSpy(object):
             def __init__(spy):
@@ -31,12 +37,17 @@ class TestApplicationDaemon(unittest.TestCase):
                         pass
                 self.ioloop = ioloop()
 
+        class AdventurerApplicationStub(object):
+            def register(spy, data):
+                pass
+
         self.daemonizer = self.DaemonContextSpy()
-        app = Application(
+        app = Controller(
                 daemonizer = self.daemonizer,
                 pidfile = self.pidfile,
                 pika_params = dict(),
-                pika_connection = PikaConnectionStub
+                pika_connection = PikaConnectionStub,
+                application = AdventurerApplicationStub
                 )
         app.run()
 
@@ -48,7 +59,7 @@ class TestApplicationDaemon(unittest.TestCase):
         '''Should set the correct pidfile path'''
         self.assertEquals(self.daemonizer.pidfile, self.pidfile)
 
-class TestApplicationPika(unittest.TestCase):
+class TestControllerPika(unittest.TestCase):
     def setUp(self):
         class DaemonContextStub(object):
             def __init__(spy, pidfile=None):
@@ -86,10 +97,15 @@ class TestApplicationPika(unittest.TestCase):
         self.pika_connection = PikaConnectionSpy()
         self.parameters = dict(host='localhost')
 
-        app = Application(
+        class AdventurerApplicationStub(object):
+            def register(spy, data):
+                pass
+
+        app = Controller(
                 daemonizer = self.DaemonContextStub,
                 pika_connection = self.pika_connection,
-                pika_params = self.parameters
+                pika_params = self.parameters,
+                application = AdventurerApplicationStub
                 )
         app.run()
 
@@ -117,6 +133,76 @@ class TestApplicationPika(unittest.TestCase):
     def test_ioloop_started(self):
         '''The ioloop should be started'''
         self.assertTrue(self.pika_connection.ioloop_started)
+
+class TestControllerConsumeMessage(unittest.TestCase):
+
+    def test_consumes_messages(self):
+        '''Can consume messages'''
+        class DaemonContextStub(object):
+            def __init__(spy, pidfile=None):
+                pass
+
+            def __enter__(spy):
+                return spy
+
+            def __exit__(self, exc_type, exc_value, trackback):
+                pass
+        self.DaemonContextStub = DaemonContextStub
+
+        class PIDFileStub(object):
+            pass
+        self.pidfile = PIDFileStub()
+
+        class PikaConnectionSpy(object):
+            def __call__(spy, parameters, on_open_callback=None):
+                spy.ioloop_started = False
+                class ioloop(object):
+                    def start(ioloopself):
+                        pass
+                spy.ioloop = ioloop()
+                on_open_callback(spy)
+
+                return spy
+
+            def channel(spy, callback=None):
+                class PikaChannelSpy(object):
+                    def basic_consume(channelspy, callback, queue=None):
+                        spy.consume_callback = callback
+                spy.channel = PikaChannelSpy()
+                callback(spy.channel)
+        self.pika_connection = PikaConnectionSpy()
+        self.parameters = dict(host='localhost')
+
+        class AdventurerApplicationSpy(object):
+            def __call__(spy):
+                spy.register_called = False
+                return spy
+
+            def register(spy, data):
+                spy.register_data = data
+        self.AdventurerApplicationSpy = AdventurerApplicationSpy()
+
+        environ = environment.create()
+        app = Controller(
+                daemonizer = self.DaemonContextStub,
+                pika_connection = self.pika_connection,
+                pika_params = self.parameters,
+                pidfile = self.pidfile,
+                application = self.AdventurerApplicationSpy
+                )
+        app.run()
+        
+        albert = environ.albert
+        albert_json = json.dumps(albert)
+
+        method = frame.Method(1, spec.Basic.ConsumeOk())
+        properties = pika.BasicProperties(content_type = 'application/json')
+        header = frame.Header(1, len(albert_json), properties)
+
+        delivery_callback = self.pika_connection.consume_callback
+        delivery_callback(self.pika_connection.channel, method, header, albert_json)
+
+        self.assertEquals(self.AdventurerApplicationSpy.register_data, albert)
 
 if __name__ == '__main__':
     unittest.main()
