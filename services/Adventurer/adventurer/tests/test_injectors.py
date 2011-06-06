@@ -4,22 +4,23 @@ import pika
 
 from tptesting import environment
 
-from adventurer.injectors import ApplicationInjector
+from adventurer.injectors import ControllerInjector, ApplicationInjector
 
-class TestInjectorsApplication(unittest.TestCase):
+class TestInjectorsController(unittest.TestCase):
     def setUp(self):
-        class ApplicationStub(object):
+        class ControllerStub(object):
             def __init__(stub):
                 stub.pika_params = None
 
             def __call__(stub, pika_connection=None, daemonizer=None, pidfile=None,
-                    pika_params=None):
+                    pika_params=None, application=None):
                 stub.pika = pika_connection
                 stub.daemonizer = daemonizer
                 stub.pika_params = pika_params
+                stub.application = application
 
                 return stub
-        self.appstub = ApplicationStub()
+        self.appstub = ControllerStub()
 
         class PikaConnectionStub(object):
             pass
@@ -37,33 +38,40 @@ class TestInjectorsApplication(unittest.TestCase):
                 spy.pidfile = pidfile_path
         self.PIDLockFileSpy = PIDLockFileSpy()
 
-        class ApplicationSUT(ApplicationInjector):
-            def _ApplicationInjector__application(sut):
+        class ApplicationStub(object):
+            pass
+        self.ApplicationStub = ApplicationStub
+
+        class ControllerSUT(ControllerInjector):
+            def _ControllerInjector__controller(sut):
                 return self.appstub
 
-            def _ApplicationInjector__pika_connection(sut):
+            def _ControllerInjector__pika_connection(sut):
                 return PikaConnectionStub
 
-            def _ApplicationInjector__daemoncontext(sut):
+            def _ControllerInjector__daemoncontext(sut):
                 return DaemonContextStub
 
-            def _ApplicationInjector__pidfile(sut):
+            def _ControllerInjector__pidfile(sut):
                 return self.PIDLockFileSpy
 
-        self.app_sut = ApplicationSUT()
+            def _ControllerInjector__application(sut):
+                return self.ApplicationStub
 
-    def test_application_creation_pika(self):
-        """Application injector creates the application with pika"""
+        self.app_sut = ControllerSUT()
+
+    def test_controller_creation_pika(self):
+        """Controller injector creates the controller with pika"""
         self.app_sut()
         self.assertEquals(self.appstub.pika, self.pikastub)
 
-    def test_application_creation_daemoncontext(self):
-        """Application injector creates the application with daemoncontext"""
+    def test_controller_creation_daemoncontext(self):
+        """Controller injector creates the controller with daemoncontext"""
         self.app_sut()
         self.assertEquals(self.appstub.daemonizer, self.daemoncontextstub)
 
-    def test_injector_returns_application(self):
-        '''The application() injector should return an application object'''
+    def test_injector_returns_controller(self):
+        '''The controller() injector should return an controller object'''
         app = self.app_sut()
         self.assertTrue(isinstance(app, self.appstub.__class__))
 
@@ -80,5 +88,50 @@ class TestInjectorsApplication(unittest.TestCase):
         parameters = pika.ConnectionParameters(host = 'localhost')
         self.assertEquals(self.appstub.pika_params.host, parameters.host)
 
+    def test_application(self):
+        '''Test taht the application gets passed in'''
+        self.app_sut()
+        self.assertEquals(self.appstub.application, self.ApplicationStub)
+
+class TestApplicationInjector(unittest.TestCase):
+
+    def setUp(self):
+        class RiakClientSpy(object):
+            def __call__(spy):
+                return spy
+
+            def bucket(spy, name):
+                spy.name = name
+                class BucketStub(object):
+                    pass
+                spy.BucketStub = BucketStub 
+
+                return BucketStub()
+        self.RiakClientSpy = RiakClientSpy()
+
+        class ApplicationInjectorSUT(ApplicationInjector):
+            def _ApplicationInjector__riak(sut):
+                return self.RiakClientSpy
+
+        class PikaChannelStub(object):
+            def basic_publish(stub):
+                pass
+        self.pika_channel = PikaChannelStub()
+
+        sut = ApplicationInjectorSUT()
+        self.app = sut()
+
+    def test_creates_riak_dependency(self):
+        '''Creates and passes in the dependency on Riak'''
+        self.assertTrue(isinstance(self.app.bucket, self.RiakClientSpy.BucketStub))
+
+    def test_uses_adventurers_bucket(self):
+        '''Uses the adventurers bucket for the riak dependency'''
+        self.assertEquals(self.RiakClientSpy.name, 'adventurers')
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
+
