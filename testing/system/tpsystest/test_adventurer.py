@@ -15,7 +15,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
         cls.environ = environment.create()
         cls.environ.make_pristine()
 
-        cls.environ.start_rabbitmq()
+        cls.environ.rabbitmq.start_server()
         cls.environ.riak.start()
 
         mq_params = pika.ConnectionParameters(host='localhost')

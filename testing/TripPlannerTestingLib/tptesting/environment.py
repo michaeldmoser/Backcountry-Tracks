@@ -13,6 +13,7 @@ import subprocess
 from .adventurer import AdventurerEnvironment
 from .riakenv import RiakEnvironment
 from .utils import wait_for_start
+from .rabbitmq import RabbitMQEnvironment
 
 
 class TpEnvironment(object):
@@ -23,6 +24,7 @@ class TpEnvironment(object):
 
         self.adventurer = AdventurerEnvironment(self)
         self.riak = RiakEnvironment(self)
+        self.rabbitmq = RabbitMQEnvironment(self)
 
     def __getattr__(self, name):
         if self.__config.has_key(name):
@@ -46,6 +48,7 @@ class TpEnvironment(object):
         self.kill_processes()
         self.remove_pid_files()
 
+        self.rabbitmq.make_pristine()
         self.adventurer.make_pristine()
         self.riak.make_pristine()
 
@@ -53,7 +56,7 @@ class TpEnvironment(object):
         '''
         Starts all services which should be running for a functional system
         '''
-        self.start_rabbitmq()
+        self.rabbitmq.start()
         self.riak.start()
         self.adventurer.start()
         self.start_trailhead()
@@ -81,21 +84,7 @@ class TpEnvironment(object):
         self.stop_trailhead()
         self.adventurer.stop()
         self.riak.stop()
-        self.stop_rabbitmq()
-
-    def start_rabbitmq(self):
-        '''
-        Starts the rabbitmq server
-        '''
-        subprocess.call(['/etc/init.d/rabbitmq-server', 'start'], 
-                stdout=self.devnull, stderr=self.devnull)
-
-    def stop_rabbitmq(self):
-        '''
-        Stops the rabbitmq server
-        '''
-        subprocess.call(['/etc/init.d/rabbitmq-server', 'stop'], 
-                stdout=self.devnull, stderr=self.devnull)
+        self.rabbitmq.stop()
 
     def start_trailhead(self):
         '''

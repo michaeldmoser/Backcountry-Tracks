@@ -5,7 +5,7 @@ infrastructure-dev-config: django nginx-config riak-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-services: install-trailhead install-adventurer varrun
+install-services: install-trailhead install-adventurer varrun install-smokesignal
 
 install-dependencies: install-libyaml
 
@@ -164,6 +164,14 @@ services/Adventurer/setup.py:
 
 services/Adventurer/Adventurer.egg-info:
 	cd services/Adventurer && sudo python setup.py develop
+
+install-smokesignal: services/SmokeSignal/setup.py services/SmokeSignal/SmokeSignal.egg-info
+	
+services/SmokeSignal/setup.py: 
+	cd services/SmokeSignal && sudo python setup.py develop
+	
+services/SmokeSignal/SmokeSignal.egg-info:
+	cd services/SmokeSignal && sudo python setup.py develop
 
 varrun: /var/run/tripplanner
 

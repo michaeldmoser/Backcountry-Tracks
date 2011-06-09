@@ -11,7 +11,7 @@ class TestSubmitRegistration(unittest.TestCase):
     def setUpClass(cls):
         cls.environ = environment.create()
         cls.environ.make_pristine()
-        cls.environ.start_rabbitmq()
+        cls.environ.rabbitmq.start_server()
 
         mq_params = pika.ConnectionParameters('localhost')
         mq_conn = pika.BlockingConnection(mq_params)
