@@ -1,5 +1,5 @@
 hostname: {{ hostname }}
-app: app
+url_preifx: app
 
 trailhead_url: http://{{ hostname }}/app
 
