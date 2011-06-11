@@ -33,3 +33,6 @@ adventurer:
     start: ['adventurer', 'start']
     stop: ['adventurer', 'stop']
     pidfile: '/var/run/tripplanner/adventurer.pid'
+
+selenium_server: http://localhost:4444
+

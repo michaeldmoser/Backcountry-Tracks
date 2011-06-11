@@ -49,9 +49,16 @@ td.name, th.name {
 <th colspan="4">Value</th>
 </tr>
 <tr>
+<td class="name">Variables</td>
+<td>testing/acceptance/environment_variables.py</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Library</td>
 <td>SeleniumLibrary</td>
-<td>server_host=http://seleniumserver.dev:4444</td>
+<td>server_host=${SELENIUM_SERVER}</td>
 <td></td>
 <td></td>
 </tr>
@@ -95,7 +102,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Start the browser">Start the browser</a></td>
 <td>Open browser</td>
-<td><a href="http://tripplanner.dev">http://tripplanner.dev</a></td>
+<td>${SITE_HOME_PAGE}</td>
 <td>browser=firefox</td>
 <td></td>
 </tr>
@@ -109,7 +116,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Goto the site's home page">Goto the site's home page</a></td>
 <td>go to</td>
-<td><a href="http://tripplanner.dev">http://tripplanner.dev</a></td>
+<td>${SITE_HOME_PAGE}</td>
 <td></td>
 <td></td>
 </tr>
