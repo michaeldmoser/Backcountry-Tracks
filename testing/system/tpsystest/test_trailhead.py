@@ -34,10 +34,12 @@ class TestSubmitRegistration(unittest.TestCase):
         cls.environ.start_trailhead()
 
         register_url = '/'.join([cls.environ.trailhead_url, 'register'])
-        cls.register_request = urllib2.Request(register_url)
-
+        cls.register_request = urllib2.Request(
+                register_url,
+                json.dumps(cls.environ.albert),
+                headers = {'Content-Type': 'application/json'}
+                )
         cls.albert = cls.environ.albert
-        cls.register_request.add_data(json.dumps(cls.albert))
 
     @classmethod
     def tearDownClass(cls):
@@ -65,13 +67,15 @@ class TestSubmitRegistration(unittest.TestCase):
         def submit_registration():
             try:
                 response = urllib2.urlopen(self.register_request)
-            except urllib2.HTTPError:
+            except urllib2.HTTPError, e:
                 self.fail(str(e))
         utils.try_until(1, submit_registration)
 
         method, header, body = self.channel.basic_get(queue='test_registration')
         actual_registration = json.loads(body)
         self.assertEquals(actual_registration, self.albert)
+
+
 
                 
 

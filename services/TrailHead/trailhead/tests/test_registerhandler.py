@@ -32,7 +32,11 @@ class TestRegisterHandlerHttp(unittest.TestCase):
 
     def test_returned_status_code(self):
         """On a good post should return a 202 Accepted status code"""
-        request = faketornado.HTTPRequestFake('post', '/app/register')
+        request = faketornado.HTTPRequestFake(
+                'post', 
+                '/app/register',
+                headers = {'Content-Type': 'application/json'}
+                )
         application = faketornado.WebApplicationFake()
         application.mq = PikaClient(fakepika.PikaConnectionFake, dict())
         application.mq.connect()
@@ -40,6 +44,21 @@ class TestRegisterHandlerHttp(unittest.TestCase):
         handler.post()
         
         self.assertEquals(handler._status_code, 202)
+
+    def test_returned_status_code(self):
+        """On a good post should return a 202 Accepted status code"""
+        request = faketornado.HTTPRequestFake(
+                'post', 
+                '/app/register',
+                headers = {'Content-Type': 'mulitpart/form-data'}
+                )
+        application = faketornado.WebApplicationFake()
+        application.mq = PikaClient(fakepika.PikaConnectionFake, dict())
+        application.mq.connect()
+        handler = RegisterHandler(application, request)
+        handler.post()
+        
+        self.assertEquals(handler._status_code, 400)
 
 class TestPublishesRegistration(unittest.TestCase):
 
@@ -60,7 +79,11 @@ class TestPublishesRegistration(unittest.TestCase):
                 if callback is not None:
                     callback(PikaChannel())
 
-        request = faketornado.HTTPRequestFake('post', '/app/register')
+        request = faketornado.HTTPRequestFake(
+                'post', 
+                '/app/register',
+                headers = {'Content-Type': 'application/json'}
+                )
         request.body = json.dumps(self.environ.douglas)
 
         application = faketornado.WebApplicationFake()
