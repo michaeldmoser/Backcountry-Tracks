@@ -1,3 +1,28 @@
+"""
+Pretends to be pika.adapters.select_connection.SelectConnection
+
+Usage:
+>>> connectionfake_class = SelectConnectionFake()
+>>> PikaUser(connectionfake_class)
+
+This will react like a SelectConnection object but in a blocking manner. It
+will record how it was used for verification later.
+
+To get messages that were published using this fake connection:
+>>> message = connectionfake_class.published_messages[0]
+>>> assert message.exchange == "example_exchange"
+>>> assert message.routing_key == "example.routing.key"
+>>> assert message.mandatory
+>>> assert message.immediate
+>>> assert message.properties == properties
+...
+
+"message" in the above case is a tptesting.fakepika.PikaMessage object.
+
+To inject messages and trigger the callbacks for channel.basic_consume():
+>>> connectionfake_class.inject(queue_name, header, body)
+>>> connectionfake_class.trigger_consume(queue_name)
+"""
 from pika import frame, spec
 import logging
 
