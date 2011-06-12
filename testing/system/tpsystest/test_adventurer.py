@@ -23,14 +23,14 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
         channel = mq_conn.channel()
         channel.exchange_declare(exchange='registration', type='topic')
         channel.queue_declare(
-                queue = 'registrations',
+                queue = 'register',
                 durable = False,
                 exclusive = False,
                 auto_delete = True
                 )
         channel.queue_bind(
                 exchange = 'registration',
-                queue = 'registrations',
+                queue = 'register',
                 routing_key = 'registration.register'
                 )
         cls.channel = channel

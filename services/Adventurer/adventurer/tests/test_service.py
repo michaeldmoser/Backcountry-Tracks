@@ -4,7 +4,7 @@ import json
 from pika import frame, spec
 import pika
 
-from tptesting import environment
+from tptesting import environment, fakepika
 
 from adventurer.service import Controller
 
@@ -30,13 +30,6 @@ class TestControllerDaemon(unittest.TestCase):
             pass
         self.pidfile = PIDFileStub()
 
-        class PikaConnectionStub(object):
-            def __init__(self, parameters, on_open_callback=None):
-                class ioloop(object):
-                    def start(ioloopself):
-                        pass
-                self.ioloop = ioloop()
-
         class AdventurerApplicationStub(object):
             def register(spy, data):
                 pass
@@ -46,7 +39,7 @@ class TestControllerDaemon(unittest.TestCase):
                 daemonizer = self.daemonizer,
                 pidfile = self.pidfile,
                 pika_params = dict(),
-                pika_connection = PikaConnectionStub,
+                pika_connection = fakepika.SelectConnectionFake(),
                 application = AdventurerApplicationStub
                 )
         app.run()
@@ -72,29 +65,7 @@ class TestControllerPika(unittest.TestCase):
                 pass
         self.DaemonContextStub = DaemonContextStub
 
-        class PikaConnectionSpy(object):
-            def __call__(spy, parameters, on_open_callback=None):
-                spy.ioloop_started = False
-                class ioloop(object):
-                    def start(ioloopself):
-                        spy.ioloop_started = True
-                spy.ioloop = ioloop()
-
-                spy.parameters = parameters
-                spy.on_open_callback = on_open_callback
-                on_open_callback(spy)
-
-                return spy
-
-            def channel(spy, callback=None):
-                spy.channel_callback = callback
-                class PikaChannelSpy(object):
-                    def basic_consume(channelspy, callback, queue=None):
-                        spy.consume_callback = callback
-                        spy.queue = queue
-                callback(PikaChannelSpy())
-
-        self.pika_connection = PikaConnectionSpy()
+        self.pika_connection = fakepika.SelectConnectionFake()
         self.parameters = dict(host='localhost')
 
         class AdventurerApplicationStub(object):
@@ -112,32 +83,13 @@ class TestControllerPika(unittest.TestCase):
     
     def test_pika_connection(self):
         '''Connects to rabbitmq'''
-        self.assertEquals(self.pika_connection.parameters, self.parameters)
-
-    def test_opens_channel(self):
-        '''Creates a channel on the Pika connection'''
-        self.assertTrue(hasattr(self.pika_connection, 'channel_callback'), 'No channel was opened')
-
-    def test_consumes_messages(self):
-        '''Starts consuming messages'''
-        expected_consume = {
-                'queue': 'registrations',
-                'callback': True
-                }
-        actual_consume = {
-                'queue': self.pika_connection.queue,
-                'callback': self.pika_connection.consume_callback is not None
-                }
-        self.assertEquals(actual_consume, expected_consume)
-
-    def test_ioloop_started(self):
-        '''The ioloop should be started'''
-        self.assertTrue(self.pika_connection.ioloop_started)
+        self.assertEquals(self.pika_connection.connection_parameters, self.parameters)
 
 class TestControllerConsumeMessage(unittest.TestCase):
 
     def test_consumes_messages(self):
         '''Can consume messages'''
+        environ = environment.create()
         class DaemonContextStub(object):
             def __init__(spy, pidfile=None):
                 pass
@@ -153,25 +105,6 @@ class TestControllerConsumeMessage(unittest.TestCase):
             pass
         self.pidfile = PIDFileStub()
 
-        class PikaConnectionSpy(object):
-            def __call__(spy, parameters, on_open_callback=None):
-                spy.ioloop_started = False
-                class ioloop(object):
-                    def start(ioloopself):
-                        pass
-                spy.ioloop = ioloop()
-                on_open_callback(spy)
-
-                return spy
-
-            def channel(spy, callback=None):
-                class PikaChannelSpy(object):
-                    def basic_consume(channelspy, callback, queue=None):
-                        spy.consume_callback = callback
-                spy.channel = PikaChannelSpy()
-                callback(spy.channel)
-        self.pika_connection = PikaConnectionSpy()
-        self.parameters = dict(host='localhost')
 
         class AdventurerApplicationSpy(object):
             def __call__(spy):
@@ -181,6 +114,9 @@ class TestControllerConsumeMessage(unittest.TestCase):
             def register(spy, data):
                 spy.register_data = data
         self.AdventurerApplicationSpy = AdventurerApplicationSpy()
+
+        self.pika_connection = fakepika.SelectConnectionFake()
+        self.parameters = dict(host='localhost')
 
         environ = environment.create()
         app = Controller(
@@ -199,8 +135,8 @@ class TestControllerConsumeMessage(unittest.TestCase):
         properties = pika.BasicProperties(content_type = 'application/json')
         header = frame.Header(1, len(albert_json), properties)
 
-        delivery_callback = self.pika_connection.consume_callback
-        delivery_callback(self.pika_connection.channel, method, header, albert_json)
+        self.pika_connection.inject('register', header, albert_json)
+        self.pika_connection.trigger_consume('register')
 
         self.assertEquals(self.AdventurerApplicationSpy.register_data, albert)
 

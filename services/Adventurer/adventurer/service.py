@@ -30,7 +30,7 @@ class Controller(object):
         self.begin_consuming()
 
     def begin_consuming(self):
-        self.channel.basic_consume(self.process_registration, queue='registrations')
+        self.channel.basic_consume(self.process_registration, queue='register')
 
     def process_registration(self, channel, method, header, data):
         self.app_instance.register(json.loads(data))
