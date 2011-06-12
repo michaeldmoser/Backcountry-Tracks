@@ -133,7 +133,7 @@ class ChannelFake(object):
 
     def basic_publish(self, exchange, routing_key, body, properties=None,
             mandatory=False, immediate=False):
-        self.message.append(PikaMessage(exchange, routing_key, body, 
+        self.messages.append(PikaMessage(exchange, routing_key, body, 
             properties, mandatory, immediate))
 
     @property

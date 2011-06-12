@@ -24,11 +24,6 @@ class TestRegisterHandler(unittest.TestCase):
         assert(issubclass(RegisterHandler, RequestHandler))
 
 class TestRegisterHandlerHttp(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
 
     def test_returned_status_code(self):
         """On a good post should return a 202 Accepted status code"""
@@ -38,8 +33,9 @@ class TestRegisterHandlerHttp(unittest.TestCase):
                 headers = {'Content-Type': 'application/json'}
                 )
         application = faketornado.WebApplicationFake()
-        application.mq = PikaClient(fakepika.PikaConnectionFake, dict())
+        application.mq = PikaClient(fakepika.SelectConnectionFake(), dict())
         application.mq.connect()
+
         handler = RegisterHandler(application, request)
         handler.post()
         
@@ -52,9 +48,12 @@ class TestRegisterHandlerHttp(unittest.TestCase):
                 '/app/register',
                 headers = {'Content-Type': 'mulitpart/form-data'}
                 )
+        pika_connection_class = fakepika.SelectConnectionFake()
         application = faketornado.WebApplicationFake()
-        application.mq = PikaClient(fakepika.PikaConnectionFake, dict())
+        application.mq = PikaClient(pika_connection_class, dict())
         application.mq.connect()
+        pika_connection_class.ioloop.start()
+
         handler = RegisterHandler(application, request)
         handler.post()
         
@@ -64,21 +63,6 @@ class TestPublishesRegistration(unittest.TestCase):
 
     def setUp(self):
         self.environ = environment.create()
-        class PikaConnectionFake(object):
-            def __call__(fake, params, on_open_callback=None):
-                on_open_callback(fake)
-
-            def channel(fake, callback=None):
-                class PikaChannel(object):
-                    def basic_publish(self, exchange=None, routing_key=None, body=None, properties=None):
-                        fake.message_body = body
-                        fake.exchange = exchange
-                        fake.routing_key = routing_key
-                        fake.properties = properties
-
-                if callback is not None:
-                    callback(PikaChannel())
-
         request = faketornado.HTTPRequestFake(
                 'post', 
                 '/app/register',
@@ -86,37 +70,40 @@ class TestPublishesRegistration(unittest.TestCase):
                 )
         request.body = json.dumps(self.environ.douglas)
 
+        pika_connection_class = fakepika.SelectConnectionFake()
         application = faketornado.WebApplicationFake()
-        application.mq = PikaClient(PikaConnectionFake(), dict())
+        application.mq = PikaClient(pika_connection_class, dict())
         application.mq.connect()
+        pika_connection_class.ioloop.start()
         self.application = application
+        self.pika = pika_connection_class
 
         handler = RegisterHandler(application, request)
         handler.post()
 
     def test_publish_registration_data(self):
         '''Pushlishes registration data to mq'''
-        received_body = json.loads(self.application.mq.connection.message_body)
+        received_body = json.loads(self.pika.published_messages[0].body)
         self.assertEquals(received_body, self.environ.douglas)
 
     def test_correct_exchange(self):
         '''Publishes to the correct exchange'''
-        actual_exchange = self.application.mq.connection.exchange
+        actual_exchange = self.pika.published_messages[0].exchange
         self.assertEquals(actual_exchange, 'registration')
 
     def test_correct_routing_key(self):
         '''Publishes with the correct routing key'''
-        actual_routing_key = self.application.mq.connection.routing_key
+        actual_routing_key = self.pika.published_messages[0].routing_key
         self.assertEquals(actual_routing_key, 'registration.register')
 
     def test_correct_content_type(self):
         '''Publishes message using json mime type'''
-        actual_mime_type = self.application.mq.connection.properties.content_type
+        actual_mime_type = self.pika.published_messages[0].properties.content_type
         self.assertEquals(actual_mime_type, 'application/json')
 
     def test_durablability(self):
         '''Message should be published as durable'''
-        actual_durability = self.application.mq.connection.properties.delivery_mode
+        actual_durability = self.pika.published_messages[0].properties.delivery_mode
         self.assertEquals(actual_durability, 2)
 
 if __name__ == '__main__':
