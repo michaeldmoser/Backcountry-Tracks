@@ -5,6 +5,9 @@ import time
 from os import path
 import urllib2
 
+import logging
+import logging.config
+
 from usertemplate import UserTemplate
 import riak
 
@@ -14,6 +17,33 @@ from .adventurer import AdventurerEnvironment
 from .riakenv import RiakEnvironment
 from .utils import wait_for_start
 from .rabbitmq import RabbitMQEnvironment
+
+default_logging_config = {
+        'version': 1,
+        'formatters': {
+            'simple': {
+                'format': "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                },
+            },
+        'handlers': {
+            'main': {
+                'class': 'tptesting.tplogging.MemoryLoggingHandler',
+                'level': 'DEBUG',
+                'formatter': 'simple',
+                },
+            },
+        'loggers': {
+            'main_logger': {
+                'level': 'DEBUG',
+                'handlers': ['main'],
+                'propagate': 'no',
+                },
+            },
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['main'],
+            },
+        }
 
 
 class TpEnvironment(object):
@@ -25,6 +55,8 @@ class TpEnvironment(object):
         self.adventurer = AdventurerEnvironment(self)
         self.riak = RiakEnvironment(self)
         self.rabbitmq = RabbitMQEnvironment(self)
+
+        logging.config.dictConfig(default_logging_config)
 
     def __getattr__(self, name):
         if self.__config.has_key(name):
