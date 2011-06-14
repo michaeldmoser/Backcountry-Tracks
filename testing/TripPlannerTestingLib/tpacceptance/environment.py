@@ -8,4 +8,9 @@ class Environment(object):
         self.tpenviron.make_pristine()
         self.tpenviron.bringup_infrastructure()
 
+    def add_user_to_application(self, user):
+        app_user = getattr(self.tpenviron, user)
+        self.tpenviron.create_user(app_user)
+
+
 

@@ -139,6 +139,12 @@ class TpEnvironment(object):
             except OSError:
                 pass
 
+    def create_user(self, user):
+        adventurers = self.riak.get_database('adventurers')
+        adventurer = adventurers.new(user.email, data=user)
+        adventurer.store()
+
+
 def create():
     # TODO: reading in the config file needs to be cached. Especially for unittesting
     environ_yaml = open('/etc/tptesting.yaml', 'r')

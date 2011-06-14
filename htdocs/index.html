@@ -29,6 +29,12 @@
 	<script type="text/javascript" >
 		$('#registerForm').tpRegistration({thankYouElement: $('#thankYouContainer')})
 	</script>
+<h1>Login</h1>
+<form id="login_form" action="/app/login" method="POST" enctype="multipart/form-data">
+    <div><label for="email">Email: </label><input type='input' name='email' id='email' /></div>
+    <div><label for="password">Password: </label><input type='password' name='password' id='password' /></div>
+</form>
+	
 </body>
 </html>
 
