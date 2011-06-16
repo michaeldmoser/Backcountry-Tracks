@@ -1,4 +1,4 @@
-server: {{ hostname }}:9876
+server: http://{{ hostname }}:9876
 
 basepath: {{ working_directory }}
 
