@@ -1,0 +1,13 @@
+server: {{ hostname }}:9876
+
+basepath: {{ working_directory }}
+
+load:
+  - htdocs/static/js/lib/underscore.js
+  - htdocs/static/js/lib/*.js
+  - htdocs/static/js/*.js
+
+  - testing/javascript/public/lib/qunit.js
+  - testing/javascript/public/lib/equiv.js
+  - testing/javascript/public/lib/QUnitAdapter.js
+  - testing/javascript/public/unit/*.js
