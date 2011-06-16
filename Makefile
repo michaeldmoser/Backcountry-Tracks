@@ -100,9 +100,20 @@ config/nginx.in/nginx.conf:
 	sudo ln -sf `pwd`/htdocs /srv/www
 	sudo chown -R `whoami`:`whoami` /srv/www
 
-testing-framework: robotframework tptesting systemtests integrationtests tptesting-config
+testing-framework: robotframework tptesting systemtests integrationtests tptesting-config nginx-config-test js-testing-config
 
 tptesting-config: /etc/tptesting.yaml
+
+js-testing-config: testing/etc/jsTestDriver.conf
+
+testing/etc/jsTestDriver.conf:
+	python testing/bin/build-js-test-driver-conf.py
+
+nginx-config-test: /srv/test
+
+/srv/test:
+	sudo ln -sf `pwd`/testing/javascript/public /srv/test
+	sudo chown -R `whoami`:`whoami` /srv/test
 
 /etc/tptesting.yaml: testing/etc/tptesting.yaml
 	sudo ln -sf `pwd`/testing/etc/tptesting.yaml /etc/tptesting.yaml
