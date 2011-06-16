@@ -71,7 +71,10 @@ test("test ajax sends content as application/json", function() {
   }
   testHelpers.form.tpRegisration().trigger("submit");
 
-  equal(contentType, 'application/json');
+  //for some reason jsTestDriver breaks on equal()
+  //use ok for now until a fix is found
+  //equal(contentType, 'application/json');
+  ok(contentType === 'application/json')
 });
 
 test("test ajax sends form as json", function() {
@@ -85,5 +88,6 @@ test("test ajax sends form as json", function() {
   }
   testHelpers.form.tpRegisration().trigger("submit");
 
-  equal(data, '{"test1":"1","test2":"2","test3":"3"}');
+  //equal(data, '{"test1":"1","test2":"2","test3":"3"}');
+  ok(data === '{"test1":"1","test2":"2","test3":"3"}')
 });
