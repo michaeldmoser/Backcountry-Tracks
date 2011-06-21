@@ -17,6 +17,7 @@ from .adventurer import AdventurerEnvironment
 from .riakenv import RiakEnvironment
 from .utils import wait_for_start
 from .rabbitmq import RabbitMQEnvironment
+from .nginx import NginxEnvironment
 
 default_logging_config = {
         'version': 1,
@@ -55,6 +56,7 @@ class TpEnvironment(object):
         self.adventurer = AdventurerEnvironment(self)
         self.riak = RiakEnvironment(self)
         self.rabbitmq = RabbitMQEnvironment(self)
+        self.nginx = NginxEnvironment(self)
 
         logging.config.dictConfig(default_logging_config)
 
@@ -88,6 +90,7 @@ class TpEnvironment(object):
         '''
         Starts all services which should be running for a functional system
         '''
+        self.nginx.start()
         self.rabbitmq.start()
         self.riak.start()
         self.adventurer.start()
@@ -117,6 +120,7 @@ class TpEnvironment(object):
         self.adventurer.stop()
         self.riak.stop()
         self.rabbitmq.stop()
+        self.nginx.stop()
 
     def start_trailhead(self):
         '''
