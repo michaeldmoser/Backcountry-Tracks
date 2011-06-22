@@ -4,10 +4,16 @@
 	lang="en">
 <head>
 	<title>Register</title>
+    <link rel="stylesheet" href="/static/js/lib/jquery-ui/1.8.13/themes/base/jquery-ui.css" type="text/css" media="screen">
+    <script type="text/javascript" src="/static/js/lib/underscore.js"></script>
+    <script type="text/javascript" src="/static/js/lib/backbone.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-1.6.1.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui/1.8.13/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/js/tripplanner.js"></script>
 </head>
 <body id="" >
 	<h1>Register</h1>
-	<form action="/app/register" method="POST" enctype="multipart/form-data">
+	<form id="registerForm" action="/app/register" method="POST" enctype="multipart/form-data">
 		<input name="first_name" id="first_name" type="text" value="first name" tabindex="1"  />
 		<input name="last_name" id="last_name" type="text" value="last name" tabindex="1"  />
 		<input name="email" id="email" type="text" value="email address" tabindex="3"  />
@@ -15,6 +21,13 @@
 		<input name="password" id="password" type="password" value="" tabindex="5"  />
 		<input name="password_again" id="password_again" type="password" value="" tabindex="6"  />
 		<input name="submit" id="submit" type="submit" value="Register" tabindex="7"  />
-	</form>	
+	</form>
+	<div id="thankYouContainer" style="display: none">
+		Thank You
+	</div>
+	<script type="text/javascript" >
+		$('#registerForm').tpRegistration({thankYouElement: $('#thankYouContainer')})
+	</script>
 </body>
 </html>
+
