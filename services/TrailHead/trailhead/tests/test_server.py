@@ -1,9 +1,11 @@
 import unittest
 
-from tptesting import environment
+from tptesting import environment, fakepika, faketornado, fakedaemonizer
 
 from trailhead.server import TrailHead, RootHandler
 from trailhead.register import RegisterHandler
+from trailhead.login import LoginHandler
+from trailhead.mq import PikaClient
 
 class TestTrailHeadTornado(unittest.TestCase):
     '''
@@ -66,11 +68,6 @@ class TestTrailHeadTornado(unittest.TestCase):
             def __exit__(self, exc_type, exc_value, traceback):
                 pass
 
-        class PikaClientStub(object):
-            def connect(stub):
-                stub.connected = True
-        self.pikastub = PikaClientStub
-
         class PidFile(object):
             pass
 
@@ -78,15 +75,18 @@ class TestTrailHeadTornado(unittest.TestCase):
         self.webapp = TornadoWebApplication()
         self.daemonizer = Daemonizer()
         self.pidfile = PidFile()
+        self.pika_class = fakepika.SelectConnectionFake()
 
         self.trailhead = TrailHead(
                 daemonizer=self.daemonizer,
                 ioloop=self.ioloop,
                 webapp=self.webapp,
-                mqclient=PikaClientStub(),
+                mqclient=PikaClient(self.pika_class, None), # fake it till you make it
                 pidfile=self.pidfile
                 )
         self.trailhead.run()
+        # FIXME: Need to find a better way to activate this in tests
+        self.pika_class.ioloop.start() 
 
     def tearDown(self):
         pass
@@ -130,11 +130,61 @@ class TestTrailHeadTornado(unittest.TestCase):
 
     def test_adds_pika_to_application(self):
         '''PikaClient should be on the application instance'''
-        assert(isinstance(self.webapp.mq, self.pikastub))
+        self.assertIsInstance(self.webapp.mq, PikaClient)
 
     def test_connects_to_mq(self):
         '''Should create a connection to the message queue'''
-        assert(self.webapp.mq.connected)
+        self.assertIn('connected', self.pika_class.usage)
+
+    def test_adds_login_handler(self):
+        '''The login handler should be added to the routes'''
+        expected_route = (r'/app/login', LoginHandler)
+        routes = self.webapp.routes
+
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
+
+class TestTrailHeadReplyQueue(unittest.TestCase):
+
+    def setUp(self):
+        self.pika_class = fakepika.SelectConnectionFake()
+        self.webapp = faketornado.WebApplicationFake()
+        self.trailhead = TrailHead(
+                daemonizer=fakedaemonizer.Daemonizer(),
+                ioloop=faketornado.ioloop,
+                webapp=self.webapp,
+                mqclient=PikaClient(self.pika_class, None), # fake it till you make it
+                pidfile=fakedaemonizer.PidFile()
+                )
+        self.trailhead.run()
+
+        # FIXME: Need to find a better way to activate this in tests
+        self.pika_class.ioloop.start() 
+
+    def test_reply_queue_created(self):
+        '''TrailHead() should create a reply queue for rpc requests'''
+        queues = self.pika_class.get_queues()
+        self.assertGreater(len(queues), 0)
+
+    def test_reply_queue_declaration(self):
+        '''Reply queue created correctly'''
+        reply_queue = self.pika_class.get_queues()[0]
+        queue = self.pika_class.get_queue_declaration(reply_queue)
+
+        expected_declaration = {
+                'exclusive': True,
+                'durable': False,
+                'auto_delete': True,
+                'passive': False
+                }
+        self.assertDictContainsSubset(expected_declaration, queue)
+
+    def test_reply_queue_name(self):
+        '''Name saved for use by handlers'''
+        reply_queue = self.pika_class.get_queues()[0]
+        self.assertEquals(reply_queue, self.webapp.mq.rpc_reply)
 
 
 if __name__ == '__main__':

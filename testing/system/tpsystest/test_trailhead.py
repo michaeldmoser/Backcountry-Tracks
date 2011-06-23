@@ -31,6 +31,7 @@ class TestSubmitRegistration(unittest.TestCase):
                 )
         cls.channel = channel
 
+        cls.environ.nginx.start()
         cls.environ.start_trailhead()
 
         register_url = '/'.join([cls.environ.trailhead_url, 'register'])
@@ -76,9 +77,6 @@ class TestSubmitRegistration(unittest.TestCase):
         self.assertEquals(actual_registration, self.albert)
 
 
-
-                
-
-
 if __name__ == '__main__':
     unittest.main()
+

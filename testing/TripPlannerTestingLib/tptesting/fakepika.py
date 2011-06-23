@@ -23,8 +23,10 @@ To inject messages and trigger the callbacks for channel.basic_consume():
 >>> connectionfake_class.inject(queue_name, header, body)
 >>> connectionfake_class.trigger_consume(queue_name)
 """
-from pika import frame, spec
 import logging
+import uuid
+
+from pika import frame, spec, exceptions
 
 class PikaMessage(object):
     def __init__(self, exchange, routing_key, body, properties,
@@ -78,6 +80,10 @@ class ChannelFake(object):
         self.injected = dict()
 
         self.consumers = dict()
+
+        self.exchanges = dict()
+        self.queues = dict()
+        self.bindings = list()
 
     def inject(self, queue, header, body):
         if not self.injected.has_key(queue):
@@ -157,18 +163,60 @@ class ChannelFake(object):
 
     def exchange_declare(self, callback=None, ticket=0, exchange=None, type='direct',
             passive=False, durable=False, auto_delete=False, internal=False,
-            nowait=False, arguments=False):
-        raise NotImplementedError
+            nowait=False, arguments={}):
+        new_exchange = {
+                'type': type,
+                'passive': passive,
+                'durable': durable,
+                'auto_delete': auto_delete,
+                'internal': internal,
+                'nowait': nowait,
+                'arguments': arguments
+                }
+        if self.exchanges.has_key(exchange):
+            if new_exchange != self.exchanges[exchange]:
+                raise exceptions.AMQPChannelError
+        
+        self.exchanges[exchange] = new_exchange
 
     def exchange_delete(self, callback=None, ticket=0, exchange=None, if_unused=False,
             nowait=False):
         raise NotImplementedError
 
     def queue_declare(self, callback=None, ticket=0, queue='', passive=False, durable=False, exclusive=False, auto_delete=False, nowait=False, arguments={}):
-        raise NotImplementedError
+        new_queue = {
+                'passive': passive,
+                'durable': durable,
+                'exclusive': exclusive,
+                'auto_delete': auto_delete,
+                'nowait': nowait,
+                'arguments': arguments,
+                }
+        if len(queue) < 1:
+            queue = str(uuid.uuid4())
+
+        if self.queues.has_key(queue):
+            if new_queue != self.queues[queue]:
+                raise exceptions.AMQPChannelError
+
+        if callable(callback):
+            queue_declare_method = spec.Queue.DeclareOk(queue=queue, message_count=0, consumer_count=0)
+            queue_frame = frame.Method(0, queue_declare_method)
+            callback(queue_frame)
+            
+
+        self.queues[queue] = new_queue
 
     def queue_bind(self, callback=None, ticket=0, queue='', exchange=None, routing_key='', nowait=False, arguments={}):
-        raise NotImplementedError
+        new_binding = {
+                'queue': queue,
+                'exchange': exchange,
+                'routing_key': routing_key,
+                'nowait': nowait,
+                'arguments': arguments
+                }
+        self.bindings.append(new_binding)
+
 
     def queue_purge(self, callback=None, ticket=0, queue='', nowait=False):
         raise NotImplementedError
@@ -237,12 +285,18 @@ class SelectConnectionFake(object):
     def __init__(self):
         self.ioloop = IOLoopFake(self.start_callback)
         self._channel = ChannelFake(self)
+        self.__usage = list()
 
     @property
     def published_messages(self):
         return self._channel.messages
 
+    @property
+    def usage(self):
+        return self.__usage
+
     def start_callback(self):
+        self.__usage.append('connected')
         if self.on_open_callback is None:
             return
 
@@ -255,6 +309,65 @@ class SelectConnectionFake(object):
     def trigger_consume(self, queue):
         self._channel.trigger_consume(queue)
 
+    def get_exchange_declaration(self, exchange):
+        try:
+            return self._channel.exchanges[exchange]
+        except KeyError:
+            return {}
+
+    def get_queue_declaration(self, queue):
+        try:
+            return self._channel.queues[queue]
+        except KeyError:
+            return {}
+
+    def get_queues(self):
+        return self._channel.queues.keys()
+
+    def get_bindings(self):
+        return self._channel.bindings
+
+    def find_binding(self, needle):
+        '''
+        Searches for the a particular binding and returns it. Returns an empty dict()
+        if there is no matching binding.
+
+        @needle should be a dict() with the keys queue, exchange, and routing_key. This
+            is what the searching will be based on.
+        '''
+        bindings = self.get_bindings()
+
+        for binding in bindings:
+            binding_match = {
+                    'queue': binding['queue'],
+                    'exchange': binding['exchange'],
+                    'routing_key': binding['routing_key'],
+                    }
+            if needle == binding_match:
+                return binding
+
+        return dict()
+
+    def was_called(self, method):
+        '''
+        Returns True if method was called otherwise returns false
+
+        method is function object instance on this class
+        '''
+        for method_call in self.__usage:
+            instancemethod = method_call[0]
+
+            if not callable(instancemethod):
+                continue
+
+            unbound_method = getattr(instancemethod.im_class, instancemethod.__name__)
+            search_unbound_method = getattr(method.im_class, method.__name__)
+            if unbound_method == search_unbound_method:
+                return True
+
+        return False
+
+
 ###
 ### These methods are part of the Pika API, these can/should be used
 ### in production code
@@ -265,11 +378,10 @@ class SelectConnectionFake(object):
         self.on_open_callback = on_open_callback
         self.connection_parameters = parameters
 
+        self.__usage.append((self.__init__, (parameters, on_open_callback, reconnection_strategy)))
+
         return self
 
-    @property
-    def usage(self):
-        return self._usage
 
     def close(self):
         raise NotImplementedError
@@ -298,6 +410,78 @@ class SelectConnectionFake(object):
 
     def channel(self, on_open_callback, channel_number=None):
         logging.debug("Calling channel's on_open_callback")
+        self.__usage.append((self.channel, (on_open_callback, channel_number)))
         on_open_callback(self._channel)
 
 
+class BlockingChannelFake(ChannelFake):
+
+    ###
+    ### These methods are part of the Pika API
+    ###
+
+    def basic_get(self, ticket=0, queue='', no_ack=False):
+        raise NotImplementedError
+
+
+class BlockingConnectionFake(SelectConnectionFake):
+    """
+    Pretends to be pika.adapters.select_connection.BlockingConnection
+
+    Usage:
+    >>> connectionfake = BlockingConnectionFake()
+    >>> FakeConnectionUser(connectionfake)
+
+    This will react like a SelectConnection object but in a blocking manner. It
+    will record how it was used for verification later.
+
+    To get the record of usage do:
+    >>> record = connectionfake.usage
+
+    To get messages that were published using this fake connection:
+    >>> messages = connectionfake.published_messages
+
+    To inject messages and trigger the callbacks for channel.basic_consume():
+    >>> connectionfake.inject(header, body)
+    >>> connectionfake.trigger_consume()
+    """
+
+###
+### These methods are part of the Fake objects API, do not
+### use them in production code
+###
+
+    def __init__(self):
+        self.ioloop = IOLoopFake(self.start_callback)
+        self._channel = BlockingChannelFake(self)
+
+    @property
+    def published_messages(self):
+        return self._channel.messages
+
+    def start_callback(self):
+        if self.on_open_callback is None:
+            return
+
+        logging.debug('calling on_open_callback: %s' % self.on_open_callback.__name__)
+        self.on_open_callback(self)
+
+    def inject(self, queue, header, body):
+        self._channel.inject(queue, header, body)
+
+    def trigger_consume(self, queue):
+        self._channel.trigger_consume(queue)
+
+###
+### These methods are part of the Pika API, these can/should be used
+### in production code
+###
+    def __call__(self, parameters=None, reconnection_strategy=None):
+        logging.debug('SelectConnection initialized')
+        self.connection_parameters = parameters
+
+        return self
+
+    def channel(self, channel_number=None):
+        logging.debug("Calling channel's on_open_callback")
+        return self._channel

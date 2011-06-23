@@ -52,6 +52,7 @@ class TestRegisterHandlerHttp(unittest.TestCase):
                 )
         pika_connection_class = fakepika.SelectConnectionFake()
         application = faketornado.WebApplicationFake()
+        application()
         application.mq = PikaClient(pika_connection_class, dict())
         application.mq.connect()
         pika_connection_class.ioloop.start()
@@ -74,6 +75,7 @@ class TestPublishesRegistration(unittest.TestCase):
 
         pika_connection_class = fakepika.SelectConnectionFake()
         application = faketornado.WebApplicationFake()
+        application()
         application.mq = PikaClient(pika_connection_class, dict())
         application.mq.connect()
         pika_connection_class.ioloop.start()

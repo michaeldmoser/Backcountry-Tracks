@@ -1,5 +1,6 @@
 from tornado.web import Application, RequestHandler
 from trailhead.register import RegisterHandler
+from trailhead.login import LoginHandler
 
 class RootHandler(RequestHandler):
     def get(self):
@@ -22,6 +23,7 @@ class TrailHead(object):
             app = self.webapp([
                 (r'/', RootHandler),
                 (r'/app/register', RegisterHandler),
+                (r'/app/login', LoginHandler),
                 ])
             app.listen(8080)
 

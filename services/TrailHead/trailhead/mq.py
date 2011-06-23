@@ -1,3 +1,4 @@
+import pdb
 
 class PikaClient(object):
     def __init__(self, connection, params):
@@ -22,4 +23,10 @@ class PikaClient(object):
 
     def on_channel_opened(self, channel):
         self.channel = channel
+        self.create_rpc_reply_queue()
 
+    def create_rpc_reply_queue(self):
+        self.channel.queue_declare(callback=self.rpc_queue_declared, exclusive = True, auto_delete = True)
+
+    def rpc_queue_declared(self, queue):
+        self.rpc_reply = queue.method.queue

@@ -5,7 +5,10 @@ import cgi
 
 class WebApplicationFake(object):
 
-    def __init__(self, handlers=None, default_host='', transforms=None, 
+    def __init__(self):
+        self.__usage = list()
+
+    def __call__(self, handlers=None, default_host='', transforms=None, 
             wsgi=False, **settings):
         self.handlers = handlers
         self.default_host = default_host
@@ -14,20 +17,38 @@ class WebApplicationFake(object):
         self.ui_methods = {}
         self.ui_modules = {}
 
+        return self
+
     def add_handlers(self, host_pattern, host_handlers):
         raise NotImplementedError
 
     def add_transform(self, transform_class):
         raise NotImplementedError
 
-    def listen(self, port, address='', **kwards):
-        raise NotImplementedError
+    def listen(self, port, address='', **kwargs):
+        self.__usage.append((self.listen, (port, address, kwargs)))
 
     def log_request(self, handler):
         raise NotImplementedError
 
     def reverse_url(self, name, *args):
         raise NotImplementedError
+
+class IOLoopFake(object):
+    def start(self):
+        pass
+
+    def add_timeout(self, timeout, connect):
+        connect()
+
+
+class ioloop(object):
+
+    class IOLoop(object):
+        @staticmethod
+        def instance():
+            return IOLoopFake()
+
 
 class HTTPRequestFake(object):
 
