@@ -1,4 +1,5 @@
 import json
+import pika
 
 class Controller(object):
     
@@ -31,9 +32,27 @@ class Controller(object):
 
     def begin_consuming(self):
         self.channel.basic_consume(self.process_registration, queue='register')
+        self.channel.basic_consume(self.process_login, queue='login_rpc')
 
     def process_registration(self, channel, method, header, data):
         self.app_instance.register(json.loads(data))
         # TODO: The message needs to be ack()'ed
+
+    def process_login(self, channel, method, header, data):
+        login = json.loads(data)
+        result = self.app_instance.login(login['email'], login['password'])
+
+        properties = pika.BasicProperties(
+                correlation_id = header.correlation_id,
+                content_type = 'application/json'
+                )
+
+        login_reply = json.dumps({
+            'successful': result
+            })
+        self.channel.basic_publish(exchange='adventurer', 
+                routing_key=header.reply_to, properties=properties,
+                body=login_reply)
+        
 
         

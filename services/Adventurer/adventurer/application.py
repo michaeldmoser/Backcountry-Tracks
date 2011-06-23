@@ -11,3 +11,15 @@ class Application(object):
         new_registration = self.bucket.new(data['email'], data = data)
         new_registration.store()
 
+    def login(self, email, password):
+        '''
+        Validates user crendentials and returns true if the email/password combination exists
+        '''
+        user_object = self.bucket.get(email)
+        user = user_object.get_data()
+        if user['password'] == password:
+            return True
+        else:
+            return False
+        
+

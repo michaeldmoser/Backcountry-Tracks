@@ -13,6 +13,7 @@ class TestRegisterHandler(unittest.TestCase):
         cls.environ.make_pristine()
         cls.environ.rabbitmq.start_server()
 
+        cls.environ.nginx.start()
         cls.environ.start_trailhead()
 
         cls.register_url = '/'.join([cls.environ.trailhead_url, 'register'])

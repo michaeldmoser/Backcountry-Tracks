@@ -139,6 +139,9 @@ class ChannelFake(object):
 
     def basic_consume(self, consumer_callback, queue='', no_ack=False,
             exclusive=False, consumer_tag=None):
+        self.connection.record_usage(self.basic_consume, consumer_callback, queue=queue,
+                no_ack=no_ack, exclusive=exclusive, consumer_tag=consumer_tag)
+
         if not self.consumers.has_key(queue):
             self.consumers[queue] = list()
 
@@ -366,6 +369,9 @@ class SelectConnectionFake(object):
                 return True
 
         return False
+
+    def record_usage(self, method, *args, **kwargs):
+        self.__usage.append((method, args, kwargs))
 
 
 ###

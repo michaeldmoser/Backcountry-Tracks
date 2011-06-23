@@ -1,5 +1,7 @@
 import subprocess
 
+import pika
+
 def parse_bool_string(string):
     return True if string == 'true' else False
 
@@ -8,6 +10,8 @@ class RabbitMQEnvironment(object):
     def __init__(self, environment):
         self.environ = environment
         self.devnull = self.environ.devnull
+        self.__channel = None
+        self.__connection = None
 
     def make_pristine(self):
         '''
@@ -152,5 +156,18 @@ class RabbitMQEnvironment(object):
                 })
 
         return bindings
+
+    def channel(self):
+        '''Get an open channel to the rabbitmq server'''
+        if self.__channel is not None:
+            return self.__channel
+
+        parameters = pika.ConnectionParameters(host='localhost')
+        self.__connection = pika.BlockingConnection(parameters)
+
+        self.__channel = self.__connection.channel()
+
+        return self.__channel
+
 
 

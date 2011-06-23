@@ -31,5 +31,13 @@ class AdventurerEnvironment(object):
 
         os.unlink(self.config['pidfile'])
 
+    def create_user(self, name):
+        '''Creates a known user in the adventurer database'''
+        riak = self.environment.riak.get_database('adventurers')
+
+        user_to_create = getattr(self.environment, name.lower())
+        user = riak.new(user_to_create.email, user_to_create)
+        user.store()
+
 
 

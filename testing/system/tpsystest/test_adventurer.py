@@ -1,6 +1,7 @@
 import unittest
 import json
 from os import path
+import uuid
 
 import pika.adapters
 import pika.connection
@@ -84,6 +85,57 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
 
             self.assertEquals(albert_data, self.albert)
         utils.try_until(1, check_registration_stored)
+
+class TestAdventurerServiceLogins(unittest.TestCase):
+
+    def test_returns_successful_login(self):
+        '''Valid credentials should return a sucessful login'''
+        environ = environment.create()
+        environ.make_pristine()
+
+        environ.rabbitmq.start()
+        environ.riak.start()
+        environ.adventurer.start()
+
+        channel = environ.rabbitmq.channel()
+        reply_to_queue = channel.queue_declare(auto_delete=True)
+        reply_to = reply_to_queue.method.queue
+        reply_routing = 'adventurer.login.' + reply_to
+        channel.queue_bind(exchange='adventurer', queue=reply_to,
+                routing_key=reply_routing)
+
+        environ.adventurer.create_user('albert') 
+
+
+        properties = pika.BasicProperties(
+                content_type = 'application/json',
+                correlation_id = str(uuid.uuid4()),
+                reply_to = reply_routing
+                )
+
+        login_message = json.dumps({
+                'email': environ.albert.email,
+                'password': environ.albert.password,
+                })
+        channel.basic_publish(
+                exchange = 'adventurer',
+                routing_key = 'adventurer.login',
+                properties = properties,
+                body = login_message
+                )
+
+        def verify_successful_login():
+            method, header, body = channel.basic_get(queue=reply_to)
+            if method.name == 'Basic.GetEmpty':
+                self.fail("No login reply received")
+
+            login_reply = json.loads(body)
+            expected_reply = {
+                    'successful': True
+                    }
+            self.assertEquals(login_reply, expected_reply)
+        utils.try_until(1, verify_successful_login)
+
 
 if __name__ == '__main__':
     unittest.main()
