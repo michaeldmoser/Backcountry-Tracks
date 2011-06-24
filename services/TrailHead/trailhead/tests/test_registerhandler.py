@@ -25,26 +25,28 @@ class TestRegisterHandler(unittest.TestCase):
 
 class TestRegisterHandlerHttp(unittest.TestCase):
 
-    def test_returned_status_code(self):
+    def test_returned_status_code_202(self):
         """On a good post should return a 202 Accepted status code"""
         request = faketornado.HTTPRequestFake(
-                'post', 
+                'post',
                 '/app/register',
-                headers = {'Content-Type': 'application/json'}
+                headers = {'Content-Type': 'application/json; charset=UTF-8'}
                 )
+        pika_connection_class = fakepika.SelectConnectionFake()
         application = faketornado.WebApplicationFake()
-        application.mq = PikaClient(fakepika.SelectConnectionFake(), dict())
+        application.mq = PikaClient(pika_connection_class, dict())
         application.mq.connect()
+        pika_connection_class.ioloop.start()
 
         handler = RegisterHandler(application, request)
         handler.post()
-        
+
         self.assertEquals(handler._status_code, 202)
 
-    def test_returned_status_code(self):
-        """On a good post should return a 202 Accepted status code"""
+    def test_returned_status_code_400(self):
+        """On a bad post should return a 400 bad data status code"""
         request = faketornado.HTTPRequestFake(
-                'post', 
+                'post',
                 '/app/register',
                 headers = {'Content-Type': 'mulitpart/form-data'}
                 )
@@ -56,7 +58,7 @@ class TestRegisterHandlerHttp(unittest.TestCase):
 
         handler = RegisterHandler(application, request)
         handler.post()
-        
+
         self.assertEquals(handler._status_code, 400)
 
 class TestPublishesRegistration(unittest.TestCase):
@@ -64,7 +66,7 @@ class TestPublishesRegistration(unittest.TestCase):
     def setUp(self):
         self.environ = environment.create()
         request = faketornado.HTTPRequestFake(
-                'post', 
+                'post',
                 '/app/register',
                 headers = {'Content-Type': 'application/json'}
                 )

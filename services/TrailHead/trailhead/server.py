@@ -7,7 +7,7 @@ class RootHandler(RequestHandler):
 
 class TrailHead(object):
 
-    def __init__(self, daemonizer=None, ioloop=None, webapp=None, mqclient=None, 
+    def __init__(self, daemonizer=None, ioloop=None, webapp=None, mqclient=None,
             pidfile=None):
         self.daemonize = daemonizer
         self.ioloop = ioloop

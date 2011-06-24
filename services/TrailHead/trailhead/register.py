@@ -5,7 +5,7 @@ from tornado.web import RequestHandler
 
 class RegisterHandler(RequestHandler):
     def post(self):
-        if not self.request.headers.get('Content-Type') == 'application/json':
+        if 'application/json' not in self.request.headers.get('Content-Type'):
             self.set_status(400)
             return
 
@@ -15,7 +15,7 @@ class RegisterHandler(RequestHandler):
                 delivery_mode = 2
                 )
         mq.channel.basic_publish(
-                exchange = 'registration', 
+                exchange = 'registration',
                 routing_key = 'registration.register',
                 body = self.request.body,
                 properties = properties

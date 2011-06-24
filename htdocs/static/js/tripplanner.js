@@ -40,7 +40,7 @@
       success: function(data, textStatus, jqXHR) {
         $.fn.tpRegistration.handleSuccess.call($this, data, textStatus, jqXHR)
       }
-    }, 'json');
+    });
   };
 
   $.fn.tpRegistration.handleSuccess = function(data, textStatus, jqXHR) {
