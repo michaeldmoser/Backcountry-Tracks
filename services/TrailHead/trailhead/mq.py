@@ -30,3 +30,8 @@ class PikaClient(object):
 
     def rpc_queue_declared(self, queue):
         self.rpc_reply = queue.method.queue
+        self.bind_reply_queue()
+
+    def bind_reply_queue(self):
+        self.channel.queue_bind(exchange='adventurer', queue=self.rpc_reply,
+                routing_key='adventurer.login.%s' % self.rpc_reply)

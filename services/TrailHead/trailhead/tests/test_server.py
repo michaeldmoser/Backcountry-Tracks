@@ -146,47 +146,6 @@ class TestTrailHeadTornado(unittest.TestCase):
         except ValueError, e:
             self.fail(str(e))
 
-class TestTrailHeadReplyQueue(unittest.TestCase):
-
-    def setUp(self):
-        self.pika_class = fakepika.SelectConnectionFake()
-        self.webapp = faketornado.WebApplicationFake()
-        self.trailhead = TrailHead(
-                daemonizer=fakedaemonizer.Daemonizer(),
-                ioloop=faketornado.ioloop,
-                webapp=self.webapp,
-                mqclient=PikaClient(self.pika_class, None), # fake it till you make it
-                pidfile=fakedaemonizer.PidFile()
-                )
-        self.trailhead.run()
-
-        # FIXME: Need to find a better way to activate this in tests
-        self.pika_class.ioloop.start() 
-
-    def test_reply_queue_created(self):
-        '''TrailHead() should create a reply queue for rpc requests'''
-        queues = self.pika_class.get_queues()
-        self.assertGreater(len(queues), 0)
-
-    def test_reply_queue_declaration(self):
-        '''Reply queue created correctly'''
-        reply_queue = self.pika_class.get_queues()[0]
-        queue = self.pika_class.get_queue_declaration(reply_queue)
-
-        expected_declaration = {
-                'exclusive': True,
-                'durable': False,
-                'auto_delete': True,
-                'passive': False
-                }
-        self.assertDictContainsSubset(expected_declaration, queue)
-
-    def test_reply_queue_name(self):
-        '''Name saved for use by handlers'''
-        reply_queue = self.pika_class.get_queues()[0]
-        self.assertEquals(reply_queue, self.webapp.mq.rpc_reply)
-
-
 if __name__ == '__main__':
     unittest.main()
 

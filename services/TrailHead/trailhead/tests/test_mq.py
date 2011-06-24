@@ -7,28 +7,9 @@ from trailhead.mq import PikaClient
 class TestPikaClient(unittest.TestCase):
     def setUp(self):
         """PikaClient.connect() creates connection to RabbitMQ"""
-        class PikaChannelStub(object):
-            pass
-        self.pikachannel = PikaChannelStub
-
-        class PikaConnectionFake(object):
-            def __call__(fake, params, on_open_callback=None):
-                fake.params = params
-                fake.on_open_callback = on_open_callback
-                on_open_callback(fake)
-
-                return fake
-
-            def channel(fake, callback=None):
-                fake.channel_opened = True
-                if callback is not None:
-                    callback(PikaChannelStub())
-
         # This is simulating a pika.ConnectionParameters object which should
         # remain as a complete black box to the SUT
         self.connection_params = dict(host='localhost')            
-        self.connection = PikaConnectionFake()
-
         self.connection = fakepika.SelectConnectionFake()
         self.connection()
 
@@ -58,6 +39,50 @@ class TestPikaClient(unittest.TestCase):
         self.client.connect()
         self.connection.ioloop.start()
         self.assertIsInstance(self.client.channel, fakepika.ChannelFake)
+
+    def test_reply_queue_created(self):
+        '''TrailHead() should create a reply queue for rpc requests'''
+        self.client.connect()
+        self.connection.ioloop.start()
+        queues = self.connection.get_queues()
+        self.assertGreater(len(queues), 0)
+
+    def test_reply_queue_declaration(self):
+        '''Reply queue created correctly'''
+        self.client.connect()
+        self.connection.ioloop.start()
+        reply_queue = self.connection.get_queues()[0]
+        queue = self.connection.get_queue_declaration(reply_queue)
+
+        expected_declaration = {
+                'exclusive': True,
+                'durable': False,
+                'auto_delete': True,
+                'passive': False
+                }
+        self.assertDictContainsSubset(expected_declaration, queue)
+
+    def test_reply_queue_name(self):
+        '''Name saved for use by handlers'''
+        self.client.connect()
+        self.connection.ioloop.start()
+        reply_queue = self.connection.get_queues()[0]
+        self.assertEquals(reply_queue, self.client.rpc_reply)
+
+    def test_binding_on_reply_queue(self):
+        '''Should create a binding between the adventurer exchange and the reply queue'''
+        self.client.connect()
+        self.connection.ioloop.start()
+
+        binding_query = {
+                'exchange': 'adventurer',
+                'queue': self.client.rpc_reply,
+                'routing_key': 'adventurer.login.%s' % self.client.rpc_reply,
+                }
+        binding = self.connection.find_binding(binding_query)
+
+        self.assertTrue(binding != dict())
+
 
 if __name__ == '__main__':
     unittest.main()
