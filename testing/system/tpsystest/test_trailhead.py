@@ -40,7 +40,7 @@ class TestSubmitRegistration(unittest.TestCase):
     def tearDownClass(cls):
         cls.environ.teardown()
 
-    def notest_submit_valid_registration(self):
+    def test_submit_valid_registration(self):
         """Submitting a valid registration should return successful"""
         def assert_valid_response():
             try:

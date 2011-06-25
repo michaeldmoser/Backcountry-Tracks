@@ -6,6 +6,11 @@ from tornado import web
 class LoginHandler(web.RequestHandler):
     @web.asynchronous
     def post(self):
+        if 'application/json' not in self.request.headers.get('Content-Type'):
+            self.set_status(400)
+            self.finish()
+            return
+
         mq = self.application.mq
         correlation_id = str(uuid.uuid4())
         properties = pika.BasicProperties(

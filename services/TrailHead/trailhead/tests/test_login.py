@@ -7,6 +7,43 @@ from tptesting import faketornado, environment, fakepika
 from trailhead.mq import PikaClient
 from trailhead.login import LoginHandler
 
+class TestLoginHTTPRequest(unittest.TestCase):
+    def setUp(self):
+        environ = environment.create()
+
+        self.credentials = {
+            'email': environ.ramona.email,
+            'password': environ.ramona.password,
+            }
+        self.request = faketornado.HTTPRequestFake(
+                'post', 
+                '/app/login',
+                headers = {'Content-Type': 'multipart/form-data'}
+                )
+        self.request.body = json.dumps(self.credentials)
+
+        pika_connection_class = fakepika.SelectConnectionFake()
+        self.application = faketornado.WebApplicationFake()
+        self.application()
+        self.application.mq = PikaClient(pika_connection_class, dict())
+        self.application.mq.connect()
+        pika_connection_class.ioloop.start()
+        self.pika = pika_connection_class
+
+        self.handler = LoginHandler(self.application, self.request)
+        self.handler._transforms = []
+        self.handler.post()
+
+    def test_rejects_non_json_content(self):
+        '''Should not accept non-json content'''
+        self.assertEquals(self.handler._status_code, 400)
+
+    def test_finishes_request(self):
+        '''Inform tornado the request is finished'''
+        self.assertTrue(self.request.was_called(self.request.finish))
+
+
+
 class TestSendsLoginRequest(unittest.TestCase):
     def setUp(self):
         environ = environment.create()
