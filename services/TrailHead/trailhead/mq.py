@@ -1,9 +1,10 @@
-import pdb
 
 class PikaClient(object):
     def __init__(self, connection, params):
         self.connection = connection
         self.params = params
+
+        self.rpc_replies = dict()
 
     def connect(self):
         '''
@@ -30,3 +31,20 @@ class PikaClient(object):
 
     def rpc_queue_declared(self, queue):
         self.rpc_reply = queue.method.queue
+        self.bind_reply_queue()
+        self.consume_reply_messages()
+
+    def bind_reply_queue(self):
+        self.channel.queue_bind(exchange='adventurer', queue=self.rpc_reply,
+                routing_key='adventurer.login.%s' % self.rpc_reply)
+
+    def consume_reply_messages(self):
+        self.channel.basic_consume(self.receive_message, queue=self.rpc_reply)
+
+    def receive_message(self, channel, method, headers, body):
+        correlation_id = headers.correlation_id
+        self.rpc_replies[correlation_id](headers, body)
+
+    def register_rpc_reply(self, correlation_id, callback):
+        self.rpc_replies[correlation_id] = callback
+

@@ -38,7 +38,7 @@ class TestRegisterHandlerHttp(unittest.TestCase):
         application.mq.connect()
         pika_connection_class.ioloop.start()
 
-        handler = RegisterHandler(application, request)
+        handler = RegisterHandler(application(), request)
         handler.post()
 
         self.assertEquals(handler._status_code, 202)
@@ -57,7 +57,7 @@ class TestRegisterHandlerHttp(unittest.TestCase):
         application.mq.connect()
         pika_connection_class.ioloop.start()
 
-        handler = RegisterHandler(application, request)
+        handler = RegisterHandler(application(), request)
         handler.post()
 
         self.assertEquals(handler._status_code, 400)
@@ -82,7 +82,7 @@ class TestPublishesRegistration(unittest.TestCase):
         self.application = application
         self.pika = pika_connection_class
 
-        handler = RegisterHandler(application, request)
+        handler = RegisterHandler(application(), request)
         handler.post()
 
     def test_publish_registration_data(self):

@@ -11,18 +11,12 @@ class TestSubmitRegistration(unittest.TestCase):
     def setUpClass(cls):
         cls.environ = environment.create()
         cls.environ.make_pristine()
-        cls.environ.rabbitmq.start_server()
+        cls.environ.rabbitmq.start()
 
         mq_params = pika.ConnectionParameters('localhost')
         mq_conn = pika.BlockingConnection(mq_params)
         channel = mq_conn.channel()
-        channel.exchange_declare(
-                exchange='registration',
-                type='topic',
-                auto_delete=True,
-                durable=False
-                )
-        channel.queue_declare(queue='test_registration', durable=False, 
+        channel.queue_declare(queue='test_registration', durable=True, 
                 exclusive=True, auto_delete=True)
         channel.queue_bind(
                 exchange='registration',
