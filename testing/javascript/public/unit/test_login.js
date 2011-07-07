@@ -1,16 +1,16 @@
 (function($) {
 
 var testHelpers = {
-    submitForm: $.fn.tpRegistration.submitForm,
-    ajax: $.fn.tpRegistration.ajax,
+    submitForm: $.fn.tpLogin.submitForm,
+    ajax: $.fn.tpLogin.ajax,
+    window: $.fn.tpLogin.window,
 
     reset: function() {
-      $.fn.tpRegistration.submitForm = testHelpers.submitForm;
-      $.fn.tpRegistration.ajax = testHelpers.ajax;
-      $.dialog = testHelpers.dialog;
+      $.fn.tpLogin.submitForm = testHelpers.submitForm;
+      $.fn.tpLogin.ajax = testHelpers.ajax;
+      $.fn.tpLogin.window = testHelpers.window;
 
       testHelpers.createForm()
-      testHelpers.createThankYouElement()
     },
 
     createForm: function() {
@@ -21,14 +21,10 @@ var testHelpers = {
           '<input name="test3" value="3" />',
         '</form>'
       ].join('\n'));
-    },
-
-    createThankYouElement: function() {
-      testHelpers.thankYouElement =  $('<div>Thank You</div>');
     }
 }
 
-module("Registration Tests", {
+module("Login Tests", {
   setup: function() {
     testHelpers.reset();
   }
@@ -36,41 +32,41 @@ module("Registration Tests", {
 
 test("test trigger submit calls submit handler", function() {
   var callsSubmitHandler = false;
-  $.fn.tpRegistration.submitForm = function(event) {
+  $.fn.tpLogin.submitForm = function(event) {
     callsSubmitHandler = true;
   }
 
-  testHelpers.form.tpRegistration().trigger("submit");
+  testHelpers.form.tpLogin().trigger("submit");
   ok(callsSubmitHandler, "submit handler called");
 });
 
 test("test submit form sends ajax request", function() {
   var sendsAjax = false;
-  $.fn.tpRegistration.ajax = function(url, options) {
+  $.fn.tpLogin.ajax = function(url, options) {
     sendsAjax = true;
   }
 
-  testHelpers.form.tpRegistration().trigger("submit");
+  testHelpers.form.tpLogin().trigger("submit");
   ok(sendsAjax, "ajax function called");
 });
 
 test("test ajax url follows form action", function() {
   var testUrl = '';
-  $.fn.tpRegistration.ajax = function(url, options) {
+  $.fn.tpLogin.ajax = function(url, options) {
     testUrl = url;
   }
-  testHelpers.form.tpRegistration().trigger("submit");
+  testHelpers.form.tpLogin().trigger("submit");
   ok(testUrl.indexOf('/test') >= 0)
 
   testHelpers.form.attr('action', '/another/test');
-  testHelpers.form.tpRegistration().trigger("submit");
+  testHelpers.form.tpLogin().trigger("submit");
   ok(testUrl.indexOf('/another/test') >= 0)
 });
 
 test("test ajax sends json-encoded form as application/json", function() {
   var contentType = null;
   var data = null;
-  $.fn.tpRegistration.ajax = function(url, options) {
+  $.fn.tpLogin.ajax = function(url, options) {
     options.beforeSend = function(jqXHR, settings) {
       contentType = settings.contentType;
       data = settings.data;
@@ -78,7 +74,7 @@ test("test ajax sends json-encoded form as application/json", function() {
     }
     $.ajax(url, options);
   }
-  testHelpers.form.tpRegistration().trigger("submit");
+  testHelpers.form.tpLogin().trigger("submit");
 
   //for some reason jsTestDriver breaks on equal()
   //use ok for now until a fix is found
@@ -86,22 +82,15 @@ test("test ajax sends json-encoded form as application/json", function() {
   ok(data === '{"test1":"1","test2":"2","test3":"3"}', 'form data serialized as expected')
 });
 
-test("test handle success method creates thank you modal", function() {
-  $.fn.tpRegistration.ajax = function(url, options) {
-    options.success({}, 'success', {})
+test("test handle complete redirects to given url", function() {
+  var path = '/path/to/home';
+  $.fn.tpLogin.ajax = function(url, options) {
+    options.complete({redirect_url: path}, null, null)
   }
 
-  var isOpen = false;
-  testHelpers.thankYouElement.bind('dialogopen', function(event, ui) {
-    isOpen = true;
-  });
-
-  testHelpers.form.tpRegistration({
-    thankYouElement: testHelpers.thankYouElement
-  }).trigger("submit");
-
-  testHelpers.thankYouElement.dialog('close');
-  ok(isOpen, 'thank you dialog opened')
+  $.fn.tpLogin.window = {location: null};
+  testHelpers.form.tpLogin().trigger("submit");
+  ok($.fn.tpLogin.window.location == '/path/to/home', 'complete redirects to given url')
 });
 
 })(jQuery);
