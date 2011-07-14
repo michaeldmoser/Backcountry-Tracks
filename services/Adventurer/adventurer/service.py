@@ -2,8 +2,8 @@ import json
 import pika
 
 class Controller(object):
-    
-    def __init__(self, daemonizer=None, pidfile=None, pika_params=None, 
+
+    def __init__(self, daemonizer=None, pidfile=None, pika_params=None,
             pika_connection=None, application=None):
         self.daemonizer = daemonizer
         self.pidfile = pidfile
@@ -13,11 +13,11 @@ class Controller(object):
 
     def run(self):
         self.daemoncontext = self.daemonizer(pidfile=self.pidfile)
-        with self.daemoncontext:
-            self.app_instance = self.application()
-            connection = self.pika_connection(self.pika_params,
-                    self.on_connection_opened)
-            connection.ioloop.start()
+#        with self.daemoncontext:
+        self.app_instance = self.application()
+        connection = self.pika_connection(self.pika_params,
+                self.on_connection_opened)
+        connection.ioloop.start()
 
     def on_connection_opened(self, connection):
         self.connection = connection
@@ -50,9 +50,9 @@ class Controller(object):
         login_reply = json.dumps({
             'successful': result
             })
-        self.channel.basic_publish(exchange='adventurer', 
+        self.channel.basic_publish(exchange='adventurer',
                 routing_key=header.reply_to, properties=properties,
                 body=login_reply)
-        
 
-        
+
+
