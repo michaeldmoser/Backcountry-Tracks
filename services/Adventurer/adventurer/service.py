@@ -13,11 +13,11 @@ class Controller(object):
 
     def run(self):
         self.daemoncontext = self.daemonizer(pidfile=self.pidfile)
-#        with self.daemoncontext:
-        self.app_instance = self.application()
-        connection = self.pika_connection(self.pika_params,
-                self.on_connection_opened)
-        connection.ioloop.start()
+        with self.daemoncontext:
+            self.app_instance = self.application()
+            connection = self.pika_connection(self.pika_params,
+                    self.on_connection_opened)
+            connection.ioloop.start()
 
     def on_connection_opened(self, connection):
         self.connection = connection
@@ -51,7 +51,8 @@ class Controller(object):
             'successful': result
             })
         self.channel.basic_publish(exchange='adventurer',
-                routing_key=header.reply_to, properties=properties,
+                routing_key='adventurer.login.%s' % header.reply_to,
+                properties=properties,
                 body=login_reply)
 
 

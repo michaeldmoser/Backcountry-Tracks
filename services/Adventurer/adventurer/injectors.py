@@ -40,20 +40,6 @@ class ControllerInjector(object):
         return app
 controller = ControllerInjector()
 
-
-#import pycurl
-#class MyTestTransport(riak.RiakHttpTransport):
-#
-#    def build_rest_path(self, bucket, key=None, params=None, another=[]) :
-#        """
-#        Given a RiakClient, RiakBucket, Key, LinkSpec, and Params,
-#        construct and return a URL.
-#        """
-#        # Build 'http://hostname:port/prefix/bucket'
-#        path = ''
-#        path += '/' + self._prefix
-#        print type(path)
-
 class ApplicationInjector(object):
     def __riak(self):
         return riak.RiakClient
