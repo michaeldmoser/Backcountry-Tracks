@@ -1,7 +1,7 @@
 import pika
 import uuid
 import json
-from tornado import web 
+from tornado import web
 
 class LoginHandler(web.RequestHandler):
     @web.asynchronous
@@ -29,10 +29,10 @@ class LoginHandler(web.RequestHandler):
     def respond_to_login(self, headers, body):
         reply = json.loads(body)
         if reply['successful'] == True:
-            self.set_header('Location', '/app/home')
-            self.set_status(303)
+            self.set_header('X-Location', '/app/home')
+            self.set_status(202)
         else:
-            self.set_header('Location', '/app/login')
+            self.set_header('X-Location', '/app/login')
             self.set_status(403)
 
         self.finish()
