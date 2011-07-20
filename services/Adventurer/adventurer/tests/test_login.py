@@ -21,10 +21,9 @@ class TestApplicationLogin(unittest.TestCase):
 
         self.app = Application(bucket = bucket)
 
-
     def test_login_successful(self):
         '''Returns successful message on valid credentials'''
-        login_result = self.app.login(self.environ.albert.email, 
+        login_result = self.app.login(self.environ.albert.email,
                 self.environ.albert.password)
         self.assertTrue(login_result)
 
@@ -59,7 +58,7 @@ class TestServiceLogin(unittest.TestCase):
         properties = pika.BasicProperties(
                 content_type = 'application/json',
                 correlation_id = str(uuid.uuid4()),
-                reply_to = 'adventurer.login.' + str(uuid.uuid4())
+                reply_to = str(uuid.uuid4())
                 )
 
         pika_class.inject('login_rpc', properties, login_message)
@@ -78,7 +77,7 @@ class TestServiceLogin(unittest.TestCase):
         message = pika_class.published_messages[0]
         expected_message = {
                 'exchange': 'adventurer',
-                'routing_key': properties.reply_to,
+                'routing_key': 'adventurer.login.%s' % properties.reply_to,
                 'correlation_id': properties.correlation_id,
                 'content_type': properties.content_type,
                 'body': {'successful': True}

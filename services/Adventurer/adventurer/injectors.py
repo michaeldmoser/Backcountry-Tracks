@@ -49,8 +49,7 @@ class ApplicationInjector(object):
 
     def __call__(self):
         riak = self.__riak()
-        transport = self.__transport()
-        self.riak_client = riak(transport_class = transport)
+        self.riak_client = riak()
         bucket = self.riak_client.bucket('adventurers')
 
         return Application(bucket = bucket)

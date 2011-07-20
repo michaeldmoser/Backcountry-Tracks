@@ -39,5 +39,8 @@ class TestApplication(unittest.TestCase):
 
         self.assertEquals(actual, expected)
 
+    def test_registration_allows_unicode_data(self):
+        pass
+
 if __name__ == '__main__':
     unittest.main()
