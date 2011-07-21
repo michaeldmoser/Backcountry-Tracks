@@ -142,6 +142,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>and the application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>When I go to the "Gear Manager"</td>
 <td></td>
 <td></td>
@@ -150,13 +157,6 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Then I should see a list of all my gear</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>And there should be a name column in the list</td>
 <td></td>
 <td></td>
 <td></td>
@@ -303,10 +303,38 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_I have some basic gear in my gear list">I have some basic gear in my gear list</a></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>Add gear item</td>
+<td>Backpack</td>
+<td>A really lightweight frameless backpack</td>
+<td>18</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>Alcohol stove</td>
+<td>A small alcohol stove made out of a coke can</td>
+<td>1</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>Quilt</td>
+<td>A 800 power down quilt</td>
+<td>17</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>Sleeping pad</td>
+<td>A closed cell half length foam sleeping pad</td>
+<td>12</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>8x5 Tarp</td>
+<td>A catenary cut 8 foot by 5 foot silnylon tarp</td>
+<td>14</td>
 </tr>
 <tr>
 <td class="name"></td>
@@ -317,23 +345,37 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_I should see a list of all my gear">I should see a list of all my gear</a></td>
-<td></td>
-<td></td>
-<td></td>
+<td>Element Should Contain</td>
+<td>css=div#gear_listing</td>
+<td>Backpack</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
+<td>Element should contain</td>
+<td>css=div#gear_listing</td>
+<td>Alcohol stove</td>
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="keyword_there should be a name column in the list">there should be a name column in the list</a></td>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div#gear_listing</td>
+<td>8x5 Tarp</td>
 <td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div#gear_listing</td>
+<td>Quilt</td>
 <td></td>
-<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div#gear_listing</td>
+<td>Sleeping pad</td>
 <td></td>
 </tr>
 <tr>
