@@ -1,5 +1,5 @@
 import unittest
-
+import types
 import json
 import uuid
 import pika
@@ -31,6 +31,22 @@ class TestApplicationLogin(unittest.TestCase):
         '''Returns false on bad password'''
         login_result = self.app.login(self.environ.albert.email, 'badpassword')
         self.assertFalse(login_result)
+
+    def test_login_casts_unicode_email_to_string(self):
+        """Login allows Unicode email"""
+        class RiakBucketSpy(object):
+            def get(spy, key):
+                spy.key = key
+                class RiakObjectSpy(object):
+                    def get_data(rspy):
+                        return dict(password='mypass')
+                return RiakObjectSpy()
+        riakspy = RiakBucketSpy()
+
+        app = Application(bucket = riakspy)
+        app.login(unicode('email@test.com'), 'mypass')
+
+        self.assertEquals(type(riakspy.key), types.StringType)
 
 class TestServiceLogin(unittest.TestCase):
 
