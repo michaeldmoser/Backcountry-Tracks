@@ -104,13 +104,13 @@ class TestAdventurerServiceLogins(unittest.TestCase):
         channel.queue_bind(exchange='adventurer', queue=reply_to,
                 routing_key=reply_routing)
 
-        environ.adventurer.create_user('albert') 
+        environ.adventurer.create_user('albert')
 
 
         properties = pika.BasicProperties(
                 content_type = 'application/json',
                 correlation_id = str(uuid.uuid4()),
-                reply_to = reply_routing
+                reply_to = reply_to
                 )
 
         login_message = json.dumps({

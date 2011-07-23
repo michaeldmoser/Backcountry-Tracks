@@ -1,4 +1,3 @@
-import logging
 
 class Application(object):
     def __init__(self, bucket=None):
@@ -17,7 +16,7 @@ class Application(object):
         '''
         user_object = self.bucket.get(str(email))
         user = user_object.get_data()
-        if user['password'] == str(password):
+        if user and user['password'] == str(password):
             return True
         else:
             return False

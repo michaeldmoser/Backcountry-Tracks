@@ -76,7 +76,7 @@ class TpEnvironment(object):
 
     def make_pristine(self):
         '''
-        Stops all running services and removes all data from the services 
+        Stops all running services and removes all data from the services
         and generally resets the environment to a clean slate.
         '''
         self.kill_processes()

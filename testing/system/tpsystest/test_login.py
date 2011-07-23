@@ -16,6 +16,7 @@ class TestLoginHTTPPost(unittest.TestCase):
         cls.environ = environment.create()
         cls.environ.make_pristine()
         cls.environ.bringup_infrastructure()
+        cls.environ.adventurer.create_user('douglas')
 
         mq_params = pika.ConnectionParameters(host='localhost')
         mq_conn = pika.BlockingConnection(mq_params)
@@ -31,6 +32,7 @@ class TestLoginHTTPPost(unittest.TestCase):
                 json.dumps(cls.credentials),
                 headers = {'Content-Type': 'application/json'}
                 )
+
         def make_request():
             cls.response = urllib2.urlopen(cls.login_request)
         request_thread = threading.Thread(target=make_request)
@@ -52,7 +54,6 @@ class TestLoginHTTPPost(unittest.TestCase):
     def tearDownClass(cls):
         cls.environ.teardown()
 
-
     def test_login_redirects(self):
         """Valid credentials should redirect to application home"""
         expected_url = self.environ.trailhead_url + "/home"
@@ -70,7 +71,7 @@ class TestLoginHTTPPost(unittest.TestCase):
     def test_login_message_headers_reply_to(self):
         '''Login message should have a reply_to'''
         self.assertIsNotNone(self.headers.reply_to)
-        
+
 class TestLoginHTTPResponse(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -88,6 +89,7 @@ class TestLoginHTTPResponse(unittest.TestCase):
                 'email': cls.environ.douglas.email,
                 'password': cls.environ.douglas.password
                 }
+
         cls.login_request = urllib2.Request(
                 login_url,
                 json.dumps(cls.credentials),
@@ -109,7 +111,7 @@ class TestLoginHTTPResponse(unittest.TestCase):
             assert False, "Failed to get a message in the alotted time"
 
         cls.method, cls.headers, cls.body = wait_for_message()
-        
+
     def test_send_invalid_login_response(self):
         '''Receiving and invalid login response produces an invalid login page'''
         invalid_login_reply = {
