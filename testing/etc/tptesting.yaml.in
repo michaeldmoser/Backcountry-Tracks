@@ -1,5 +1,5 @@
 hostname: {{ hostname }}
-url_preifx: app
+url_prefix: app
 
 trailhead_url: http://{{ hostname }}/app
 
@@ -8,6 +8,7 @@ trailhead:
 
 riak:
     datadir: '/srv/riak/bitcask/'
+
 
 users:
     albert:
@@ -36,3 +37,13 @@ adventurer:
 
 selenium_server: http://localhost:4444
 
+smtp:
+    host: localhost
+    port: 25
+    from_line: BackCountry Tracks
+    from_address: noreply@example.org
+    subject: BackCountry Tracks Notification
+
+mbox_file: '/var/mail/{{ user }}'
+
+user: '{{ user }}'

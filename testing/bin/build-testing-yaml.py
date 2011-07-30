@@ -17,11 +17,14 @@ def main():
     tptesting_template = Template(tptesting_template_file.read())
 
     tptesting_yaml_file = open(tptesting_yaml, 'w')
-    
+
     fqdn = socket.getfqdn()
+
+    pw_name = pwd.getpwuid(os.getuid()).pw_name
 
     context = Context({
         'hostname': socket.getfqdn(),
+        'user': pw_name,
     })
 
     rendered_tptesting_yaml = tptesting_template.render(context)
