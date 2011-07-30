@@ -3,6 +3,8 @@ import os.path
 import socket
 from shutil import copytree
 
+import pwd
+
 from django.conf import settings
 from django.template import Template, Context
 
