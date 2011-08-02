@@ -4,6 +4,9 @@ import os
 import time
 from os import path
 import urllib2
+import mailbox
+import pwd
+import grp
 
 import logging
 import logging.config
@@ -11,7 +14,6 @@ import logging.config
 from usertemplate import UserTemplate
 import riak
 
-import subprocess
 
 from .adventurer import AdventurerEnvironment
 from .riakenv import RiakEnvironment
@@ -85,6 +87,7 @@ class TpEnvironment(object):
         self.rabbitmq.make_pristine()
         self.adventurer.make_pristine()
         self.riak.make_pristine()
+        self.clear_mbox()
 
     def bringup_infrastructure(self):
         '''
@@ -126,7 +129,7 @@ class TpEnvironment(object):
         '''
         Starts the trailhead application server
         '''
-        subprocess.call(['trailhead', 'start'], 
+        subprocess.call(['trailhead', 'start'],
                 stdout=self.devnull, stderr=self.devnull)
         def check_trailhead_start():
             urllib2.urlopen("http://localhost:8080/")
@@ -148,6 +151,14 @@ class TpEnvironment(object):
         adventurer = adventurers.new(user.email, data=user)
         adventurer.store()
 
+    def clear_mbox(self):
+        user = self.get_config_for('user')
+        mbox_path = self.get_config_for('mbox_file')
+        mbox = mailbox.mbox(mbox_path)
+        mbox.clear()
+        mbox.flush()
+        mbox.close()
+        os.chown(mbox_path, pwd.getpwnam(user)[2], grp.getgrnam('mail')[2])
 
 def create():
     # TODO: reading in the config file needs to be cached. Especially for unittesting

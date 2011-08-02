@@ -2,6 +2,7 @@ import unittest
 import json
 from os import path
 import uuid
+import mailbox
 
 import pika.adapters
 import pika.connection
@@ -83,8 +84,37 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
             except Exception, e:
                 raise AssertionError(str(e))
 
+            # remove confirmation key from data so we
+            # get a true comparison
+            del albert_data['confirmation_key']
             self.assertEquals(albert_data, self.albert)
         utils.try_until(1, check_registration_stored)
+
+    def test_regitration_sends_confirmation_email(self):
+        """Service should sends confirmation email for upon registration"""
+        registration_message = json.dumps(self.environ.albert)
+        properties = pika.BasicProperties(
+                content_type="application/json",
+                delivery_mode=2
+                )
+
+        self.channel.basic_publish(
+                exchange='registration',
+                routing_key='registration.register',
+                properties=properties,
+                body=registration_message
+                )
+
+        mbox_path = self.environ.get_config_for('mbox_file')
+        self.mbox = mailbox.mbox(mbox_path)
+        assert len(self.mbox) == 0, 'Mailbox not pristine'
+
+        def check_email_sent():
+            mbox_path = self.environ.get_config_for('mbox_file')
+            mbox = mailbox.mbox(mbox_path)
+            assert len(mbox) == 1
+
+        utils.try_until(3, check_email_sent)
 
 class TestAdventurerServiceLogins(unittest.TestCase):
 

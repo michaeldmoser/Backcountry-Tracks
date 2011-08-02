@@ -4,6 +4,7 @@ import daemon
 from lockfile.pidlockfile import PIDLockFile
 
 import service
+import mailer
 from adventurer.application import Application
 
 class ControllerInjector(object):
@@ -44,15 +45,18 @@ class ApplicationInjector(object):
     def __riak(self):
         return riak.RiakClient
 
-    def __transport(self):
-        return riak.RiakHttpTransport
+    def __mailer(self):
+        return mailer.Mailer
 
     def __call__(self):
         riak = self.__riak()
         self.riak_client = riak()
         bucket = self.riak_client.bucket('adventurers')
 
-        return Application(bucket = bucket)
+        mail_class = self.__mailer()
+        mailer = mail_class(host = 'localhost', port = 25)
+
+        return Application(bucket = bucket, mailer = mailer)
 application = ApplicationInjector()
 
 
