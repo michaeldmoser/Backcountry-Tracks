@@ -1,0 +1,176 @@
+body {
+	padding: 0;
+	margin: 0;
+	font-family: Arial, sans-serif;
+}
+div {
+	padding: 0;
+	margin: 0;
+}
+
+#topbar {
+	position: fixed;
+	height: 60px;
+	width: 100%;
+	top: 0px;
+	left: 0px;
+	padding: 0;
+	margin: 0;
+	background-color: #803300;	
+	z-index: 9999;
+}
+
+#leftbar {
+	position: fixed;
+	height: 100%;
+	width: 150px;
+	top: 0px;
+	left: 0px;
+	padding: 0;
+	margin: 0;
+	background-color: #803300;	
+	z-index: 9998;
+}
+
+#app_chooser_buttons {
+	position: fixed;
+	bottom: 0px;
+}
+
+#appcontent {
+	position: relative;
+	padding: 0;
+	margin: 60px 0 0 150px;
+	background-color: #f1f1f1;
+	z-index: 9997;
+}
+
+#add_gear_splash {
+	position: absolute;
+	margin: auto;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px; border: 1px solid black;
+	height: 100px;
+	width: 100px;
+}
+
+#app_chooser_buttons div.app_chooser_button {
+	padding: 0;
+	margin: 0;
+	width: 148px;
+	height: 148px;
+	border: 1px solid white;
+	line-height: 148px;
+	vertical-align: middle;
+	text-align: center;
+}
+#app_chooser_buttons div.app_chooser_button img {
+	width: 148px;
+	height: 148px;
+}
+
+div.gear_list_view_container {
+	width: 100%;
+}
+
+div.gear_listing {
+	border: 1px solid black;
+	padding: 5px;
+	margin: 70px 5px 5px 5px;
+	overflow: auto;
+	width: 75%;
+}
+
+div.gear_listing ul {
+	list-style-type: none;	
+	margin: 0;
+	padding: 0;
+}
+
+div.gear_listing ul li {
+	line-height: 30px;
+	vertical-align: middle;
+	overflow: auto;
+	position: relative;
+}
+div.gear_listing li div.gear_item_list_column {
+	padding: 5px 10px;
+	float: left;
+}
+
+div.gear_listing li div.gear_name {
+	width: 200px;
+}
+div.gear_listing li div.gear_weight {
+	width: 50px;
+}
+div.gear_listing li div.gear_description {
+	width: 300px;
+}
+div.gear_listing li.gear_list_header {
+	font-weight: bold;
+}
+div.gear_listing li.oddrow {
+	background-color: white;
+}
+div.gear_listing li.evenrow {
+	background-color: #e1e1e1;
+}
+
+div.gear_list_view_controls {
+	top: 60px;
+	left: 150px;
+	position: fixed;
+	z-index: 9999;
+	margin: 0 0 0 0;
+	background-color: #f4f4f4;
+	width: 100%;
+	overflow: auto;
+}
+
+div.gear_list_search_box_container {
+	width: 25%;
+	float: left;
+}
+
+div.gear_list_add_button {
+	width: 25%;
+	float: left;
+}
+
+div.application_container {
+	position: absolute;
+	width: 100%;
+}
+
+div.gear_list_view_controls div.gear_list_add_form {
+	clear: both;
+	background-color: #b06330;
+}
+
+div.gear_list_management_buttons {
+	float: right;
+	height: 30px;
+	line-height: 30px;
+	vertical-align: middle;
+}
+
+div.gear_listing li.highlighted_row,
+div.gear_listing li.highlighted_row div {
+	background-color: #ffe991;
+}
+
+div.gear_listing li div.gear_list_add_form {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	z-index: 9998;
+}
+
+div.gear_listing li div.gear_item_row {
+	height: 40px;
+	z-index: 9999;
+}
+
