@@ -292,7 +292,7 @@ class RiakObjectFake(object):
 		raise NotImplementedError
 
     def store(self, w=None, dw=None, return_body=True):
-        self.bucket.documents[self.key] = self.data
+        self.bucket.documents[self.key] = self.__data
 
     def reload(self, r=None, vtag=None):
 		raise NotImplementedError

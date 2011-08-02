@@ -66,7 +66,7 @@
   }
 
   $.fn.tpLogin.ajax = $.ajax;
-  $.fn.tpLogin.window = $.window;
+  $.fn.tpLogin.window = window;
 
   $.fn.tpLogin.submitForm = function(event) {
     event.preventDefault();
@@ -86,13 +86,18 @@
       data: data,
       contentType: 'application/json',
       complete: function(data, textStatus, jqXHR) {
-        $.fn.tpLogin.handleComplete.call($this, data, textStatus, jqXHR)
+        $.fn.tpLogin.handleComplete.call($this, response)
       }
     });
   };
 
-  $.fn.tpLogin.handleComplete = function(data, textStatus, jqXHR) {
-    $.fn.tpLogin.window.location = data.redirect_url;
+  $.fn.tpLogin.handleComplete = function(response) {
+    var headers = response.getAllResponseHeaders();
+    var results = headers.match('X-Location: (.*)\n');
+    if (results && results.length == 2) {
+      var location = results[1];
+      $.fn.tpLogin.window.location = location;
+    }
   }
 
 })( jQuery );

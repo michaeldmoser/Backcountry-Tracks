@@ -16,7 +16,7 @@ class TestLoginHTTPRequest(unittest.TestCase):
             'password': environ.ramona.password,
             }
         self.request = faketornado.HTTPRequestFake(
-                'post', 
+                'post',
                 '/app/login',
                 headers = {'Content-Type': 'multipart/form-data'}
                 )
@@ -53,7 +53,7 @@ class TestSendsLoginRequest(unittest.TestCase):
             'password': environ.ramona.password,
             }
         request = faketornado.HTTPRequestFake(
-                'post', 
+                'post',
                 '/app/login',
                 headers = {'Content-Type': 'application/json'}
                 )
@@ -117,7 +117,7 @@ class TestLoginReply(unittest.TestCase):
             'password': environ.ramona.password,
             }
         self.request = faketornado.HTTPRequestFake(
-                'post', 
+                'post',
                 '/app/login',
                 headers = {'Content-Type': 'application/json'}
                 )
@@ -142,13 +142,13 @@ class TestLoginReply(unittest.TestCase):
                 )
 
     def test_process_valid_login_reply(self):
-        '''Uses 303 status code for valid login'''
+        '''Uses 202 status code for valid login'''
         body = json.dumps(dict(successful = True))
         reply_queue = self.application.mq.rpc_reply
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
 
-        self.assertEquals(self.handler._status_code, 303)
+        self.assertEquals(self.handler._status_code, 202)
 
     def test_process_valid_login_location(self):
         '''Sets location to /app/home'''
@@ -157,7 +157,7 @@ class TestLoginReply(unittest.TestCase):
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
 
-        location = self.handler._headers['Location']
+        location = self.handler._headers['X-Location']
         self.assertEquals(location, '/app/home')
 
     def test_process_invalid_login_status(self):
@@ -176,7 +176,7 @@ class TestLoginReply(unittest.TestCase):
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
 
-        location = self.handler._headers['Location']
+        location = self.handler._headers['X-Location']
         self.assertEquals(location, '/app/login')
 
     def test_finishes_request(self):
@@ -187,11 +187,11 @@ class TestLoginReply(unittest.TestCase):
         self.pika.trigger_consume(reply_queue)
 
         self.assertTrue(self.request.was_called(self.request.finish))
-    
 
 
 
-        
+
+
 if __name__ == '__main__':
     unittest.main()
 

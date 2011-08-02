@@ -84,12 +84,14 @@ test("test ajax sends json-encoded form as application/json", function() {
 
 test("test handle complete redirects to given url", function() {
   var path = '/path/to/home';
-  $.fn.tpLogin.ajax = function(url, options) {
-    options.complete({redirect_url: path}, null, null)
+  var fakeResponse = {
+    getAllResponseHeaders: function() {
+      return 'X-Location: ' + path + '\n';
+    }
   }
 
   $.fn.tpLogin.window = {location: null};
-  testHelpers.form.tpLogin().trigger("submit");
+  $.fn.tpLogin.handleComplete(fakeResponse);
   ok($.fn.tpLogin.window.location == '/path/to/home', 'complete redirects to given url')
 });
 

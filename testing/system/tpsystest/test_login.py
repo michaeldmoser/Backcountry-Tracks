@@ -15,7 +15,9 @@ class TestLoginHTTPPost(unittest.TestCase):
     def setUpClass(cls):
         cls.environ = environment.create()
         cls.environ.make_pristine()
-        cls.environ.bringup_infrastructure()
+        cls.environ.nginx.start()
+        cls.environ.rabbitmq.start()
+        cls.environ.start_trailhead()
 
         mq_params = pika.ConnectionParameters(host='localhost')
         mq_conn = pika.BlockingConnection(mq_params)
@@ -31,6 +33,7 @@ class TestLoginHTTPPost(unittest.TestCase):
                 json.dumps(cls.credentials),
                 headers = {'Content-Type': 'application/json'}
                 )
+
         def make_request():
             cls.response = urllib2.urlopen(cls.login_request)
         request_thread = threading.Thread(target=make_request)
@@ -52,12 +55,6 @@ class TestLoginHTTPPost(unittest.TestCase):
     def tearDownClass(cls):
         cls.environ.teardown()
 
-
-    def test_login_redirects(self):
-        """Valid credentials should redirect to application home"""
-        expected_url = self.environ.trailhead_url + "/home"
-        self.assertEquals(self.response.url, expected_url)
-
     def test_login_message(self):
         '''A login message should be sent to the Adventurer service'''
         received_credentials = json.loads(self.body)
@@ -70,37 +67,45 @@ class TestLoginHTTPPost(unittest.TestCase):
     def test_login_message_headers_reply_to(self):
         '''Login message should have a reply_to'''
         self.assertIsNotNone(self.headers.reply_to)
-        
+
 class TestLoginHTTPResponse(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.response = None
-        cls.environ = environment.create()
-        cls.environ.make_pristine()
-        cls.environ.bringup_infrastructure()
+    def setUp(self):
+        self.response = None
+        self.environ = environment.create()
+        self.environ.make_pristine()
+        self.environ.nginx.start()
+        self.environ.rabbitmq.start()
+        self.environ.start_trailhead()
 
         mq_params = pika.ConnectionParameters(host='localhost')
         mq_conn = pika.BlockingConnection(mq_params)
-        cls.channel = mq_conn.channel()
+        self.channel = mq_conn.channel()
 
-        login_url = cls.environ.trailhead_url + '/login'
-        cls.credentials = {
-                'email': cls.environ.douglas.email,
-                'password': cls.environ.douglas.password
+        login_url = self.environ.trailhead_url + '/login'
+        self.credentials = {
+                'email': self.environ.douglas.email,
+                'password': self.environ.douglas.password
                 }
-        cls.login_request = urllib2.Request(
+
+        self.login_request = urllib2.Request(
                 login_url,
-                json.dumps(cls.credentials),
+                json.dumps(self.credentials),
                 headers = {'Content-Type': 'application/json'}
                 )
+
         def make_request():
-            cls.response = urllib2.urlopen(cls.login_request)
+            # allow HTTPErrors for testing 40X status codes
+            try:
+                self.response = urllib2.urlopen(self.login_request)
+            except urllib2.HTTPError, e:
+                self.response = e
+
         request_thread = threading.Thread(target=make_request)
         request_thread.start()
 
         def wait_for_message():
             for x in range(20):
-                method, headers, body = cls.channel.basic_get(queue='login_rpc')
+                method, headers, body = self.channel.basic_get(queue='login_rpc')
                 if isinstance(method, spec.Basic.GetOk):
                     return method, headers, body
 
@@ -108,10 +113,15 @@ class TestLoginHTTPResponse(unittest.TestCase):
 
             assert False, "Failed to get a message in the alotted time"
 
-        cls.method, cls.headers, cls.body = wait_for_message()
-        
+        self.method, self.headers, self.body = wait_for_message()
+
+    def tearDown(self):
+        self.environ.teardown()
+
     def test_send_invalid_login_response(self):
-        '''Receiving and invalid login response produces an invalid login page'''
+        '''
+        Receiving an invalid login response provides location to login page
+        '''
         invalid_login_reply = {
                 'successful': False
                 }
@@ -131,11 +141,13 @@ class TestLoginHTTPResponse(unittest.TestCase):
             assert self.response is not None
         utils.try_until(1, wait_for_response)
 
-        self.assertIn('/app/login', self.response.url)
+        self.assertIn('/app/login', self.response.info().getheader('X-Location'))
 
     def test_send_valid_login_response(self):
-        '''Receiving a valid login response produces the home page'''
-        invalid_login_reply = {
+        '''
+        Receiving a valid login response provides location to home page
+        '''
+        valid_login_reply = {
                 'successful': True
                 }
 
@@ -147,15 +159,14 @@ class TestLoginHTTPResponse(unittest.TestCase):
                 exchange = 'adventurer',
                 routing_key = 'adventurer.login.%s' % self.headers.reply_to,
                 properties = properties,
-                body = json.dumps(invalid_login_reply)
+                body = json.dumps(valid_login_reply)
                 )
 
         def wait_for_response():
             assert self.response is not None
         utils.try_until(1, wait_for_response)
 
-        self.assertIn('/app/home', self.response.url)
-
+        self.assertIn('/app/home', self.response.info().getheader('X-Location'))
 
 
 if __name__ == '__main__':

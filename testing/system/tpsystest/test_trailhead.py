@@ -16,7 +16,7 @@ class TestSubmitRegistration(unittest.TestCase):
         mq_params = pika.ConnectionParameters('localhost')
         mq_conn = pika.BlockingConnection(mq_params)
         channel = mq_conn.channel()
-        channel.queue_declare(queue='test_registration', durable=True, 
+        channel.queue_declare(queue='test_registration', durable=True,
                 exclusive=True, auto_delete=True)
         channel.queue_bind(
                 exchange='registration',
