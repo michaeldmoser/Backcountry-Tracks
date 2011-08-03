@@ -87,6 +87,7 @@ var GearListItemView = Backbone.View.extend({
 		var after_slide_up = _.bind(function () {
 			$(this.row).css('position', 'absolute');
 			$(this.management_buttons).hide();
+			var expose_me = this.editview.el;
 			$(this.editview.el).slideDown(400);
 		}, this);
 		
@@ -113,15 +114,18 @@ var GearListItemView = Backbone.View.extend({
 var GearListAddButton = Backbone.View.extend({
 	className: 'gear_list_add_button',
 	events: {
-		'click button': 'trigger_add_event'	
+		'click img': 'trigger_add_event'	
 	},
 
 	initialize: function () {
 		_.bindAll(this, 'trigger_add_event');
 
-		this.button = $(document.createElement('button')).html('Add');
+		this.button = $(document.createElement('img')).attr({
+			'height': '66',
+			'width': '148',
+			'src': '/static/img/add-gear-button.jpg'
+		});
 		$(this.el).append(this.button);
-		$(this.button).button();
 	},
 
 	trigger_add_event: function () {
@@ -133,13 +137,27 @@ var GearListSearchForm = Backbone.View.extend({
 	className: 'gear_list_search_box_container',
 
 	initialize: function() {
-		var search_input = $(document.createElement('input')).attr({
+		_.bindAll(this, 'handle_receive_focus', 'handle_lose_focus');
+		this.search_input = $(document.createElement('input')).attr({
 			'type': 'text',
 			'name': 'query',
-			'value': 'search...'
+			'value': 'search'
 		});
 
-		$(this.el).append(search_input);
+		$(this.el).append(this.search_input);
+
+		this.search_input.focus(this.handle_receive_focus);
+		this.search_input.blur(this.handle_lose_focus);
+	},
+
+	handle_receive_focus: function () {
+		$(this.search_input).val('');
+		$(this.search_input).css('text-align', 'left');
+	},
+
+	handle_lose_focus: function () {
+		$(this.search_input).val('search...');
+		$(this.search_input).css('text-align', 'right');
 	}
 });
 

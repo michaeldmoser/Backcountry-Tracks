@@ -10,25 +10,43 @@ div {
 
 #topbar {
 	position: fixed;
-	height: 60px;
+	height: 80px;
 	width: 100%;
 	top: 0px;
 	left: 0px;
 	padding: 0;
 	margin: 0;
-	background-color: #803300;	
+	background-color: rgb(89,76,60);
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.39, rgb(89,76,60)),
+		color-stop(1, rgb(4,3,1))
+	);
+	background-image: -moz-linear-gradient(
+		center bottom,
+		rgb(89,76,60) 79%,
+		rgb(4,3,1) 100%
+	);
 	z-index: 9999;
+}
+
+#topbar img {
+	position: absolute;
+	left: 19px;
+	top: 18px;
 }
 
 #leftbar {
 	position: fixed;
 	height: 100%;
-	width: 150px;
+	width: 100px;
 	top: 0px;
 	left: 0px;
 	padding: 0;
 	margin: 0;
-	background-color: #803300;	
+	background-color: rgb(89,76,60);
 	z-index: 9998;
 }
 
@@ -38,9 +56,11 @@ div {
 }
 
 #appcontent {
-	position: relative;
+	position: absolute;
+	left: 100px;
+	right: 0px;
+	top: 80px;
 	padding: 0;
-	margin: 60px 0 0 150px;
 	background-color: #f1f1f1;
 	z-index: 9997;
 }
@@ -51,7 +71,8 @@ div {
 	top: 0px;
 	bottom: 0px;
 	left: 0px;
-	right: 0px; border: 1px solid black;
+	right: 0px; 
+	border: 1px solid black;
 	height: 100px;
 	width: 100px;
 }
@@ -59,16 +80,16 @@ div {
 #app_chooser_buttons div.app_chooser_button {
 	padding: 0;
 	margin: 0;
-	width: 148px;
-	height: 148px;
+	width: 98px;
+	height: 98px;
 	border: 1px solid white;
-	line-height: 148px;
+	line-height: 98px;
 	vertical-align: middle;
 	text-align: center;
 }
 #app_chooser_buttons div.app_chooser_button img {
-	width: 148px;
-	height: 148px;
+	width: 98px;
+	height: 98px;
 }
 
 div.gear_list_view_container {
@@ -76,11 +97,11 @@ div.gear_list_view_container {
 }
 
 div.gear_listing {
-	border: 1px solid black;
-	padding: 5px;
-	margin: 70px 5px 5px 5px;
+	border: 0;
+	padding: 0;
+	margin: 148px 0 0 0;
 	overflow: auto;
-	width: 75%;
+	width: 100%;
 }
 
 div.gear_listing ul {
@@ -110,34 +131,67 @@ div.gear_listing li div.gear_description {
 	width: 300px;
 }
 div.gear_listing li.gear_list_header {
-	font-weight: bold;
+	color: white;
+	background-color: #ab9d83;
+	font-size: 12px;
+	height: 32px;
+	border-bottom: 1px solid #807563;
+	position: fixed;
+	top: 196px;
+	right: 0px;
+	left: 100px;
+	z-index:9000;
+}
+div.gear_listing li.gear_list_header div.gear_item_list_column {
+	padding: 0 10px;
+	margin: 0;
+	height: 32px;
+	line-height: 32px;
+	vertical-align:middle;
 }
 div.gear_listing li.oddrow {
-	background-color: white;
+	background-color: #f2edda;
 }
 div.gear_listing li.evenrow {
-	background-color: #e1e1e1;
+	background-color: #ffffff;
 }
 
 div.gear_list_view_controls {
-	top: 60px;
-	left: 150px;
+	top: 80px;
+	left: 100px;
+	right: 0px;
 	position: fixed;
 	z-index: 9999;
 	margin: 0 0 0 0;
-	background-color: #f4f4f4;
-	width: 100%;
-	overflow: auto;
+	background-color: #fff;
+	min-height: 116px;
 }
 
 div.gear_list_search_box_container {
-	width: 25%;
-	float: left;
+	position: absolute;
+	right: 20px;
+	top: 25px;
+	height: 66px;
+	width: 229px;
+	background-image: url("/static/img/search-box.jpg");
+}
+div.gear_list_search_box_container input {
+	position: relative;
+	left: 10px;
+	top: 8px;
+	border: 0;
+	background-color: transparent;
+	width: 170px;
+	height: 50px;
+	line-height: 50px;
+	vertical-align: middle;
+	text-align: right;
 }
 
 div.gear_list_add_button {
-	width: 25%;
-	float: left;
+	position: absolute;
+	right: 260px;
+	top: 25px;
 }
 
 div.application_container {
@@ -146,8 +200,10 @@ div.application_container {
 }
 
 div.gear_list_view_controls div.gear_list_add_form {
-	clear: both;
-	background-color: #b06330;
+	position: relative;
+	top: 116px;
+	background-color: #fff;
+	border-bottom: 3px groove #807563;
 }
 
 div.gear_list_management_buttons {
@@ -166,7 +222,7 @@ div.gear_listing li div.gear_list_add_form {
 	position: relative;
 	top: 0px;
 	left: 0px;
-	z-index: 9998;
+	z-index: 8999;
 }
 
 div.gear_listing li div.gear_item_row {
