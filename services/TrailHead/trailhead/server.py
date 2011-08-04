@@ -22,7 +22,7 @@ class TrailHead(object):
         with daemon_context:
             app = self.webapp([
                 (r'/', RootHandler),
-                (r'/app/register', RegisterHandler),
+                (r'/app/register(.*)', RegisterHandler),
                 (r'/app/login', LoginHandler),
                 ])
             app.listen(8080)

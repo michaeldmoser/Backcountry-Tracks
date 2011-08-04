@@ -4,6 +4,10 @@ import pika
 from tornado.web import RequestHandler
 
 class RegisterHandler(RequestHandler):
+    def get(self):
+        self.set_status(400)
+        return
+
     def post(self):
         if 'application/json' not in self.request.headers.get('Content-Type'):
             self.set_status(400)

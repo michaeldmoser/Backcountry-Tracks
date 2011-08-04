@@ -3,6 +3,7 @@ import json
 from os import path
 import uuid
 import mailbox
+import urllib2
 
 import pika.adapters
 import pika.connection
@@ -114,7 +115,58 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
             mbox = mailbox.mbox(mbox_path)
             assert len(mbox) == 1
 
-        utils.try_until(3, check_email_sent)
+        utils.try_until(1, check_email_sent)
+
+    def test_email_contains_link_for_completing_registration(self):
+        """Confirmation email contains link to complete registration"""
+        registration_message = json.dumps(self.environ.albert)
+        properties = pika.BasicProperties(
+                content_type="application/json",
+                delivery_mode=2
+                )
+
+        self.channel.basic_publish(
+                exchange='registration',
+                routing_key='registration.register',
+                properties=properties,
+                body=registration_message
+                )
+
+        mbox_path = self.environ.get_config_for('mbox_file')
+        self.mbox = mailbox.mbox(mbox_path)
+        assert len(self.mbox) == 0, 'Mailbox not pristine'
+
+        def get_email_message():
+            mbox_path = self.environ.get_config_for('mbox_file')
+            mbox = mailbox.mbox(mbox_path)
+            assert len(mbox) == 1
+
+        utils.try_until(1, get_email_message)
+
+        self.mbox = mailbox.mbox(mbox_path)
+        for key, message in self.mbox.items():
+            continue
+
+        trailhead_url = self.environ.get_config_for('trailhead_url')
+        url = 'href="http://%s/app/register?email=' % trailhead_url
+
+        self.assertIn(url, message.as_string())
+
+    def test_confirmation_request_activates_account(self):
+        pass
+#        urllib2.urlopen(self.register_url)
+#
+#        def check_registration_complete():
+#            try:
+#                user_bucket = self.environ.riak.get_database('adventurers')
+#                albert_user = user_bucket.get(self.albert.email)
+#                albert_data = albert_user.get_data()
+#            except Exception, e:
+#                raise AssertionError(str(e))
+#
+#            self.assertTrue(albert_data['registration_complete'])
+#
+#        utils.try_until(1, check_registration_complete)
 
 class TestAdventurerServiceLogins(unittest.TestCase):
 
