@@ -96,7 +96,10 @@ config/nginx/nginx.conf: /usr/sbin/nginx /usr/local/lib/python2.7/dist-packages/
 
 config/nginx.in/nginx.conf:
 
-app-config: config/tpapp.yaml
+app-config: /etc/tpapp.yaml
+
+/etc/tpapp.yaml: config/tpapp.yaml
+	sudo ln -sf `pwd`/config/tpapp.yaml /etc/tpapp.yaml
 
 config/tpapp.yaml:
 	python tools/build-tpapp-dev-config.py
