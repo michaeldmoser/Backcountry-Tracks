@@ -1,7 +1,7 @@
 
 dev-environ: install-dependencies install-infrastructure install-services infrastructure-dev-config testing-framework
 	
-infrastructure-dev-config: django nginx-config riak-config
+infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
@@ -95,6 +95,11 @@ config/nginx/nginx.conf: /usr/sbin/nginx /usr/local/lib/python2.7/dist-packages/
 	sudo /etc/init.d/nginx restart
 
 config/nginx.in/nginx.conf:
+
+app-config: config/tpapp.yaml
+
+config/tpapp.yaml:
+	python tools/build-tpapp-dev-config.py
 
 /srv/www: htdocs
 	sudo ln -sf `pwd`/htdocs /srv/www
