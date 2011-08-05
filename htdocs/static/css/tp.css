@@ -82,7 +82,6 @@ div {
 	margin: 0;
 	width: 98px;
 	height: 98px;
-	border: 1px solid white;
 	line-height: 98px;
 	vertical-align: middle;
 	text-align: center;
@@ -198,12 +197,75 @@ div.application_container {
 	position: absolute;
 	width: 100%;
 }
+div.gear_list_add_form {
+	background-color: #fff;
+	border-bottom: 3px groove #807563;
+	height: 142px;
+}
 
 div.gear_list_view_controls div.gear_list_add_form {
 	position: relative;
 	top: 116px;
 	background-color: #fff;
 	border-bottom: 3px groove #807563;
+	height: 142px;
+}
+
+div.gear_list_add_form div.save {
+	position: absolute;
+	right: 180px;
+	bottom: 20px;
+}
+
+div.gear_list_add_form div.add_gear_name,
+div.gear_list_add_form div.add_gear_description {
+	position: absolute;
+	right: 380px;
+	left: 0px;
+	height: 34px;
+}
+div.gear_list_add_form div.add_gear_name {
+	top: 0px;
+}
+div.gear_list_add_form div.add_gear_name div input {
+	width:100%;
+}
+div.gear_list_add_form div div {
+	display:block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	left: 125px;
+	width: auto;
+}
+div.gear_list_add_form div.add_gear_description {
+	top: 44px;
+	vertical-align:top;
+}
+div.gear_list_add_form div.add_gear_weight {
+	position: absolute;
+	right: 180px;
+	height: 34px;
+	width: 174px;
+}
+div.gear_list_add_form div.add_gear_weight input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 70px;
+}
+
+input, textarea {
+	border: 2px solid #d7cfc4;
+}
+input {
+	height: 30px;
+}
+
+div.gear_list_add_form div.cancel {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
 }
 
 div.gear_list_management_buttons {

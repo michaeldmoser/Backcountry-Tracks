@@ -21,14 +21,13 @@ var GearListItemView = Backbone.View.extend({
 
 	initialize: function () {
 		_.bindAll(this, 'render', 'mouseovered', 'mouseouted',
-			'edit_requested', 'edit_done');	
+			'edit_requested', 'edit_done', 'gear_save');	
 
 		this.build_management_buttons();
 		this.build_row();
 
 		$(this.el).mouseenter(this.mouseovered);
 		$(this.el).mouseleave(this.mouseouted);
-		$(this.el).click(this.edit_done);
 
 		this.editview = new GearListAddForm({
 			model: this.model
@@ -36,6 +35,14 @@ var GearListItemView = Backbone.View.extend({
 		this.editview.render();
 		$(this.editview.el).hide();
 		$(this.el).append(this.editview.el);
+
+		this.editview.bind('gear:save', this.gear_save);
+		this.editview.bind('cancel', this.edit_done);
+	},
+
+	gear_save: function (gear_item) {
+		this.render();
+		this.edit_done();
 	},
 
 	mouseovered: function () {
@@ -88,6 +95,7 @@ var GearListItemView = Backbone.View.extend({
 			$(this.row).css('position', 'absolute');
 			$(this.management_buttons).hide();
 			var expose_me = this.editview.el;
+			this.editview.render();
 			$(this.editview.el).slideDown(400);
 		}, this);
 		
@@ -161,24 +169,72 @@ var GearListSearchForm = Backbone.View.extend({
 	}
 });
 
+var FormGraphicButton = Backbone.View.extend({
+	name: 'submit',
+	src: '/static/img/32x32/dialog-ok.png',
+	height: '32',
+	width: '32',
+
+	tagName: 'div',
+
+	className: 'form_graphic_button',
+
+	events: {
+		'click img': 'activate'
+	},
+
+	initialize: function () {
+		_.bindAll(this, 'activate');
+		this.set_options();
+		this.create_graphic();
+
+		$(this.el).addClass(this.name);
+	},
+
+	create_graphic: function () {
+		var src = this.src;
+		var height = this.height;
+		var width = this.width;
+		this.button = $('<img />').attr({
+			'src': src,
+			'height': height,
+			'width': width
+		});
+		$(this.el).append(this.button);
+	},
+
+	set_options: function () {
+		this.name = this.options.name ? this.options.name : this.name;
+		this.src = this.options.src ? this.options.src : this.src;
+		this.height = this.options.height ? this.options.height : this.height;
+		this.width = this.options.width ? this.options.width : this.width;
+	},
+
+	activate: function () {
+		this.trigger('click');	
+	}
+});
+
 var GearListAddForm = Backbone.View.extend({
 	className: 'gear_list_add_form',
 
 	initialize: function () {
-		_.bindAll(this, 'hide', 'show');
+		_.bindAll(this, 'hide', 'show', 'save_gear', 'cancel');
 		this.create_name_input();
 		this.create_weight_input();
 		this.create_description_input();
+		this.create_buttons();
 	},
 
 	create_name_input: function () {
 		this.input_name = $(document.createElement('input')).attr({
 			'id': 'add_gear_name'	
 		});
+		var input_name_container = $('<div />').append(this.input_name);
 		var label = $(document.createElement('label')).attr('for', 'add_gear_name').html('Name');
 
 		var container = $(document.createElement('div')).attr('class', 'add_gear_name');
-		$(container).append(label, this.input_name);
+		$(container).append(label, input_name_container);
 		$(this.el).append(container);
 	},
 
@@ -201,6 +257,59 @@ var GearListAddForm = Backbone.View.extend({
 
 	},
 
+	create_submit_button: function () {
+		this.submit_button = new FormGraphicButton({
+			'name': 'save',
+			'height': '66',
+			'width': '174',
+			'src': '/static/img/add-to-gear-button.jpg'
+		});
+		$(this.el).append(this.submit_button.el);
+		this.submit_button.bind('click', this.save_gear);
+	},
+
+	create_cancel_button: function () {
+		this.cancel_button = new FormGraphicButton({
+			'name': 'cancel',
+			'height': '69',
+			'width': '132',
+			'src': '/static/img/cancel-button.jpg'
+		});
+		$(this.el).append(this.cancel_button.el);
+		this.cancel_button.bind('click', this.cancel);
+	},
+
+	create_buttons: function () {
+		this.create_submit_button();
+		this.create_cancel_button();
+	},
+
+	save_gear: function () {
+		var weight = $(this.input_weight).val();
+		var	name = $(this.input_name).val();
+		var description = $(this.input_description).val();
+
+		var gear_item = this.model ? this.model : new GearItem();
+		gear_item.set({
+			weight: weight,
+			name: name,
+			description: description
+		});
+		this.trigger('gear:save', gear_item);
+		this.reset_form();
+	},
+
+	cancel: function () {
+		this.reset_form();
+		this.trigger('cancel');
+	},
+
+	reset_form: function () {
+		$(this.input_description).val('');
+		$(this.input_weight).val('');
+		$(this.input_name).val('');
+	},
+
 	hide: function () {
 		$(this.el).slideToggle();
 	},
@@ -219,11 +328,23 @@ var GearListAddForm = Backbone.View.extend({
 	}
 });
 
+var GearListEditForm = GearListAddForm.extend({
+	create_submit_button: function () {
+		this.submit_button = new FormGraphicButton({
+			'height': '66',
+			'width': '174',
+			'src': '/static/img/add-to-gear-button.jpg'
+		});
+		$(this.el).append(this.submit_button.el);
+		this.submit_button.bind('click', this.save_gear);
+	}
+});
+
 var GearListView = Backbone.View.extend({
 	className: 'gear_list_view_container',
 
 	initialize: function () {
-		_.bindAll(this, 'render', 'add_new_gear', 'hide_add_form', 'close_all');
+		_.bindAll(this, 'render', 'add_new_gear', 'hide_add_form', 'close_all', 'add_gear', 'cancel_add');
 		this.models = this.options.models;
 
 		this.list_el = $(document.createElement('div'));
@@ -237,6 +358,8 @@ var GearListView = Backbone.View.extend({
 
 		this.init_add_form();
 		$(this.controls_el).append(this.add_form.el);
+
+		this.models.bind('add');
 	},
 
 	init_controls: function () {
@@ -248,7 +371,19 @@ var GearListView = Backbone.View.extend({
 	init_add_form: function () {
 		this.add_form = new GearListAddForm();
 		$(this.add_form.el).hide();
-		$(this.add_form.el).mouseleave(this.hide_add_form);
+
+		this.add_form.bind('gear:save', this.add_gear);
+		this.add_form.bind('cancel', this.cancel_add);
+	},
+
+	add_gear: function (new_gear) {
+		this.models.add(new_gear, {silent: true});
+		this.hide_add_form();
+		this.render();
+	},
+
+	cancel_add: function () {
+		this.hide_add_form();
 	},
 
 	hide_add_form: function () {
@@ -527,7 +662,7 @@ var Portal = function (deps, containers) {
 				'manager': GearManagerApp,
 				'model': new ApplicationModel({
 					'name': 'Gear Manager',
-					'icon': '/static/imgs/gear_manager.png'
+					'icon': '/static/img/gear_manager.png'
 				})
 			}
 		},
