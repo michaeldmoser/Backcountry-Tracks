@@ -466,6 +466,9 @@ var GearManagerApp = Backbone.View.extend({
 		$(this.el).hide();
 		this.model.bind('activating', this.handle_activate);
 
+		var app_title = $('<h1 />').html('Gear Manager');
+		$(this.el).append(app_title);
+
 		this.gear = new GearCollection([
 			{'name': 'Backpack', 'description': 'This is a backpack', 'weight': '24 oz'},
 			{'name': 'Alcohol Stove', 'description': 'A stove that uses alcohol for fuel', 'weight': '2 oz'},

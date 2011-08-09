@@ -91,6 +91,7 @@ div {
 	height: 98px;
 }
 
+
 div.gear_list_view_container {
 	width: 100%;
 }
@@ -160,7 +161,7 @@ div.gear_list_view_controls {
 	left: 100px;
 	right: 0px;
 	position: fixed;
-	z-index: 9999;
+	z-index: 9998;
 	margin: 0 0 0 0;
 	background-color: #fff;
 	min-height: 116px;
@@ -196,6 +197,16 @@ div.gear_list_add_button {
 div.application_container {
 	position: absolute;
 	width: 100%;
+}
+
+div.application_container h1 {
+	position: fixed;
+	left: 120px;
+	z-index: 9999;
+	top: 110px;
+	padding:0;
+	margin:0;
+	font-weight: normal;
 }
 div.gear_list_add_form {
 	background-color: #fff;

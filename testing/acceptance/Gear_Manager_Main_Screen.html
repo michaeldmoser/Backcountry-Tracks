@@ -213,7 +213,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_I click on the &quot;Gear Manager&quot; icon">I click on the "Gear Manager" icon</a></td>
 <td>Click Image</td>
-<td>gear_manager_app_icon</td>
+<td>Gear Manager</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
@@ -227,14 +227,28 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_the &quot;Gear Manager&quot; screen should appear">the "Gear Manager" screen should appear</a></td>
 <td>Page Should Contain Element</td>
-<td>css=div#gear_manager_view</td>
+<td>css=div.gear_list_view_container</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>1</td>
+<td>.1</td>
 <td>Element Should Be Visible</td>
-<td>gear_manager_view</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>css=div.gear_list_view_container</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain</td>
+<td>Gear Manager</td>
 <td></td>
 <td></td>
 </tr>
