@@ -56,7 +56,7 @@ class Application(object):
             "To complete your registration, click on the link below or copy and paste it into your browser's location bar." \
             "Once you have completed your registration, you can login to your BackCountryTracks.com account!" % (first_name, last_name)
 
-        href = u'%s/app/register?email=%s&confirmation_key=%s' % (self.trailhead_url, email, confirmation_key)
+        href = u'%s/activate/%s/%s' % (self.trailhead_url, email, confirmation_key)
         link = u'<a href="%s">%s</a>' % (href, href)
 
         output.append(u'<html><head><title>Welcome to BackCountryTracks.com!</title></head><body>')
@@ -65,8 +65,16 @@ class Application(object):
         output.append(u'</body></html>')
         return '\r\n'.join(output)
 
-    def complete_registration(self, data):
-        pass
+    def activate(self, email, confirmation_key):
+        user_object = self.bucket.get(str(email))
+        user = user_object.get_data()
+
+        if user and confirmation_key == user['confirmation_key']:
+            user['registration_complete'] = True
+            user_object.store()
+            return True
+
+        return False
 
     def login(self, email, password):
         '''
