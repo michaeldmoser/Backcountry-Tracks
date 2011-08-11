@@ -20,6 +20,7 @@ from .riakenv import RiakEnvironment
 from .utils import wait_for_start
 from .rabbitmq import RabbitMQEnvironment
 from .nginx import NginxEnvironment
+from .gear import Gear
 
 default_logging_config = {
         'version': 1,
@@ -59,6 +60,8 @@ class TpEnvironment(object):
         self.riak = RiakEnvironment(self)
         self.rabbitmq = RabbitMQEnvironment(self)
         self.nginx = NginxEnvironment(self)
+
+        self.gear = Gear(self)
 
         logging.config.dictConfig(default_logging_config)
 

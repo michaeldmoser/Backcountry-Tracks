@@ -3,6 +3,8 @@
 *.egg-info
 *.yaml
 *.swp
+*.log
+*.bak
 config/nginx
 config/riak
 log.html
