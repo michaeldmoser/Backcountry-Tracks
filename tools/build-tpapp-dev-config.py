@@ -12,13 +12,13 @@ def main():
     settings.configure()
     working_directory = os.getcwd()
 
-    tptesting_yaml_template = "testing/etc/tptesting.yaml.in"
-    tptesting_yaml = 'testing/etc/tptesting.yaml'
+    tpapp_yaml_template = "config/tpapp.yaml.in"
+    tpapp_yaml = 'config/tpapp.yaml'
 
-    tptesting_template_file = open(tptesting_yaml_template, "r+")
-    tptesting_template = Template(tptesting_template_file.read())
+    tpapp_template_file = open(tpapp_yaml_template, "r+")
+    tpapp_template = Template(tpapp_template_file.read())
 
-    tptesting_yaml_file = open(tptesting_yaml, 'w')
+    tpapp_yaml_file = open(tpapp_yaml, 'w')
 
     fqdn = socket.getfqdn()
 
@@ -29,10 +29,10 @@ def main():
         'user': pw_name,
     })
 
-    rendered_tptesting_yaml = tptesting_template.render(context)
+    rendered_tpapp_yaml = tpapp_template.render(context)
 
-    tptesting_yaml_file.write(rendered_tptesting_yaml)
-    tptesting_yaml_file.close()
+    tpapp_yaml_file.write(rendered_tpapp_yaml)
+    tpapp_yaml_file.close()
 
 if __name__ == '__main__':
     main()

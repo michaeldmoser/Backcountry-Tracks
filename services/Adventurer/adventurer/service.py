@@ -33,10 +33,31 @@ class Controller(object):
     def begin_consuming(self):
         self.channel.basic_consume(self.process_registration, queue='register')
         self.channel.basic_consume(self.process_login, queue='login_rpc')
+        self.channel.basic_consume(self.process_activation, queue='activate_rpc')
 
     def process_registration(self, channel, method, header, data):
         self.app_instance.register(json.loads(data))
-        # TODO: The message needs to be ack()'ed
+#         TODO: The message needs to be ack()'ed
+
+    def process_activation(self, channel, method, header, data):
+        params = json.loads(data)
+        email = params['email']
+        confirmation_code = params['confirmation_code']
+
+        result = self.app_instance.activate(email, confirmation_code)
+
+        properties = pika.BasicProperties(
+                correlation_id = header.correlation_id,
+                content_type = 'application/json'
+                )
+
+        activate_reply = json.dumps({
+            'successful': result
+            })
+        self.channel.basic_publish(exchange='registration',
+                routing_key='registration.activate.%s' % header.reply_to,
+                properties=properties,
+                body=activate_reply)
 
     def process_login(self, channel, method, header, data):
         login = json.loads(data)

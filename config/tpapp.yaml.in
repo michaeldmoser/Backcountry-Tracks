@@ -1,0 +1,26 @@
+hostname: {{ hostname }}
+url_prefix: app
+
+trailhead_url: http://{{ hostname }}/app
+
+trailhead:
+    pidfile: /var/run/tripplanner/trailhead.pid
+
+riak:
+    datadir: '/srv/riak/bitcask/'
+
+adventurer:
+    start: ['adventurer', 'start']
+    stop: ['adventurer', 'stop']
+    pidfile: '/var/run/tripplanner/adventurer.pid'
+
+smtp:
+    host: localhost
+    port: 25
+    from_line: BackCountry Tracks
+    from_address: noreply@example.org
+    subject: BackCountry Tracks Notification
+
+mbox_file: '/var/mail/{{ user }}'
+
+user: '{{ user }}'

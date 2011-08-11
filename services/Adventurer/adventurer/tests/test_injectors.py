@@ -104,14 +104,22 @@ class TestApplicationInjector(unittest.TestCase):
                 spy.name = name
                 class BucketStub(object):
                     pass
-                spy.BucketStub = BucketStub 
+                spy.BucketStub = BucketStub
 
                 return BucketStub()
         self.RiakClientSpy = RiakClientSpy()
 
+        class MailerStub(object):
+            def __init__(self, **args):
+                pass
+        self.mailerstub = MailerStub
+
         class ApplicationInjectorSUT(ApplicationInjector):
             def _ApplicationInjector__riak(sut):
                 return self.RiakClientSpy
+
+            def _ApplicationInjector__mailer(sut):
+                return self.mailerstub
 
         class PikaChannelStub(object):
             def basic_publish(stub):
@@ -129,7 +137,9 @@ class TestApplicationInjector(unittest.TestCase):
         '''Uses the adventurers bucket for the riak dependency'''
         self.assertEquals(self.RiakClientSpy.name, 'adventurers')
 
-
+    def test_creates_mailer_dependency(self):
+        '''Creates and passes in the mailer dependency'''
+        self.assertIsInstance(self.app.mailer, self.mailerstub)
 
 
 if __name__ == '__main__':
