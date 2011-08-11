@@ -1,3 +1,6 @@
+import urllib2
+import cookielib
+import json
 
 class UserTemplate(dict):
     '''
@@ -12,6 +15,9 @@ class UserTemplate(dict):
       password:: The password for this user
 
     '''
+
+    def set_trailhead_url(self, url):
+        self.trailhead_url = url
 
     def __get_first_name(self):
         return self['first_name']
@@ -32,5 +38,25 @@ class UserTemplate(dict):
     def __get_password(self):
         return self['password']
     password = property(fget=__get_password)
+
+    def login(self):
+        jar = cookielib.CookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(jar))
+
+        login_url = self.trailhead_url + '/login'
+        credentials = {
+                'email': self['email'],
+                'password': self['password']
+                }
+
+        login_request = urllib2.Request(
+                login_url,
+                json.dumps(credentials),
+                headers = {'Content-Type': 'application/json'}
+                )
+        response = opener.open(login_request)
+        response.read()
+
+        return opener
 
 

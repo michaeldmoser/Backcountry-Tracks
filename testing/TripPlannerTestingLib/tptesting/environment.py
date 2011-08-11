@@ -18,6 +18,7 @@ from .riakenv import RiakEnvironment
 from .utils import wait_for_start
 from .rabbitmq import RabbitMQEnvironment
 from .nginx import NginxEnvironment
+from .trailhead import TrailheadEnvironment
 from .gear import Gear
 
 default_logging_config = {
@@ -58,6 +59,7 @@ class TpEnvironment(object):
         self.riak = RiakEnvironment(self)
         self.rabbitmq = RabbitMQEnvironment(self)
         self.nginx = NginxEnvironment(self)
+        self.trailhead = TrailheadEnvironment(self)
 
         self.gear = Gear(self)
 
@@ -69,7 +71,9 @@ class TpEnvironment(object):
 
         users = self.__config['users']
         if users.has_key(name):
-            return UserTemplate(users[name])
+            user = UserTemplate(users[name])
+            user.set_trailhead_url(self.trailhead_url)
+            return user
 
         raise AttributeError("No attribute: %s" % name)
 
@@ -97,7 +101,7 @@ class TpEnvironment(object):
         self.rabbitmq.start()
         self.riak.start()
         self.adventurer.start()
-        self.start_trailhead()
+        self.trailhead.start()
 
     def teardown(self):
         '''
@@ -110,41 +114,18 @@ class TpEnvironment(object):
         '''
         Removes pid files
         '''
-        if path.exists(self.trailhead['pidfile']):
-            os.unlink(self.trailhead['pidfile'])
-
+        self.trailhead.remove_pidfile()
         self.adventurer.remove_pidfile()
 
     def kill_processes(self):
         '''
         Shutdowns all services
         '''
-        self.stop_trailhead()
+        self.trailhead.stop()
         self.adventurer.stop()
         self.riak.stop()
         self.rabbitmq.stop()
         self.nginx.stop()
-
-    def start_trailhead(self):
-        '''
-        Starts the trailhead application server
-        '''
-        subprocess.call(['trailhead', 'start'], 
-                stdout=self.devnull, stderr=self.devnull)
-        def check_trailhead_start():
-            urllib2.urlopen("http://localhost:8080/")
-        wait_for_start(check_trailhead_start, urllib2.URLError)
-
-    def stop_trailhead(self):
-        '''
-        Stop the trailhead app server
-        '''
-        if path.exists(self.trailhead['pidfile']):
-            pid = int(open(self.trailhead['pidfile']).read())
-            try:
-                os.kill(pid, 9)
-            except OSError:
-                pass
 
     def create_user(self, user):
         adventurers = self.riak.get_database('adventurers')

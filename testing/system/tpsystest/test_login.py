@@ -17,7 +17,7 @@ class TestLoginHTTPPost(unittest.TestCase):
         cls.environ.make_pristine()
         cls.environ.nginx.start()
         cls.environ.rabbitmq.start()
-        cls.environ.start_trailhead()
+        cls.environ.trailhead.start()
 
         mq_params = pika.ConnectionParameters(host='localhost')
         mq_conn = pika.BlockingConnection(mq_params)
@@ -75,7 +75,7 @@ class TestLoginHTTPResponse(unittest.TestCase):
         self.environ.make_pristine()
         self.environ.nginx.start()
         self.environ.rabbitmq.start()
-        self.environ.start_trailhead()
+        self.environ.trailhead.start()
 
         mq_params = pika.ConnectionParameters(host='localhost')
         mq_conn = pika.BlockingConnection(mq_params)
