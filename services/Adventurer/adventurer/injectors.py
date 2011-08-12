@@ -1,6 +1,7 @@
 import pika.adapters
 import riak
 import daemon
+import yaml
 from lockfile.pidlockfile import PIDLockFile
 
 import service
@@ -48,7 +49,13 @@ class ApplicationInjector(object):
     def __mailer(self):
         return mailer.Mailer
 
+    def __config(self):
+        config_yaml = open('/etc/tpapp.yaml', 'r')
+        config = yaml.load(config_yaml)
+        return config
+
     def __call__(self):
+        config = self.__config()
         riak = self.__riak()
         self.riak_client = riak()
         bucket = self.riak_client.bucket('adventurers')
@@ -56,7 +63,13 @@ class ApplicationInjector(object):
         mail_class = self.__mailer()
         mailer = mail_class(host = 'localhost', port = 25)
 
-        return Application(bucket = bucket, mailer = mailer)
+        app = Application(
+            bucket = bucket,
+            mailer = mailer,
+            trailhead_url = config['trailhead_url']
+            )
+
+        return app
 application = ApplicationInjector()
 
 

@@ -1,5 +1,6 @@
 from tornado.web import Application, RequestHandler
 from trailhead.register import RegisterHandler
+from trailhead.register import ActivateHandler
 from trailhead.login import LoginHandler
 
 class RootHandler(RequestHandler):
@@ -22,12 +23,13 @@ class TrailHead(object):
         with daemon_context:
             app = self.webapp([
                 (r'/', RootHandler),
-                (r'/app/register(.*)', RegisterHandler),
+                (r'/app/register', RegisterHandler),
+                (r'/app/activate/(.*)/(.*)', ActivateHandler),
                 (r'/app/login', LoginHandler),
                 ])
             app.listen(8080)
 
-            self.ioloop_instance = self.ioloop.IOLoop.instance()
-            app.mq = self.mqclient
-            self.ioloop_instance.add_timeout(1000, app.mq.connect)
-            self.ioloop_instance.start()
+        self.ioloop_instance = self.ioloop.IOLoop.instance()
+        app.mq = self.mqclient
+        self.ioloop_instance.add_timeout(1000, app.mq.connect)
+        self.ioloop_instance.start()

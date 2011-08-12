@@ -6,7 +6,7 @@ class Mailer(object):
     def __init__(self, host='localhost', port=25):
         self.host = host
         self.port = port
-        self.smtp = smtplib.SMTP(host, port)
+        self.smtp = smtplib.SMTP()
 
     def send(self, from_address, from_line, to, subject, body):
 
@@ -16,6 +16,7 @@ class Mailer(object):
         if type(message) == unicode:
             message = message.encode('utf-8')
 
+        self.smtp.connect(self.host, self.port)
         self.smtp.sendmail(from_address, to, message)
         self.smtp.quit()
 
