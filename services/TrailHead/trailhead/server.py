@@ -2,6 +2,7 @@ from tornado.web import Application, RequestHandler
 from trailhead.register import RegisterHandler
 from trailhead.register import ActivateHandler
 from trailhead.login import LoginHandler
+from trailhead.gear import UserGearListHandler
 
 class RootHandler(RequestHandler):
     def get(self):
@@ -26,6 +27,7 @@ class TrailHead(object):
                 (r'/app/register', RegisterHandler),
                 (r'/app/activate/(.*)/(.*)', ActivateHandler),
                 (r'/app/login', LoginHandler),
+                (r'/app/users/(.*)/gear', UserGearListHandler),
                 ])
             app.listen(8080)
 
