@@ -32,7 +32,7 @@ class LoginHandler(web.RequestHandler):
             self.set_header('X-Location', '/app/home')
             self.set_status(202)
         else:
-            self.set_header('X-Location', '/app/login')
+            self.set_header('X-Location', '/')
             self.set_status(403)
 
         self.finish()

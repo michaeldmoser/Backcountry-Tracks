@@ -54,8 +54,10 @@ class ActivateHandler(RequestHandler):
     def respond_to_request(self, headers, body):
         reply = json.loads(body)
         if reply['successful'] == True:
-            self.set_status(202)
+            self.set_status(303)
+            self.set_header('Location', '/app/registration-complete')
         else:
             self.set_status(403)
-        self.set_header('Location', '/app/login')
+            self.set_header('Location', '/')
+
         self.finish()
