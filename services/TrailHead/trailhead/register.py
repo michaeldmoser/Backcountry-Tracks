@@ -3,8 +3,10 @@ import pika
 import uuid
 from tornado import web
 from tornado.web import RequestHandler
+from trailhead.login import BaseHandler
 
-class RegisterHandler(RequestHandler):
+class RegisterHandler(BaseHandler):
+
     def get(self):
         self.set_status(400)
         return
@@ -12,6 +14,11 @@ class RegisterHandler(RequestHandler):
     def post(self):
         if 'application/json' not in self.request.headers.get('Content-Type'):
             self.set_status(400)
+            return
+
+        if self.current_user:
+            self.set_status(400)
+            self.finish()
             return
 
         mq = self.application.mq
@@ -28,9 +35,15 @@ class RegisterHandler(RequestHandler):
         self.set_status(202)
         self.finish()
 
-class ActivateHandler(RequestHandler):
+class ActivateHandler(BaseHandler):
     @web.asynchronous
     def get(self, email, confirmation_code):
+
+        if self.current_user:
+            self.set_status(400)
+            self.finish()
+            return
+
         data = json.dumps({
             'email': email,
             'confirmation_code': confirmation_code
