@@ -33,7 +33,6 @@ class RegisterHandler(BaseHandler):
                 properties = properties
                 )
         self.set_status(202)
-        self.finish()
 
 class ActivateHandler(BaseHandler):
     @web.asynchronous

@@ -8,7 +8,7 @@ class WebApplicationFake(object):
     def __init__(self):
         self.__usage = list()
 
-    def __call__(self, handlers=None, default_host='', transforms=None, 
+    def __call__(self, handlers=None, default_host='', transforms=None,
             wsgi=False, **settings):
         self.handlers = handlers
         self.default_host = default_host
@@ -17,6 +17,9 @@ class WebApplicationFake(object):
         self.ui_methods = {}
         self.ui_modules = {}
         self._wsgi = wsgi
+        self.settings = {
+            'cookie_secret': 'test_secret'
+            }
 
         return self
 

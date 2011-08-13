@@ -141,14 +141,15 @@ class TestLoginHTTPResponse(unittest.TestCase):
             assert self.response is not None
         utils.try_until(1, wait_for_response)
 
-        self.assertIn('/app/login', self.response.info().getheader('X-Location'))
+        self.assertIn('/', self.response.info().getheader('X-Location'))
 
     def test_send_valid_login_response(self):
         '''
         Receiving a valid login response provides location to home page
         '''
         valid_login_reply = {
-                'successful': True
+                'successful': True,
+                'email': 'dummy@example.org'
                 }
 
         properties = pika.BasicProperties(
