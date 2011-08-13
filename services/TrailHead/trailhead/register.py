@@ -71,5 +71,4 @@ class ActivateHandler(BaseHandler):
         else:
             self.set_status(403)
             self.set_header('Location', '/')
-
         self.finish()

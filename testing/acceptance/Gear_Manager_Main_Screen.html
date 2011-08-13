@@ -1,0 +1,404 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="RIDE" /> 
+<meta name="rf-template" content="False" /> 
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>Gear Manager Main Screen</title>
+</head>
+<body>
+<h1>Gear Manager Main Screen</h1>
+<table id="settings" border="1">
+<tr>
+<th class="name">Setting</th>
+<th colspan="4">Value</th>
+</tr>
+<tr>
+<td class="name">Suite Setup</td>
+<td>Setup gear manager main screen suite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>testing/acceptance/__init__.html</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table id="variables" border="1"></table>
+<table id="testcases" border="1">
+<tr>
+<th class="name">Test Case</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="test_Access the gear manager">Access the gear manager</a></td>
+<td>Given the application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I click on the "Gear Manager" icon</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the "Gear Manager" screen should appear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_No Gear In List">No Gear In List</a></td>
+<td>Given my gear list is empty</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I go to the "Gear Manager"</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then I see a screen asking to add gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_View list of gear">View list of gear</a></td>
+<td>Given I have some basic gear in my gear list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I go to the "Gear Manager"</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then I should see a list of all my gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table id="keywords" border="1">
+<tr>
+<th class="name">Keyword</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Setup gear manager main screen suite">Setup gear manager main screen suite</a></td>
+<td>Initialize the environment with typical defaults</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Login as Douglas</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the application is open">the application is open</a></td>
+<td>Go to</td>
+<td>${SITE_HOME_PAGE}app/home</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I click on the &quot;Gear Manager&quot; icon">I click on the "Gear Manager" icon</a></td>
+<td>Click Image</td>
+<td>Gear Manager</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the &quot;Gear Manager&quot; screen should appear">the "Gear Manager" screen should appear</a></td>
+<td>Page Should Contain Element</td>
+<td>css=div.gear_list_view_container</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>1</td>
+<td>.2</td>
+<td>Element Should Be Visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>css=div.gear_list_view_container</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain</td>
+<td>Gear Manager</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_my gear list is empty">my gear list is empty</a></td>
+<td>Go to</td>
+<td>${SITE_HOME_PAGE}app/home</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I go to the &quot;Gear Manager&quot;">I go to the "Gear Manager"</a></td>
+<td>Click Image</td>
+<td>Gear Manager</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I see a screen asking to add gear">I see a screen asking to add gear</a></td>
+<td>the "Gear Manager" screen should appear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain Element</td>
+<td>css=div#add_gear_splash</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain Link</td>
+<td>add gear</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I have some basic gear in my gear list">I have some basic gear in my gear list</a></td>
+<td>Add gear item</td>
+<td>Backpack</td>
+<td>A really lightweight frameless backpack</td>
+<td>18</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>Alcohol stove</td>
+<td>A small alcohol stove made out of a coke can</td>
+<td>1</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>Quilt</td>
+<td>A 800 power down quilt</td>
+<td>17</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>Sleeping pad</td>
+<td>A closed cell half length foam sleeping pad</td>
+<td>12</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add gear item</td>
+<td>8x5 Tarp</td>
+<td>A catenary cut 8 foot by 5 foot silnylon tarp</td>
+<td>14</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I should see a list of all my gear">I should see a list of all my gear</a></td>
+<td>Element Should Contain</td>
+<td>css=div.gear_listing</td>
+<td>Backpack</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div.gear_listing</td>
+<td>Alcohol stove</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div.gear_listing</td>
+<td>8x5 Tarp</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div.gear_listing</td>
+<td>Quilt</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element should contain</td>
+<td>css=div.gear_listing</td>
+<td>Sleeping pad</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>
