@@ -9,8 +9,8 @@ class SmokeSignalApp(object):
         # register
         channel.exchange_declare(exchange = 'registration', durable = True,
                 type = 'topic')
-        channel.queue_declare(queue = 'register', durable=True)
-        channel.queue_bind(queue = 'register', exchange = 'registration',
+        channel.queue_declare(queue = 'register_rpc', durable=True)
+        channel.queue_bind(queue = 'register_rpc', exchange = 'registration',
                 routing_key = 'registration.register')
 
         # activate

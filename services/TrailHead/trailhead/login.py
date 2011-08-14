@@ -15,11 +15,6 @@ class LoginHandler(BaseHandler):
             self.finish()
             return
 
-        if self.current_user:
-            self.set_status(400)
-            self.finish()
-            return
-
         mq = self.application.mq
         correlation_id = str(uuid.uuid4())
         properties = pika.BasicProperties(
