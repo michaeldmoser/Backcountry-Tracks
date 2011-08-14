@@ -16,11 +16,6 @@ class RegisterHandler(BaseHandler):
             self.set_status(400)
             return
 
-        if self.current_user:
-            self.set_status(400)
-            self.finish()
-            return
-
         mq = self.application.mq
         properties = pika.BasicProperties(
                 content_type = 'application/json',
@@ -37,11 +32,6 @@ class RegisterHandler(BaseHandler):
 class ActivateHandler(BaseHandler):
     @web.asynchronous
     def get(self, email, confirmation_code):
-
-        if self.current_user:
-            self.set_status(400)
-            self.finish()
-            return
 
         data = json.dumps({
             'email': email,
