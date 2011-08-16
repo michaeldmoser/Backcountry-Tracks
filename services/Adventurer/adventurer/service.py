@@ -69,7 +69,8 @@ class Controller(object):
                 )
 
         login_reply = json.dumps({
-            'successful': result
+            'successful': result,
+            'email': login['email']
             })
         self.channel.basic_publish(exchange='adventurer',
                 routing_key='adventurer.login.%s' % header.reply_to,

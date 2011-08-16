@@ -46,8 +46,8 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
         cls.pidfile_path = adventurer_config['pidfile']
 
     @classmethod
-    def tearDownClass(self):
-        self.environ.teardown()
+    def tearDownClass(cls):
+        cls.environ.teardown()
 
     def test_daemonized_process(self):
         '''We should have a running process with a pidfile'''
@@ -106,6 +106,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
                 body=registration_message
                 )
 
+        self.environ.clear_mbox()
         mbox_path = self.environ.get_config_for('mbox_file')
         self.mbox = mailbox.mbox(mbox_path)
         assert len(self.mbox) == 0, 'Mailbox not pristine'
@@ -132,6 +133,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
                 body=registration_message
                 )
 
+        self.environ.clear_mbox()
         mbox_path = self.environ.get_config_for('mbox_file')
         self.mbox = mailbox.mbox(mbox_path)
         assert len(self.mbox) == 0, 'Mailbox not pristine'
@@ -148,8 +150,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
             continue
 
         trailhead_url = self.environ.get_config_for('trailhead_url')
-        url = 'href="http://%s/app/register?email=' % trailhead_url
-
+        url = 'href="%s/activate/%s/' % (trailhead_url, self.albert['email'])
         self.assertIn(url, message.as_string())
 
     def test_confirmation_request_activates_account(self):
@@ -188,7 +189,6 @@ class TestAdventurerServiceLogins(unittest.TestCase):
 
         environ.adventurer.create_user('albert')
 
-
         properties = pika.BasicProperties(
                 content_type = 'application/json',
                 correlation_id = str(uuid.uuid4()),
@@ -213,7 +213,8 @@ class TestAdventurerServiceLogins(unittest.TestCase):
 
             login_reply = json.loads(body)
             expected_reply = {
-                    'successful': True
+                    'successful': True,
+                    'email': environ.albert.email
                     }
             self.assertEquals(login_reply, expected_reply)
         utils.try_until(1, verify_successful_login)

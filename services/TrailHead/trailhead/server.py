@@ -21,6 +21,11 @@ class TrailHead(object):
     def run(self):
         daemon_context = self.daemonize(pidfile=self.pidfile)
 
+        settings = {
+            'cookie_secret': "psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja",
+            'login_url': "/"
+            }
+
         with daemon_context:
             app = self.webapp([
                 (r'/', RootHandler),
@@ -28,7 +33,7 @@ class TrailHead(object):
                 (r'/app/activate/(.*)/(.*)', ActivateHandler),
                 (r'/app/login', LoginHandler),
                 (r'/app/users/(.*)/gear', UserGearListHandler),
-                ])
+                ], **settings)
             app.listen(8080)
 
         self.ioloop_instance = self.ioloop.IOLoop.instance()

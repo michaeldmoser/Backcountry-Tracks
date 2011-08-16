@@ -3,7 +3,11 @@ import uuid
 import json
 from tornado import web
 
-class LoginHandler(web.RequestHandler):
+class BaseHandler(web.RequestHandler):
+    def get_current_user(self):
+        return self.get_secure_cookie("user")
+
+class LoginHandler(BaseHandler):
     @web.asynchronous
     def post(self):
         if 'application/json' not in self.request.headers.get('Content-Type'):
@@ -29,10 +33,11 @@ class LoginHandler(web.RequestHandler):
     def respond_to_login(self, headers, body):
         reply = json.loads(body)
         if reply['successful'] == True:
+            self.set_secure_cookie("user", reply['email'])
             self.set_header('X-Location', '/app/home')
             self.set_status(202)
         else:
-            self.set_header('X-Location', '/app/login')
+            self.set_header('X-Location', '/')
             self.set_status(403)
 
         self.finish()

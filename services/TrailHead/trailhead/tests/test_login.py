@@ -143,7 +143,7 @@ class TestLoginReply(unittest.TestCase):
 
     def test_process_valid_login_reply(self):
         '''Uses 202 status code for valid login'''
-        body = json.dumps(dict(successful = True))
+        body = json.dumps(dict(successful = True, email = 'test@example.org'))
         reply_queue = self.application.mq.rpc_reply
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
@@ -152,7 +152,7 @@ class TestLoginReply(unittest.TestCase):
 
     def test_process_valid_login_location(self):
         '''Sets location to /app/home'''
-        body = json.dumps(dict(successful = True))
+        body = json.dumps(dict(successful = True, email = 'test@example.org'))
         reply_queue = self.application.mq.rpc_reply
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
@@ -170,14 +170,14 @@ class TestLoginReply(unittest.TestCase):
         self.assertEquals(self.handler._status_code, 403)
 
     def test_process_invalid_login_location(self):
-        '''Sets location to /app/login'''
-        body = json.dumps(dict(successful = False))
+        '''Sets location to /'''
+        body = json.dumps(dict(successful = False, email = 'test@example.org'))
         reply_queue = self.application.mq.rpc_reply
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
 
         location = self.handler._headers['X-Location']
-        self.assertEquals(location, '/app/login')
+        self.assertEquals(location, '/')
 
     def test_finishes_request(self):
         '''Report being finished to tornado'''

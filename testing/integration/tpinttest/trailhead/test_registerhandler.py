@@ -36,7 +36,7 @@ class TestRegisterHandler(unittest.TestCase):
             try:
                 urlopen(self.register_url)
             except HTTPError, e:
-                self.assertEquals(405, e.code)
+                self.assertEquals(400, e.code)
             except URLError, e:
                 self.fail(str(e))
 

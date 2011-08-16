@@ -82,11 +82,11 @@ class TestApplication(unittest.TestCase):
 
         def confirmation_key_generator():
             return 'generated_confirmation_key'
-        app.generate_confirmation_key= confirmation_key_generator
+        app.generate_confirmation_key = confirmation_key_generator
         user = environ.albert.copy()
         app.register(user)
 
-        expected_link = '%s?email=%s&confirmation_key=%s' % (
+        expected_link = '%s/activate/%s/%s' % (
                 trailhead_url,
                 user['email'],
                 'generated_confirmation_key'

@@ -96,7 +96,7 @@ class TestServiceLogin(unittest.TestCase):
                 'routing_key': 'adventurer.login.%s' % properties.reply_to,
                 'correlation_id': properties.correlation_id,
                 'content_type': properties.content_type,
-                'body': {'successful': True}
+                'body': {'successful': True, 'email': environ.douglas.email}
                 }
 
         actual_message = {

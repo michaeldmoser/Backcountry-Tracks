@@ -46,7 +46,7 @@ class TestTrailHeadTornado(unittest.TestCase):
             def listen(self, port):
                 self.port = port
 
-            def __call__(self, routes):
+            def __call__(self, routes, **args):
                 '''
                 Use this so the instance can act like a class but allows us
                 to record calls
@@ -87,7 +87,7 @@ class TestTrailHeadTornado(unittest.TestCase):
                 )
         self.trailhead.run()
         # FIXME: Need to find a better way to activate this in tests
-        self.pika_class.ioloop.start() 
+        self.pika_class.ioloop.start()
 
     def tearDown(self):
         pass
