@@ -4,25 +4,6 @@ import pika
 import uuid
 import json
 
-# FIXME: Remove this thing
-fake_gear_list = [
-            {
-            'name': 'Backpack',
-            'description': 'Something you wear on your back to carry your gear',
-            'weight': '48 oz'
-            },
-            {
-            'name': 'Backpacking Stove',
-            'description': 'A single burner stove for cooking food and boiling water',
-            'weight': '5 oz'
-            },
-            {
-            'name': 'Tarp',
-            'description': 'A single walled shelter made of silnylon',
-            'weight': '20 oz'
-            },
-        ]
-
 class UserGearListHandler(web.RequestHandler):
 
     @web.asynchronous
