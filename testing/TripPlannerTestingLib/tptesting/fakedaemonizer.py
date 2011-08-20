@@ -14,5 +14,6 @@ class Daemonizer(object):
         pass
 
 class PidFile(object):
-    pass
+    def __init__(self, path):
+        self.path = path
 

@@ -51,6 +51,51 @@ default_logging_config = {
         }
 
 
+mock_config = {
+        'services': {
+            'TestService/test_service': {
+                    'option1': '1',
+                    'option2': '2'
+                }
+            },
+
+        'messaging': {
+            'connection_params': {
+                    'host': 'localhost',
+                    'virtual_host': '/'
+                }
+            },
+        'pidfile': '/var/run/tripplanner/groupleader.pid',
+
+        'logging': {
+                'version': 1,
+                'formatters': {
+                    'simple': {
+                        'format': "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                        },
+                    },
+                'handlers': {
+                    'main': {
+                        'class': 'tptesting.tplogging.MemoryLoggingHandler',
+                        'level': 'DEBUG',
+                        'formatter': 'simple',
+                        },
+                    },
+                'loggers': {
+                    'main_logger': {
+                        'level': 'DEBUG',
+                        'handlers': ['main'],
+                        'propagate': 'no',
+                        },
+                    },
+                'root': {
+                    'level': 'DEBUG',
+                    'handlers': ['main'],
+                    },
+            }
+        }
+
+
 class TpEnvironment(object):
 
     def __init__(self, config):
@@ -64,6 +109,8 @@ class TpEnvironment(object):
         self.trailhead = TrailheadEnvironment(self)
 
         self.gear = Gear(self)
+
+        self.mock_config = mock_config
 
         logging.config.dictConfig(default_logging_config)
 

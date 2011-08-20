@@ -55,7 +55,7 @@ class TestServiceLogin(unittest.TestCase):
         environ = environment.create()
 
         daemonizer = fakedaemonizer.Daemonizer()
-        pidfile = fakedaemonizer.PidFile()
+        pidfile = fakedaemonizer.PidFile('/some/path')
         riak_class = fakeriak.RiakClientFake()
         riak_class()
         bucket = riak_class.bucket('adventurer')
