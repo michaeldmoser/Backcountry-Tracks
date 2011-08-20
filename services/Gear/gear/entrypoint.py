@@ -4,14 +4,12 @@ import json
 
 class GearEntryPoint(object):
 
-    def __init__(self, channel, configuration):
-        self.channel = channel
+    def __init__(self, environ, configuration):
+        self.environ = environ
         self.config = configuration
 
         self.usergear = self.__usergear()
 
-        service = self.__gearservice()
-        self.service = service(channel, self.config, self.usergear())
 
     def __usergear(self):
         from gear.usergear import UserGear
@@ -22,5 +20,12 @@ class GearEntryPoint(object):
         return GearService
 
     def start(self):
+        self.environ.open_messaging_channel(self.on_channel_opened)
+
+    def on_channel_opened(self, channel):
+        self.channel = channel
+        service = self.__gearservice()
+        self.service = service(self.channel, self.config, self.usergear())
+
         self.service.start()
 

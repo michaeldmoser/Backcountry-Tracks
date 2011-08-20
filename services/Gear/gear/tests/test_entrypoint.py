@@ -4,63 +4,52 @@ import pika
 import uuid
 import json
 
-from tptesting import fakepika
+from tptesting import fakepika, spy
 from gear.entrypoint import GearEntryPoint
 
 class TestServiceCreation(unittest.TestCase):
 
     def setUp(self):
-        class GearServiceSpy(object):
-            def __call__(spy, channel, config, usergear):
-                spy.geardb = usergear
-                spy.channel = channel
-                spy.config = config
-                spy.start_called = False
-
-                return spy
-
-            def start(spy):
-                spy.start_called = True
-        self.servicespy = GearServiceSpy()
+        self.servicespy = spy.SpyObject()
 
         class UserGearStub(object):
-            pass
-        self.UserGearStub = UserGearStub
+            def __call__(self):
+                return self
+        self.UserGearStub = UserGearStub()
 
         class GearEntryPointSUT(GearEntryPoint):
             def _GearEntryPoint__gearservice(sut):
                 return self.servicespy
 
             def _GearEntryPoint__usergear(sut):
-                return UserGearStub
+                return self.UserGearStub
 
         mq = fakepika.SelectConnectionFake()
         mq.ioloop.start()
         self.channel = mq._channel
+
+        class EnvironmentStub(object):
+            def open_messaging_channel(stub, on_channel_callback):
+                on_channel_callback(self.channel)
+        self.tpenviron = EnvironmentStub()
 
         self.configuration = {
                 'queues': {
                     'user_gear': 'gear_user_rpc'
                     }
                 }
-        self.gearep = GearEntryPointSUT(self.channel, self.configuration)
+        self.gearep = GearEntryPointSUT(self.tpenviron, self.configuration)
+        self.gearep.start()
 
-    def test_creates_service_with_config(self):
-        '''Uses correct config when creating service'''
-        self.assertEquals(self.configuration, self.servicespy.config)
-
-    def test_creates_service_with_channel(self):
-        '''Uses correct channel when creating service'''
-        self.assertEquals(self.channel, self.servicespy.channel)
-
-    def test_usergear_passed_in(self):
-        '''Passes in an UserGear instance'''
-        self.assertIsInstance(self.servicespy.geardb, self.UserGearStub)
+    def test_creates_service(self):
+        '''Creates the gear service'''
+        use = spy.UsageRecord('__init__', self.channel, self.configuration,
+                self.UserGearStub)
+        self.assertTrue(self.servicespy.verify_usage(use))
 
     def test_calls_start(self):
         '''Calls the GearService.start() method'''
-        self.gearep.start()
-        self.assertTrue(self.servicespy.start_called)
+        self.assertTrue(self.servicespy.was_called('start'))
 
 
 if __name__ == '__main__':
