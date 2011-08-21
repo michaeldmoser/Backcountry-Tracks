@@ -1,4 +1,5 @@
 import yaml
+import logging
 
 class GroupLeader(object):
     def __init__(self, config, daemonizer, logging, load_services, setproctitle):
@@ -13,6 +14,8 @@ class GroupLeader(object):
         with self.daemonizer(pidfile):
             self.setproctitle('GroupLeader: master')
             self.logging(self.config)
+            log = logging.getLogger('top')
+            log.debug('GroupLeader is daemonized')
             self.services = self.load_services(self.config)
             self.services.spawn()
 

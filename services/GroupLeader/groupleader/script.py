@@ -1,4 +1,5 @@
 from .controller import GroupLeader
+from setproctitle import setproctitle
 
 SERVICES_ENTRY_POINT_GROUP = 'tripplanner.service'
 CONFIG_PATH = '/etc/tripplanner/tpapp.yaml'
@@ -19,7 +20,7 @@ def build_load_services(config):
     messaging = MessagingBuilder(config)
     environ = Environment(config, messaging)
     load_service = ServiceBuilder(load_entry_point, SERVICES_ENTRY_POINT_GROUP,
-            Service, Process, environ)
+            Service, Process, environ, setproctitle)
 
     return Services(load_service)
 
@@ -41,6 +42,6 @@ def main():
     load_services = build_load_services(config)
     logging = build_logging()
 
-    gl = GroupLeader(config, daemonizer, logging, load_services)
+    gl = GroupLeader(config, daemonizer, logging, load_services, setproctitle)
     gl.run()
 

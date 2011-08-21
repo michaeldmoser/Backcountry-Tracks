@@ -34,7 +34,8 @@ class ServiceBuilder(object):
 
     def __call__(self, dist, name, config):
         entry_point = self.load_entry_point(dist, self.group, name)
-        service = self.Service(entry_point, config, self.environ, self.setproctitle)
+        service = self.Service(dist, name, entry_point, config,
+                self.environ, self.setproctitle)
         return self.Process(target=service)
 
 class Services(object):

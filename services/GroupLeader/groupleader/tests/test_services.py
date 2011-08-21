@@ -101,8 +101,8 @@ class TestServiceBuilder(unittest.TestCase):
 
     def test_service_created(self):
         '''Service creation'''
-        use = spy.UsageRecord('__init__', self.TestEntryPoint, self.service_config,
-                self.Environ, self.setproctitle)
+        use = spy.UsageRecord('__init__', self.dist, self.name, self.TestEntryPoint,
+                self.service_config, self.Environ, self.setproctitle)
         self.assertTrue(self.servicespy.verify_usage(use))
 
     def test_process_target(self):
