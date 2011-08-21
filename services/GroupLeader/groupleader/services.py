@@ -4,14 +4,18 @@ import logging
 log = logging.getLogger('top')
 
 class Service(object):
-    def __init__(self, entry_point, config, environ):
+    def __init__(self, dist, name, entry_point, config, environ, setproctitle):
         log.debug('Created service for %s' % str(entry_point))
         self.entry_point = entry_point
         self.config = config
         self.environ = environ
+        self.name = name
+        self.dist = dist
+        self.setproctitle = setproctitle
 
     def __call__(self):
         try:
+            self.setproctitle('GroupLeader: %s/%s' % (self.dist, self.name))
             self.entry_point(self.config, self.environ).start()
         except Exception:
             trace_back = traceback.format_exc()
@@ -20,16 +24,17 @@ class Service(object):
 
 
 class ServiceBuilder(object):
-    def __init__(self, load_entry_point, group, Service, Process, environ):
+    def __init__(self, load_entry_point, group, Service, Process, environ, setproctitle):
         self.load_entry_point = load_entry_point
         self.group = group
         self.Service = Service
         self.Process = Process
         self.environ = environ
+        self.setproctitle = setproctitle
 
     def __call__(self, dist, name, config):
         entry_point = self.load_entry_point(dist, self.group, name)
-        service = self.Service(entry_point, config, self.environ)
+        service = self.Service(entry_point, config, self.environ, self.setproctitle)
         return self.Process(target=service)
 
 class Services(object):

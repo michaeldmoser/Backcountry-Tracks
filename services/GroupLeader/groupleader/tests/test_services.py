@@ -78,15 +78,17 @@ class TestServiceBuilder(unittest.TestCase):
         self.Environ = spy.SpyObject()
         self.Environ()
 
+        self.setproctitle = spy.SpyObject()
+        self.setproctitle()
+
         self.dist = 'TestService'
         self.name = 'test'
         self.group =  'tripplanner.service'
 
         builder = ServiceBuilder(self.load_entry_point, self.group,
-                self.servicespy, self.ProcessSpy, self.Environ)
+                self.servicespy, self.ProcessSpy, self.Environ, self.setproctitle)
         self.service_config = {'test': 'config'}
         self.service = builder(self.dist, self.name, self.service_config)
-
 
     def test_load_entry_point(self):
         '''Load a services entry point'''
@@ -100,13 +102,14 @@ class TestServiceBuilder(unittest.TestCase):
     def test_service_created(self):
         '''Service creation'''
         use = spy.UsageRecord('__init__', self.TestEntryPoint, self.service_config,
-                self.Environ)
+                self.Environ, self.setproctitle)
         self.assertTrue(self.servicespy.verify_usage(use))
 
     def test_process_target(self):
         '''Process should have service as target'''
         use = spy.UsageRecord('__init__', target=self.servicespy)
         self.assertTrue(self.service.verify_usage(use))
+
 
 if __name__ == '__main__':
     unittest.main()

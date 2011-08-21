@@ -39,9 +39,11 @@ class TestGroupLeaderProcessStart(unittest.TestCase):
 
         self.serviceloader = spy.SpyObject()
         self.loggingspy = spy.SpyObject()
+        self.setproctitle = spy.SpyObject()
+        self.setproctitle()
 
         gl = GroupLeader(self.config, self.daemonizer, self.loggingspy, 
-                self.serviceloader)
+                self.serviceloader, self.setproctitle)
         gl.run()
 
 
@@ -63,6 +65,11 @@ class TestGroupLeaderProcessStart(unittest.TestCase):
     def test_spawn_service_processes(self):
         '''GroupLeader spawn processes for the services'''
         self.assertTrue(self.serviceloader.services_spawned)
+
+    def test_sets_process_title(self):
+        '''Sets the process title'''
+        use = spy.UsageRecord('__call__', 'GroupLeader: master')
+        self.assertTrue(self.setproctitle.verify_usage(use))
 
 if __name__ == '__main__':
     unittest.main()
