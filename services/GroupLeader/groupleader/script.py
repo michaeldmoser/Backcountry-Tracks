@@ -1,7 +1,7 @@
 from .controller import GroupLeader
 
 SERVICES_ENTRY_POINT_GROUP = 'tripplanner.service'
-CONFIG_PATH = '/etc/tripplanner/config.yaml'
+CONFIG_PATH = '/etc/tripplanner/tpapp.yaml'
 
 def build_daemonizer():
     from daemon import DaemonContext

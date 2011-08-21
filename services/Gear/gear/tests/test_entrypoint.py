@@ -4,18 +4,16 @@ import pika
 import uuid
 import json
 
-from tptesting import fakepika, spy
+from tptesting import fakepika, spy, fakeriak
 from gear.entrypoint import GearEntryPoint
 
 class TestServiceCreation(unittest.TestCase):
 
     def setUp(self):
         self.servicespy = spy.SpyObject()
+        self.UserGearStub = spy.SpyObject()
 
-        class UserGearStub(object):
-            def __call__(self):
-                return self
-        self.UserGearStub = UserGearStub()
+        self.riak = fakeriak.RiakClientFake()
 
         class GearEntryPointSUT(GearEntryPoint):
             def _GearEntryPoint__gearservice(sut):
@@ -23,6 +21,9 @@ class TestServiceCreation(unittest.TestCase):
 
             def _GearEntryPoint__usergear(sut):
                 return self.UserGearStub
+
+            def _GearEntryPoint__riak(sut):
+                return self.riak
 
         mq = fakepika.SelectConnectionFake()
         mq.ioloop.start()
@@ -36,9 +37,13 @@ class TestServiceCreation(unittest.TestCase):
         self.configuration = {
                 'queues': {
                     'user_gear': 'gear_user_rpc'
+                    },
+                'database': {
+                    'bucket': 'gear',
+                    'host': 'localhost'
                     }
                 }
-        self.gearep = GearEntryPointSUT(self.tpenviron, self.configuration)
+        self.gearep = GearEntryPointSUT(self.configuration, self.tpenviron)
         self.gearep.start()
 
     def test_creates_service(self):
@@ -50,6 +55,19 @@ class TestServiceCreation(unittest.TestCase):
     def test_calls_start(self):
         '''Calls the GearService.start() method'''
         self.assertTrue(self.servicespy.was_called('start'))
+
+    def test_usergear_created(self):
+        '''Creates the user gear db'''
+        use = spy.UsageRecord('__init__', self.riak,
+                self.configuration['database']['bucket'])
+        self.assertTrue(self.UserGearStub.verify_usage(use))
+
+    def test_riakclient(self):
+        '''Creates the riak client'''
+        self.assertEquals(self.configuration['database']['host'], self.riak.host)
+
+        
+
 
 
 if __name__ == '__main__':

@@ -24,3 +24,38 @@ smtp:
 mbox_file: '/var/mail/{{ user }}'
 
 user: '{{ user }}'
+
+pidfile: /var/run/tripplanner/groupleader.pid
+
+messaging:
+    connection_params:
+        host: localhost
+
+services:
+    Gear/gear:
+        queues:
+            user_gear: gear_user_rpc
+        database:
+            host: localhost
+            bucket: gear
+
+logging:
+    version: 1
+    formatters:
+      simple: 
+        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    handlers:
+      main: 
+        class: logging.FileHandler
+        filename: /var/log/tripplanner.log
+        formatter: simple
+        level: DEBUG
+    loggers:
+      top:
+        handlers: [main]
+        level: DEBUG
+        propagate: false
+    root:
+      handlers: [main]
+      level: DEBUG
+

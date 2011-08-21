@@ -4,7 +4,7 @@ import json
 
 class GearEntryPoint(object):
 
-    def __init__(self, environ, configuration):
+    def __init__(self, configuration, environ):
         self.environ = environ
         self.config = configuration
 
@@ -19,13 +19,21 @@ class GearEntryPoint(object):
         from gear.service import GearService
         return GearService
 
+    def __riak(self):
+        from riak import RiakClient
+        return RiakClient
+
     def start(self):
         self.environ.open_messaging_channel(self.on_channel_opened)
 
     def on_channel_opened(self, channel):
         self.channel = channel
         service = self.__gearservice()
-        self.service = service(self.channel, self.config, self.usergear())
 
+        riakclient = self.__riak()
+        riak = riakclient(host=self.config['database']['host'])
+        usergear = self.usergear(riak, self.config['database']['bucket'])
+
+        self.service = service(self.channel, self.config, self.usergear)
         self.service.start()
 
