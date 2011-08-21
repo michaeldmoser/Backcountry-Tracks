@@ -38,7 +38,7 @@ default_logging_config = {
                 },
             },
         'loggers': {
-            'main_logger': {
+            'top': {
                 'level': 'DEBUG',
                 'handlers': ['main'],
                 'propagate': 'no',
@@ -82,7 +82,7 @@ mock_config = {
                         },
                     },
                 'loggers': {
-                    'main_logger': {
+                    'top': {
                         'level': 'DEBUG',
                         'handlers': ['main'],
                         'propagate': 'no',

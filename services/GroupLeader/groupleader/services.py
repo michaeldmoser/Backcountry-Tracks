@@ -1,11 +1,23 @@
+import traceback
+
+import logging
+log = logging.getLogger('top')
+
 class Service(object):
     def __init__(self, entry_point, config, environ):
+        log.debug('Created service for %s' % str(entry_point))
         self.entry_point = entry_point
         self.config = config
         self.environ = environ
 
     def __call__(self):
-        self.entry_point(self.config, self.environ).start()
+        try:
+            self.entry_point(self.config, self.environ).start()
+        except Exception:
+            trace_back = traceback.format_exc()
+            log.error(trace_back)
+            raise
+
 
 class ServiceBuilder(object):
     def __init__(self, load_entry_point, group, Service, Process, environ):
