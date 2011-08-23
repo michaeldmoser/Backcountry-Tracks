@@ -15,6 +15,7 @@ class Service(object):
 
     def __call__(self):
         try:
+            log.debug('Start service: %s/%s' % (self.dist, self.name))
             self.setproctitle('GroupLeader: %s/%s' % (self.dist, self.name))
             self.entry_point(self.config, self.environ).start()
         except Exception:
@@ -54,3 +55,7 @@ class Services(object):
     def spawn(self):
         for service in self.services:
             service.start()
+
+    def shutdown(self):
+        for service in self.services:
+            service.terminate()

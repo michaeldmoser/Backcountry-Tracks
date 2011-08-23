@@ -56,6 +56,45 @@ class TestServices(unittest.TestCase):
         '''Service should not be spawned yet'''
         self.assertFalse(self.servicespy.was_called('start'))
 
+class TestServicesShutrdown(unittest.TestCase):
+    def test_shutdown_all_services(self):
+        '''Shutsdown all started services'''
+        self.config = {
+                'services': {
+                    'TestService/test_service': {
+                            'option1': '1',
+                            'option2': '2'
+                        }
+                    },
+
+                'messaging': {
+                    'connection_params': {
+                            'host': 'localhost',
+                            'virtual_host': '/'
+                        }
+                    },
+                'pidfile': '/var/run/tripplanner/groupleader.pid',
+
+                'logging': {
+                    'handlers': None, 'loggers': None,
+                    }
+                }
+
+
+        self.processspy = spy.SpyObject()
+        class ServiceBuilderStub(object):
+            def __call__(stub, dist, name, config):
+                return self.processspy
+        
+        load_services = Services(ServiceBuilderStub())
+        self.services = load_services(self.config)
+        self.services.spawn()
+
+        self.services.shutdown()
+
+        self.assertTrue(self.processspy.was_called('terminate'))
+
+
 class TestServiceBuilder(unittest.TestCase):
 
     def setUp(self):

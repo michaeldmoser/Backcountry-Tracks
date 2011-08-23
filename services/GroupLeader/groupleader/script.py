@@ -1,12 +1,14 @@
+import sys
 from .controller import GroupLeader
 from setproctitle import setproctitle
+from lockfile.pidlockfile import PIDLockFile
+from os import kill
 
 SERVICES_ENTRY_POINT_GROUP = 'tripplanner.service'
 CONFIG_PATH = '/etc/tripplanner/tpapp.yaml'
 
 def build_daemonizer():
     from daemon import DaemonContext
-    from lockfile.pidlockfile import PIDLockFile
     from .daemonizer import Daemonizer
 
     return Daemonizer(DaemonContext, PIDLockFile)
@@ -42,6 +44,19 @@ def main():
     load_services = build_load_services(config)
     logging = build_logging()
 
-    gl = GroupLeader(config, daemonizer, logging, load_services, setproctitle)
-    gl.run()
+    pidlockfile = PIDLockFile(config['pidfile'])
+
+    gl = GroupLeader(config, daemonizer, logging, load_services, setproctitle,
+            pidlockfile, kill)
+
+    if len(sys.argv) < 2:
+        raise RuntimeError("You must specify start or stop")
+
+    if sys.argv[1] == 'start':
+        gl.run()
+    elif sys.argv[1] == 'stop':
+        gl.stop()
+    else:
+        raise RuntimeError("You must specify start or stop")
+
 
