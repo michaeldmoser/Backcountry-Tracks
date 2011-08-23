@@ -35,6 +35,11 @@ adventurer:
     stop: ['adventurer', 'stop']
     pidfile: '/var/run/tripplanner/adventurer.pid'
 
+groupleader:
+    start: ['groupleader', 'start']
+    stop: ['groupleader', 'stop']
+    pidfile: '/var/run/tripplanner/groupleader'
+
 selenium_server: http://localhost:4444
 
 smtp:

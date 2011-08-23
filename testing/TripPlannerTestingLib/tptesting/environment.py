@@ -22,6 +22,7 @@ from .rabbitmq import RabbitMQEnvironment
 from .nginx import NginxEnvironment
 from .trailhead import TrailheadEnvironment
 from .gear import Gear
+from .groupleader import GroupLeaderEnvironment
 
 default_logging_config = {
         'version': 1,
@@ -107,6 +108,7 @@ class TpEnvironment(object):
         self.rabbitmq = RabbitMQEnvironment(self)
         self.nginx = NginxEnvironment(self)
         self.trailhead = TrailheadEnvironment(self)
+        self.groupleader = GroupLeaderEnvironment(self)
 
         self.gear = Gear(self)
 
@@ -152,6 +154,7 @@ class TpEnvironment(object):
         self.riak.start()
         self.adventurer.start()
         self.trailhead.start()
+        self.groupleader.start()
 
     def teardown(self):
         '''
