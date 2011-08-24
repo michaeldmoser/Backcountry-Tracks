@@ -34,6 +34,6 @@ class GearEntryPoint(object):
         riak = riakclient(host=self.config['database']['host'])
         usergear = self.usergear(riak, self.config['database']['bucket'])
 
-        self.service = service(self.channel, self.config, self.usergear)
+        self.service = service(self.channel, self.config, usergear)
         self.service.start()
 
