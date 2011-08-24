@@ -34,10 +34,10 @@ messaging:
 services:
     Gear/gear:
         queues:
-            user_gear: gear_user_rpc
+            user_gear: user_gear_rpc
         database:
             host: localhost
-            bucket: gear
+            bucket: personal_gear
 
 logging:
     version: 1
