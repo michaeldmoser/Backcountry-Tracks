@@ -18,7 +18,7 @@ class UserGear(object):
         Return a list of all pieces of gear owned by @owner
         '''
         mapreduce = self.riak.add(self.gear_bucket_name)
-        mapreduce.map(self.list_mapreduce, {'owner': owner})
+        mapreduce.map(self.list_mapreduce, options={'arg': {'owner': owner}})
         return mapreduce.run()
 
     

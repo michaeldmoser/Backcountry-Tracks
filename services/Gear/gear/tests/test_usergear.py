@@ -22,7 +22,7 @@ class TestUserGearList(unittest.TestCase):
 
         riak = RiakClientFake()
         riak.add_mapreduce_result(gearlist, UserGear.list_mapreduce, 
-                {'owner': owner})
+                {'arg': {'owner': owner}})
 
         gear = UserGear(riak(), 'gear')
 
