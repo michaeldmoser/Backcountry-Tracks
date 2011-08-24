@@ -174,6 +174,7 @@ class TpEnvironment(object):
         '''
         Shutdowns all services
         '''
+        self.groupleader.stop()
         self.trailhead.stop()
         self.adventurer.stop()
         self.riak.stop()

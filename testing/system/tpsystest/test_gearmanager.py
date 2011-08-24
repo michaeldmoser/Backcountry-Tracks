@@ -38,7 +38,8 @@ class RetrieveGearList(unittest.TestCase):
         stove = {
                 'name': 'Alcohol Stove',
                 'description': 'Stove that burns alcohol',
-                'weight': '2'
+                'weight': '2',
+                'owner': 'albert.corley@example.com'
                 }
         self.assertIn(stove, self.gear_list)
 
@@ -47,7 +48,8 @@ class RetrieveGearList(unittest.TestCase):
         backpack = {
                 'name': 'Backpack',
                 'description': 'Backpack for carrying things',
-                'weight': '37'
+                'weight': '37',
+                'owner': 'albert.corley@example.com'
                 }
         self.assertIn(backpack, self.gear_list)
 

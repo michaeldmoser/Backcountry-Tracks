@@ -15,7 +15,7 @@ class Gear(object):
                 'name': name,
                 'description': description,
                 'weight': weight,
-                'user': user,
+                'owner': user,
                 }
         new_gear = self.geardb.new(gear_id, data=gear_item)
         new_gear.store()

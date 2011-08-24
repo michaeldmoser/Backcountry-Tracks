@@ -112,6 +112,7 @@ class ChannelFake(object):
         for consumer in self.consumers[queue]:
             for message in self.injected[queue]:
                 method = frame.Method(1, spec.Basic.ConsumeOk())
+                method.delivery_tag = 1
                 headers = message['header']
                 body = message['body']
                 logging.debug('Calling consumer %s with data:\n%s' % 
@@ -237,7 +238,7 @@ class ChannelFake(object):
         raise NotImplementedError
 
     def basic_ack(self, delivery_tag=0, multiple=False):
-        raise NotImplementedError
+        pass
 
     def basic_reject(self, delivery_tag=None, requeue=True):
         raise NotImplementedError
