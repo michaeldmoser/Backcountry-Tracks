@@ -128,6 +128,7 @@ class TestPikaClientReplyHandling(unittest.TestCase):
         self.client.register_rpc_reply(self.correlation_id, self.reply_stub)
 
         method = frame.Method(1, spec.Basic.ConsumeOk())
+        method.delivery_tag = 1
         header = pika.BasicProperties(
                 correlation_id = self.correlation_id,
                 content_type = 'application/json'

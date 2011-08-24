@@ -1,3 +1,4 @@
+import logging
 
 class PikaClient(object):
     def __init__(self, connection, params):
@@ -46,8 +47,10 @@ class PikaClient(object):
         self.channel.basic_consume(self.receive_message, queue=self.rpc_reply)
 
     def receive_message(self, channel, method, headers, body):
+        logging.debug('received reply for message %s' % headers.correlation_id)
         correlation_id = headers.correlation_id
         self.rpc_replies[correlation_id](headers, body)
+        self.channel.basic_ack(method.delivery_tag)
 
     def register_rpc_reply(self, correlation_id, callback):
         self.rpc_replies[correlation_id] = callback
