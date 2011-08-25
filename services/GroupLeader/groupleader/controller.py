@@ -30,6 +30,9 @@ class GroupLeader(object):
 
     def stop(self):
         pid = self.pidlockfile.read_pid()
+        if pid is None:
+            return
+
         self.kill(int(pid), signal.SIGTERM)
 
     def shutdown(self, pid, stack):
