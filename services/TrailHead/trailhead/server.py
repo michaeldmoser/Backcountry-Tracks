@@ -3,6 +3,7 @@ from trailhead.register import RegisterHandler
 from trailhead.register import ActivateHandler
 from trailhead.login import LoginHandler
 from trailhead.gear import UserGearListHandler
+from trailhead.user import UserHandler
 
 import logging.config
 import yaml
@@ -39,6 +40,7 @@ class TrailHead(object):
                 (r'/app/activate/(.*)/(.*)', ActivateHandler),
                 (r'/app/login', LoginHandler),
                 (r'/app/users/(.*)/gear', UserGearListHandler),
+                (r'/app/user', UserHandler),
                 ], **settings)
             app.listen(8080)
 

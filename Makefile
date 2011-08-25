@@ -5,7 +5,7 @@ infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-services: install-groupleader install-gear install-trailhead install-adventurer varrun install-smokesignal
+install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal
 
 install-dependencies: install-libyaml
 
@@ -175,6 +175,14 @@ services/GroupLeader/setup.py:
 	
 services/GroupLeader/GroupLeader.egg-info:
 	cd services/GroupLeader && sudo python setup.py develop
+
+install-adventurer2: services/Adventurer2/setup.py services/Adventurer2/Adventurer2.egg-info
+
+services/Adventurer2/setup.py:
+	cd services/Adventurer2 && sudo python setup.py develop
+	
+services/Adventurer2/Adventurer2.egg-info:
+	cd services/Adventurer2 && sudo python setup.py develop
 
 install-gear: services/Gear/setup.py services/Gear/Gear.egg-info
 

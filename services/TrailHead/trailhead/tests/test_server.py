@@ -6,6 +6,7 @@ from trailhead.server import TrailHead, RootHandler
 from trailhead.register import RegisterHandler
 from trailhead.gear import UserGearListHandler
 from trailhead.login import LoginHandler
+from trailhead.user import UserHandler
 from trailhead.mq import PikaClient
 
 class TestTrailHeadTornado(unittest.TestCase):
@@ -153,6 +154,15 @@ class TestTrailHeadTornado(unittest.TestCase):
         expected_route = (r'/app/login', LoginHandler)
         routes = self.webapp.routes
 
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
+
+    def test_adds_user_handler(self):
+        '''The UserHandler should be added to the routes'''
+        expected_route = (r'/app/user', UserHandler)
+        routes = self.webapp.routes
         try:
             routes.index(expected_route)
         except ValueError, e:

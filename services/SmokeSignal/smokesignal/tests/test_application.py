@@ -143,6 +143,33 @@ class TestSmokeSignalGear(unittest.TestCase):
         actual_binding = self.pika_class.find_binding(expected_binding)
         self.assertDictContainsSubset(expected_binding, actual_binding)
 
+class TestSmokeSignalAdventurerRPC(unittest.TestCase):
+    def setUp(self):
+        self.pika_class = fakepika.BlockingConnectionFake()
+        pika_connection = self.pika_class()
+
+        app = SmokeSignalApp(pika_connection)
+        app.run()
+
+    def test_adventurer_rpc_queue(self):
+        '''Creates the user_gear_rpc queue'''
+        expected_queue_declare = {
+            'durable': True,
+            'auto_delete': False,
+            'arguments': {}
+            }
+        actual_queue = self.pika_class.get_queue_declaration('adventurer_rpc')
+        self.assertDictContainsSubset(expected_queue_declare, actual_queue)
+
+    def test_creates_binding(self):
+        '''Creates the exchange<->queue binding for adventurer RPCs'''
+        expected_binding = {
+            'queue': 'adventurer_rpc',
+            'exchange': 'adventurer',
+            'routing_key': 'adventurer.rpc',
+            }
+        actual_binding = self.pika_class.find_binding(expected_binding)
+        self.assertDictContainsSubset(expected_binding, actual_binding)
     
 
 if __name__ == '__main__':
