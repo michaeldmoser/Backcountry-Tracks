@@ -670,27 +670,6 @@ var Portal = function (deps, containers) {
 			window.location.href = urlparts[0];
 		}
 	});
-			var deps = {
-				'applications': {
-					'HomeManager': {
-						'manager': HomeManagerApp,
-						'model': new ApplicationModel({
-							'name': 'Home',
-							'icon': '/static/imgs/home.png'
-						})
-					},
-					'GearManager': {
-						'manager': GearManagerApp,
-						'model': new ApplicationModel({
-							'name': 'Gear Manager',
-							'icon': '/static/img/gear_manager.png'
-						})
-					}
-				},
-				'AppChooser': AppChooserView
-			};
-
-			var portal = new Portal(deps);
 })();
 
 
