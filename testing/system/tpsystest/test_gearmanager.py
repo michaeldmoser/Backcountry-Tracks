@@ -53,5 +53,57 @@ class RetrieveGearList(unittest.TestCase):
                 }
         self.assertIn(backpack, self.gear_list)
 
+class AddPieceOfGear(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.environ = environment.create()
+        cls.environ.make_pristine()
+        cls.environ.bringup_infrastructure()
+
+
+        gear = cls.environ.gear
+        albert = cls.environ.albert
+        cls.environ.create_user(albert)
+
+        login_session = albert.login() 
+
+        cls.new_peice_of_gear = {
+                'name': 'Hard Shell Jacket',
+                'description': 'Wind / Rain proof jacket',
+                'weight': '19',
+                }
+
+        gear_list_url = cls.environ.trailhead_url + '/users/' + albert.email + '/gear'
+        gear_list_request = urllib2.Request(
+                gear_list_url,
+                data=json.dumps(cls.new_peice_of_gear),
+                headers={'Content-Type': 'application/json'} 
+                )
+
+        cls.response = login_session.open(gear_list_request)
+        body = cls.response.read()
+        cls.response = json.loads(body)
+
+    def test_gear_item_id(self):
+        '''Should receive the gear item back with an id added to the object'''
+        self.assertIn('id', cls.response)
+
+    def test_gear_item_owner(self):
+        '''Should receive the gear item back with an id added to the object'''
+        self.assertEquals(cls.environ.albert.email, cls.response['owner'])
+
+    def test_gear_in_database(self):
+        '''The new piece of gear should be in the personal_gear database'''
+        bucket = cls.environ.riak.get_database('personal_gear')
+        keys = bucket.get_keys()
+        doc_object = bucket.get(keys[0])
+        pieceofgear = doc_object.get_data()
+
+        self.assertDictContainsSubset(cls.new_peice_of_gear, pieceofgear)
+
+
+
+
 if __name__ == '__main__':
     unittest.main()
