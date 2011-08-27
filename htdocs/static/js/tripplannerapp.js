@@ -138,10 +138,10 @@ var GearListAddButton = Backbone.View.extend({
 	initialize: function () {
 		_.bindAll(this, 'trigger_add_event');
 
-		this.button = $(document.createElement('img')).attr({
+		this.button = $('<img />', {
 			'height': '66',
 			'width': '148',
-			'src': '/static/img/add-gear-button.jpg'
+			'src': '/static/img/icons/gear_add32.png'
 		});
 		$(this.el).append(this.button);
 	},
@@ -238,7 +238,7 @@ var GearListAddForm = Backbone.View.extend({
 
 	create_name_input: function () {
 		this.input_name = $(document.createElement('input')).attr({
-			'id': 'add_gear_name'	
+			'name': 'gear_name'	
 		});
 		var input_name_container = $('<div />').append(this.input_name);
 		var label = $(document.createElement('label')).attr('for', 'add_gear_name').html('Name');
@@ -249,7 +249,7 @@ var GearListAddForm = Backbone.View.extend({
 	},
 
 	create_weight_input: function () {
-		this.input_weight = $(document.createElement('input')).attr('id', 'add_gear_weight');
+		this.input_weight = $(document.createElement('input')).attr('name', 'gear_weight');
 		var label = $(document.createElement('label')).attr('for', 'add_gear_weight').html('Weight');
 
 		var container = $(document.createElement('div')).attr('class', 'add_gear_weight');
@@ -258,7 +258,7 @@ var GearListAddForm = Backbone.View.extend({
 	},
 
 	create_description_input: function () {
-		this.input_description = $(document.createElement('textarea')).attr('id', 'add_gear_description');
+		this.input_description = $(document.createElement('textarea')).attr('name', 'gear_description');
 		var label = $(document.createElement('label')).attr('for', 'add_gear_description').html('Description');
 
 		var container = $(document.createElement('div')).attr('class', 'add_gear_description');
@@ -272,7 +272,7 @@ var GearListAddForm = Backbone.View.extend({
 			'name': 'save',
 			'height': '66',
 			'width': '174',
-			'src': '/static/img/add-to-gear-button.jpg'
+			'src': '/static/img/icons/gear_add32.png'
 		});
 		$(this.el).append(this.submit_button.el);
 		this.submit_button.bind('click', this.save_gear);
@@ -343,7 +343,7 @@ var GearListEditForm = GearListAddForm.extend({
 		this.submit_button = new FormGraphicButton({
 			'height': '66',
 			'width': '174',
-			'src': '/static/img/add-to-gear-button.jpg'
+			'src': '/static/img/icons/gear_add32.png'
 		});
 		$(this.el).append(this.submit_button.el);
 		this.submit_button.bind('click', this.save_gear);
@@ -656,7 +656,7 @@ var Portal = function (deps, containers) {
 						'manager': GearManagerApp,
 						'model': new ApplicationModel({
 							'name': 'Gear Manager',
-							'icon': '/static/img/gear_manager.png'
+							'icon': '/static/img/icons/gear64.png'
 						})
 					}
 				},
