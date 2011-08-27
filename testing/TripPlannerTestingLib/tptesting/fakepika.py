@@ -112,6 +112,7 @@ class ChannelFake(object):
         for consumer in self.consumers[queue]:
             for message in self.injected[queue]:
                 method = frame.Method(1, spec.Basic.ConsumeOk())
+                method.delivery_tag = 1
                 headers = message['header']
                 body = message['body']
                 logging.debug('Calling consumer %s with data:\n%s' % 
@@ -237,7 +238,7 @@ class ChannelFake(object):
         raise NotImplementedError
 
     def basic_ack(self, delivery_tag=0, multiple=False):
-        raise NotImplementedError
+        pass
 
     def basic_reject(self, delivery_tag=None, requeue=True):
         raise NotImplementedError
@@ -286,6 +287,7 @@ class SelectConnectionFake(object):
 ###
 
     def __init__(self):
+        self.on_open_callback = None
         self.ioloop = IOLoopFake(self.start_callback)
         self._channel = ChannelFake(self)
         self.__usage = list()
@@ -350,6 +352,32 @@ class SelectConnectionFake(object):
                 return binding
 
         return dict()
+
+    def verify_usage(self, method, args, kwargs):
+        '''
+        Returns True if method was called and the args and kwargs match the call, 
+        otherwise returns False
+
+        method is function object instance on this class
+        '''
+        for method_call in self.__usage:
+            instancemethod = method_call[0]
+
+            if not callable(instancemethod):
+                continue
+
+            unbound_method = getattr(instancemethod.im_class, instancemethod.__name__)
+            search_unbound_method = getattr(method.im_class, method.__name__)
+            if unbound_method == search_unbound_method:
+                if args != '*' and method_call[1] != args:
+                    return False
+
+                if kwargs != '*' and method_call[2] != kwargs:
+                    return False
+
+                return True
+
+        return False
 
     def was_called(self, method):
         '''

@@ -22,6 +22,7 @@ from .rabbitmq import RabbitMQEnvironment
 from .nginx import NginxEnvironment
 from .trailhead import TrailheadEnvironment
 from .gear import Gear
+from .groupleader import GroupLeaderEnvironment
 
 default_logging_config = {
         'version': 1,
@@ -38,7 +39,7 @@ default_logging_config = {
                 },
             },
         'loggers': {
-            'main_logger': {
+            'top': {
                 'level': 'DEBUG',
                 'handlers': ['main'],
                 'propagate': 'no',
@@ -48,6 +49,51 @@ default_logging_config = {
             'level': 'DEBUG',
             'handlers': ['main'],
             },
+        }
+
+
+mock_config = {
+        'services': {
+            'TestService/test_service': {
+                    'option1': '1',
+                    'option2': '2'
+                }
+            },
+
+        'messaging': {
+            'connection_params': {
+                    'host': 'localhost',
+                    'virtual_host': '/'
+                }
+            },
+        'pidfile': '/var/run/tripplanner/groupleader.pid',
+
+        'logging': {
+                'version': 1,
+                'formatters': {
+                    'simple': {
+                        'format': "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                        },
+                    },
+                'handlers': {
+                    'main': {
+                        'class': 'tptesting.tplogging.MemoryLoggingHandler',
+                        'level': 'DEBUG',
+                        'formatter': 'simple',
+                        },
+                    },
+                'loggers': {
+                    'top': {
+                        'level': 'DEBUG',
+                        'handlers': ['main'],
+                        'propagate': 'no',
+                        },
+                    },
+                'root': {
+                    'level': 'DEBUG',
+                    'handlers': ['main'],
+                    },
+            }
         }
 
 
@@ -62,8 +108,11 @@ class TpEnvironment(object):
         self.rabbitmq = RabbitMQEnvironment(self)
         self.nginx = NginxEnvironment(self)
         self.trailhead = TrailheadEnvironment(self)
+        self.groupleader = GroupLeaderEnvironment(self)
 
         self.gear = Gear(self)
+
+        self.mock_config = mock_config
 
         logging.config.dictConfig(default_logging_config)
 
@@ -105,6 +154,7 @@ class TpEnvironment(object):
         self.riak.start()
         self.adventurer.start()
         self.trailhead.start()
+        self.groupleader.start()
 
     def teardown(self):
         '''
@@ -124,6 +174,7 @@ class TpEnvironment(object):
         '''
         Shutdowns all services
         '''
+        self.groupleader.stop()
         self.trailhead.stop()
         self.adventurer.stop()
         self.riak.stop()

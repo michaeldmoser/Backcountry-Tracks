@@ -4,40 +4,70 @@
 	lang="en">
 <head>
 	<title>Register</title>
+    <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/css/typography.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/css/front.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/js/lib/jquery-ui/1.8.13/themes/base/jquery-ui.css" type="text/css" media="screen">
     <script type="text/javascript" src="/static/js/lib/underscore.js"></script>
     <script type="text/javascript" src="/static/js/lib/backbone.js"></script>
     <script type="text/javascript" src="/static/js/lib/jquery-1.6.1.js"></script>
     <script type="text/javascript" src="/static/js/lib/jquery-ui/1.8.13/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery.placeholder-enhanced.js"></script>
+    <script type="text/javascript" src="/static/js/lib/bday-picker-1.2.min.js"></script>
     <script type="text/javascript" src="/static/js/tripplanner.js"></script>
 </head>
 <body id="" >
-	<h1>Register</h1>
-	<form id="registerForm" action="/app/register" method="POST" enctype="multipart/form-data">
-		<input name="first_name" id="first_name" type="text" value="first name" tabindex="1"  />
-		<input name="last_name" id="last_name" type="text" value="last name" tabindex="1"  />
-		<input name="email" id="email" type="text" value="email address" tabindex="3"  />
-		<input name="birthdate" id="birthdate" type="text" value="birthdate" tabindex="4"  />
-		<input name="password" id="password" type="password" value="" tabindex="5"  />
-		<input name="password_again" id="password_again" type="password" value="" tabindex="6"  />
-		<input name="submit" id="submit" type="submit" value="Register" tabindex="7"  />
-	</form>
-	<div id="thankYouContainer" style="display: none">
-		Thank you for registering! <br />
-		An email has been sent.
+	<div id="outer-wrapper">
+		<div id="inner-wrapper">
+			<div id="header">
+				<h1>BackCountryTracks</h1>
+				<div id="login-wrapper">
+					<form id="login-form" action="/app/login" method="POST" enctype="multipart/form-data">
+				    	<input type='text' name='email' id='email' title="Email" placeholder="Email"/>
+				    	<input type='password' name='password' id='password' title="Password" placeholder="Password"/>
+				    	<input name="submit" id="submit" type="submit" value="Login" />
+					</form>
+					<script type="text/javascript" >
+						$('#login-form').tpLogin();
+					</script>
+				</div>
+			</div>
+			<hr />
+			<div id="content">
+				<div id="content-feature">
+					<h2>Your adventure awaits you.</h2>
+					<h3>Put your trips, plans, gear, and friends in one place.</h3>
+				</div>
+<!--				<div id="register-wrapper">
+					<form id="register-form" action="/app/register" method="POST" enctype="multipart/form-data">
+						<div class="form-description">
+							<strong>New to BackCountryTracks?</strong> Join today!
+						</div>
+						<input name="first_name" id="first_name" type="text" tabindex="1" title="First Name" placeholder="First Name"/><br />
+						<input name="last_name" id="last_name" type="text" tabindex="2" title="Last Name" placeholder="Last Name" /><br />
+						<input name="email" id="email" type="text" tabindex="3" title="Email" placeholder="Email" /><br />
+						<input name="password" id="password" type="password" value="" tabindex="5" title="New Password" placeholder="New Password" /><br />
+						<input name="password_again" id="password_again" type="password" value="" tabindex="6" title="Confirm Password" placeholder="Confirm Password" /><br />
+						<div id="bday-picker">
+							<label>Birthdate:</label>
+						</div>
+						<div class="clear"></div>
+						<input name="submit" id="submit" type="submit" value="Sign Up" tabindex="7"  />
+					</form>
+					<div id="thankYouContainer" style="display: none">
+						Thank you for registering! <br />
+						An email has been sent.
+					</div>
+					<script type="text/javascript" >
+						$("#bday-picker").birthdaypicker()
+						$('#register-form').tpRegistration({thankYouElement: $('#thankYouContainer')});
+						$(document).placeholderEnhanced();
+					</script>
+				</div>
+				<div class="clear"></div>
+			</div> -->
+		</div>
 	</div>
-	<script type="text/javascript" >
-		$('#registerForm').tpRegistration({thankYouElement: $('#thankYouContainer')})
-	</script>
-
-	<h1>Login</h1>
-	<form id="loginForm" action="/app/login" method="POST" enctype="multipart/form-data">
-	    <div><label for="email">Email: </label><input type='text' name='email' id='email' /></div>
-	    <div><label for="password">Password: </label><input type='password' name='password' id='password' /></div>
-	    <input name="submit" id="submit" type="submit" value="Login" />
-	</form>
-	<script type="text/javascript" >
-		$('#loginForm').tpLogin();
-	</script>
 </body>
+
 </html>

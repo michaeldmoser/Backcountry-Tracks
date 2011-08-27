@@ -21,7 +21,17 @@ Checking the data
 class RiakClientFake(object):
 
     def __init__(self):
+        self.mr_result = {}
         self.__buckets = dict()
+
+    def add_mapreduce_result(self, result, mapping, options=None):
+        '''
+        Add a result of a map/reduce operation that should be returned from RiakMapReduce.run()
+        '''
+        self.mr_result[mapping] = {
+                'result': result,
+                'options': options
+                }
 
     def __call__(self, host='127.0.0.1', port=8098, prefix='riak',
                  mapred_prefix='mapred', transport_class=None,
@@ -32,6 +42,8 @@ class RiakClientFake(object):
         self.mapred_prefix = mapred_prefix
         self.transport_class = transport_class
         self.client_id = client_id
+        return self
+
 
     def get_transport(self):
         raise NotImplementedError
@@ -89,7 +101,9 @@ class RiakClientFake(object):
         raise NotImplementedError
 
     def add(self, *args):
-        raise NotImplementedError
+        mr = RiakMapReduceFake(self)
+        mr.add_results(self.mr_result)
+        return apply(mr.add, args)
 
     def search(self, *args):
         raise NotImplementedError
@@ -338,5 +352,52 @@ class RiakObjectFake(object):
 
     def reduce(self, params):
 		raise NotImplementedError
+
+class RiakMapReduceFake(object):
+    ### These function are test helpers are not part of the Riak api
+    def add_results(self, result):
+        self.result = result
+
+    #### The following functions are part of the core api for Riak
+    def __init__(self, client):
+        self.result = {}
+        self.mapping_function = ''
+        self.map_options = ''
+
+    def add(self, arg1, arg2=None, arg3=None):
+        return self
+
+    def add_object(self, obj):
+        raise NotImplementedError
+
+    def add_bucket_key_data(self, bucket, key, data) :
+        raise NotImplementedError
+
+    def add_bucket(self, bucket) :
+        raise NotImplementedError
+
+    def search(self, bucket, query):
+        raise NotImplementedError
+
+    def link(self, bucket='_', tag='_', keep=False):
+        raise NotImplementedError
+
+    def map(self, function, options=None):
+        self.mapping_function = function
+        self.map_options = options
+        return self
+
+    def reduce(self, function, options=None):
+        raise NotImplementedError
+
+    def run(self, timeout=None):
+        if not self.result.has_key(self.mapping_function):
+            return []
+
+        result = self.result[self.mapping_function]
+        if self.map_options != result['options']:
+            return []
+
+        return result['result']
 
 

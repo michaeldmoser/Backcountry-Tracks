@@ -3,8 +3,10 @@ import pika
 import uuid
 from tornado import web
 from tornado.web import RequestHandler
+from trailhead.login import BaseHandler
 
-class RegisterHandler(RequestHandler):
+class RegisterHandler(BaseHandler):
+
     def get(self):
         self.set_status(400)
         return
@@ -26,11 +28,11 @@ class RegisterHandler(RequestHandler):
                 properties = properties
                 )
         self.set_status(202)
-        self.finish()
 
-class ActivateHandler(RequestHandler):
+class ActivateHandler(BaseHandler):
     @web.asynchronous
     def get(self, email, confirmation_code):
+
         data = json.dumps({
             'email': email,
             'confirmation_code': confirmation_code
@@ -54,8 +56,9 @@ class ActivateHandler(RequestHandler):
     def respond_to_request(self, headers, body):
         reply = json.loads(body)
         if reply['successful'] == True:
-            self.set_status(202)
+            self.set_status(303)
+            self.set_header('Location', '/app/registration-complete')
         else:
             self.set_status(403)
-        self.set_header('Location', '/app/login')
+            self.set_header('Location', '/')
         self.finish()

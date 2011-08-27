@@ -6,6 +6,10 @@ class SmokeSignalApp(object):
     def run(self):
         channel = self.pika_connection.channel()
 
+        # rpc replies
+        channel.exchange_declare(exchange = 'rpc_reply', durable = True,
+                type = 'topic')
+
         # register
         channel.exchange_declare(exchange = 'registration', durable = True,
                 type = 'topic')
@@ -24,3 +28,15 @@ class SmokeSignalApp(object):
         channel.queue_declare(queue = 'login_rpc', durable=True)
         channel.queue_bind(queue = 'login_rpc', exchange = 'adventurer',
                 routing_key = 'adventurer.login')
+
+        # adventurer rpc
+        channel.queue_declare(queue = 'adventurer_rpc', durable=True)
+        channel.queue_bind(queue = 'adventurer_rpc', exchange = 'adventurer',
+                routing_key = 'adventurer.rpc')
+
+        # gear
+        channel.exchange_declare(exchange = 'gear', durable = True,
+                type = 'topic')
+        channel.queue_declare(queue = 'user_gear_rpc', durable=True)
+        channel.queue_bind(queue = 'user_gear_rpc', exchange = 'gear',
+                routing_key = 'gear.user.rpc')

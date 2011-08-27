@@ -4,6 +4,7 @@ from os import path
 import uuid
 import mailbox
 import urllib2
+from urllib2 import HTTPError
 
 import pika.adapters
 import pika.connection
@@ -46,8 +47,8 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
         cls.pidfile_path = adventurer_config['pidfile']
 
     @classmethod
-    def tearDownClass(self):
-        self.environ.teardown()
+    def tearDownClass(cls):
+        cls.environ.teardown()
 
     def test_daemonized_process(self):
         '''We should have a running process with a pidfile'''
@@ -106,6 +107,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
                 body=registration_message
                 )
 
+        self.environ.clear_mbox()
         mbox_path = self.environ.get_config_for('mbox_file')
         self.mbox = mailbox.mbox(mbox_path)
         assert len(self.mbox) == 0, 'Mailbox not pristine'
@@ -132,6 +134,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
                 body=registration_message
                 )
 
+        self.environ.clear_mbox()
         mbox_path = self.environ.get_config_for('mbox_file')
         self.mbox = mailbox.mbox(mbox_path)
         assert len(self.mbox) == 0, 'Mailbox not pristine'
@@ -148,8 +151,7 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
             continue
 
         trailhead_url = self.environ.get_config_for('trailhead_url')
-        url = 'href="http://%s/app/register?email=' % trailhead_url
-
+        url = 'href="%s/activate/%s/' % (trailhead_url, self.albert['email'])
         self.assertIn(url, message.as_string())
 
     def test_confirmation_request_activates_account(self):
@@ -188,7 +190,6 @@ class TestAdventurerServiceLogins(unittest.TestCase):
 
         environ.adventurer.create_user('albert')
 
-
         properties = pika.BasicProperties(
                 content_type = 'application/json',
                 correlation_id = str(uuid.uuid4()),
@@ -213,11 +214,33 @@ class TestAdventurerServiceLogins(unittest.TestCase):
 
             login_reply = json.loads(body)
             expected_reply = {
-                    'successful': True
+                    'successful': True,
+                    'email': environ.albert.email
                     }
             self.assertEquals(login_reply, expected_reply)
         utils.try_until(1, verify_successful_login)
 
+class TestAdventurerUserData(unittest.TestCase):
+
+    def test_retrieve_user_data(self):
+        '''Can retrieve user related data for currently logged in user'''
+        environ = environment.create()
+        environ.make_pristine()
+        environ.bringup_infrastructure()
+
+        ramona = environ.ramona
+        environ.create_user(ramona)
+        login_session = ramona.login()
+
+        user_profile_url = environ.trailhead_url + '/user'
+        request = urllib2.Request(user_profile_url)
+
+        response = login_session.open(request)
+        body = response.read()
+
+        user_data = json.loads(body)
+
+        self.assertEquals(user_data, ramona)
 
 if __name__ == '__main__':
     unittest.main()

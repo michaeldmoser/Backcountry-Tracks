@@ -1,0 +1,130 @@
+#outer-wrapper {
+
+	}
+
+#inner-wrapper {
+	width: 960px;
+	margin: 0 auto;
+	}
+
+/*
+* HEADER
+*/
+#header {
+	height: 60px;
+	}
+
+#header h1 {
+	float: left;
+	}
+
+#header #login-wrapper {
+	float: right;
+	height: 40px;
+	padding-top: 16px;
+	}
+
+#header #login-form .element {
+	float: left;
+	}
+
+#header #login-form input {
+	padding: 2px;
+	}
+
+#header #login-form input[type="text"],
+#header #login-form input[type="password"] {
+	width: 120px;
+	margin-right: 8px;
+	}
+
+/*
+* CONTENT
+*/
+
+#content {
+	padding-top: 80px;
+	min-height: 420px;
+	}
+
+#content-feature {
+	float: left;
+	padding-top: 80px;
+	text-align: center;
+	width: 660px;
+	}
+
+#content-feature h2{
+	font-size: 36px;
+	text-transform: capitalize;
+	}
+#content-feature h3{
+	font-size: 16px
+	}
+
+
+/*
+* REGISTRATION FORM
+*/
+#content #register-wrapper {
+	float: right;
+	font-size: 14px;
+	}
+
+#content #register-form {
+	width: 300px;
+	float: right;
+	}
+
+#content #register-form .form-description {
+	margin-bottom: 8px;
+	}
+
+
+
+#content #register-form input {
+	font-size: 16px;
+	padding: 6px;
+	margin: 2px 0;
+	float: right;
+	}
+
+#content #register-form input[type="text"],
+#content #register-form input[type="password"] {
+	width: 280px;
+	}
+
+#content #register-form input {
+	font-size: 16px;
+	padding: 6px;
+	margin: 2px 0;
+	float: right;
+	}
+
+/* Birthday Picker */
+#content #register-form #bday-picker {
+	padding: 6px;
+	}
+
+#content #register-form #bday-picker label {
+	float: left;
+	padding-top: 8px;
+	}
+
+#content #register-form #bday-picker fieldset {
+	float: right;
+	}
+
+#content #register-form #bday-picker select {
+	font-size: 13px;
+	padding: 3px;
+	margin: 2px 0;
+	float: left;
+	}
+
+/*
+* MISC
+*/
+.clear {
+	clear: both;
+	}
