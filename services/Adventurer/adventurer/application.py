@@ -40,7 +40,6 @@ class Application(object):
                 )
 
         result = {'successful': True}
-
         return result
 
     def generate_confirmation_key(self):

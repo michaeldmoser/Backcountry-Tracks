@@ -48,6 +48,7 @@ class PikaClient(object):
     def receive_message(self, channel, method, headers, body):
         correlation_id = headers.correlation_id
         self.rpc_replies[correlation_id](headers, body)
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
     def register_rpc_reply(self, correlation_id, callback):
         self.rpc_replies[correlation_id] = callback

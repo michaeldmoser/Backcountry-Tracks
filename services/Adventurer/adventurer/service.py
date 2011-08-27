@@ -13,11 +13,11 @@ class Controller(object):
 
     def run(self):
         self.daemoncontext = self.daemonizer(pidfile=self.pidfile)
-#        with self.daemoncontext:
-        self.app_instance = self.application()
-        connection = self.pika_connection(self.pika_params,
-                self.on_connection_opened)
-        connection.ioloop.start()
+        with self.daemoncontext:
+            self.app_instance = self.application()
+            connection = self.pika_connection(self.pika_params,
+                    self.on_connection_opened)
+            connection.ioloop.start()
 
     def on_connection_opened(self, connection):
         self.connection = connection
@@ -48,6 +48,7 @@ class Controller(object):
                 routing_key='registration.register.%s' % header.reply_to,
                 properties=properties,
                 body=register_reply)
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
     def process_activation(self, channel, method, header, data):
         params = json.loads(data)
@@ -68,6 +69,7 @@ class Controller(object):
                 routing_key='registration.activate.%s' % header.reply_to,
                 properties=properties,
                 body=activate_reply)
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
     def process_login(self, channel, method, header, data):
         login = json.loads(data)
@@ -86,6 +88,6 @@ class Controller(object):
                 routing_key='adventurer.login.%s' % header.reply_to,
                 properties=properties,
                 body=login_reply)
-
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
 

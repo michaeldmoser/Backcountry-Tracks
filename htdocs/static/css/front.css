@@ -80,15 +80,6 @@
 	margin-bottom: 8px;
 	}
 
-
-
-#content #register-form input {
-	font-size: 16px;
-	padding: 6px;
-	margin: 2px 0;
-	float: right;
-	}
-
 #content #register-form input[type="text"],
 #content #register-form input[type="password"] {
 	width: 280px;
@@ -120,6 +111,13 @@
 	padding: 3px;
 	margin: 2px 0;
 	float: left;
+	}
+
+/* Errors */
+#content #register-form .register-error {
+	padding: 4px;
+	margin-top: 8px;
+	width: 100%;
 	}
 
 /*

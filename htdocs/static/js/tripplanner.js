@@ -8,6 +8,11 @@
 
     var $this = this;
 
+    this.errorElement = $('<ul/>')
+      .addClass('register-error ui-state-error ui-corner-all')
+      .hide()
+      .appendTo(this);
+
     this.options = $.extend({
       thankYouElement: null
     }, options);
@@ -37,15 +42,27 @@
       type: 'POST',
       data: data,
       contentType: 'application/json',
-      success: function(data, textStatus, jqXHR) {
+      complete: function(data, textStatus, jqXHR) {
         $.fn.tpRegistration.handleSuccess.call($this, data, textStatus, jqXHR)
       }
     });
   };
 
   $.fn.tpRegistration.handleSuccess = function(data, textStatus, jqXHR) {
-    if (this.options.thankYouElement) {
+    var jsonData = $.parseJSON(data.responseText);
+    if (jsonData.successful) {
       this.options.thankYouElement.dialog();
+      this.errorElement.hide();
+    } else {
+      var $this = this;
+      this.errorElement.empty();
+      _(jsonData.messages).each(function(elementMessages) {
+        _(elementMessages).each(function(message){
+          var li = $('<li></li>').html(message);
+          this.errorElement.append(li)
+        }, this)
+      }, this);
+      this.errorElement.fadeIn();
     }
   }
 
