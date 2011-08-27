@@ -168,6 +168,69 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Add Gear Item">Add Gear Item</a></td>
+<td>Open the Gear Manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click the "Add Gear" button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Enter UL Backpack for the name</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Enter A very light backpack for the description</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Enter 28 for the weight</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click the Save button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>A notice saying the gear was saved should be displayed</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The new piece of gear should be in the list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table id="keywords" border="1">
 <tr>
@@ -411,6 +474,195 @@ td.name, th.name {
 <td>Element should contain</td>
 <td>css=div.gear_listing</td>
 <td>Sleeping pad</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Goto the application">Goto the application</a></td>
+<td>Go to</td>
+<td>${SITE_HOME_PAGE}app/home</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait until page contains</td>
+<td>Welcome</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Open the Gear Manager">Open the Gear Manager</a></td>
+<td>Goto the application</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Image</td>
+<td>Gear Manager</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait until page contains</td>
+<td>Gear Manager</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Click the &quot;Add Gear&quot; button">Click the "Add Gear" button</a></td>
+<td>Click Element</td>
+<td>css=.gear_list_view_controls .gear_list_add_button img</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Page Contains Element</td>
+<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Enter ${NAME} for the name">Enter ${NAME} for the name</a></td>
+<td>Input Text</td>
+<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']//input[@name="gear_name"]</td>
+<td>${NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${gear_name}</td>
+<td>${NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Enter ${description} for the description">Enter ${description} for the description</a></td>
+<td>Input Text</td>
+<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']//textarea[@name="gear_description"]</td>
+<td>${description}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${gear_description}</td>
+<td>${description}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Enter ${weight} for the weight">Enter ${weight} for the weight</a></td>
+<td>Input Text</td>
+<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']//input[@name="gear_weight"]</td>
+<td>${weight}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${gear_weight}</td>
+<td>${weight}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Click the Save button">Click the Save button</a></td>
+<td>Click element</td>
+<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']/div[contains(@class, "save")]/img</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_A notice saying the gear was saved should be displayed">A notice saying the gear was saved should be displayed</a></td>
+<td>Wait Until Page Contains</td>
+<td>Gear Manager</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The new piece of gear should be in the list">The new piece of gear should be in the list</a></td>
+<td>Element Should Contain</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li[2]//div[contains(@class, "gear_name")]</td>
+<td>${gear_name}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Contain</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li[2]//div[contains(@class, "gear_weight")]</td>
+<td>${gear_weight}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Element Should Contain</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li[2]//div[contains(@class, "gear_description")]</td>
+<td>${gear_description}</td>
 <td></td>
 </tr>
 <tr>
