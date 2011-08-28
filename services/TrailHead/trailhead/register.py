@@ -66,7 +66,8 @@ class ActivateHandler(BaseHandler):
         reply = json.loads(body)
         if reply['successful'] == True:
             self.set_status(303)
-            self.set_header('Location', '/app/registration-complete')
+            self.set_cookie("force_login_reason", 'registration_complete')
+            self.set_header('Location', '/app/login')
         else:
             self.set_status(403)
             self.set_header('Location', '/')

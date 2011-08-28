@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/css/typography.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/css/front.css" type="text/css" media="screen">
-    <link rel="stylesheet" href="/static/js/lib/jquery-ui/1.8.13/themes/base/jquery-ui.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/static/js/lib/jquery-ui/css/custom-theme/jquery-ui-1.8.16.custom.css" type="text/css" media="screen">
     <script type="text/javascript" src="/static/js/lib/underscore.js"></script>
     <script type="text/javascript" src="/static/js/lib/backbone.js"></script>
     <script type="text/javascript" src="/static/js/lib/jquery-1.6.1.js"></script>
-    <script type="text/javascript" src="/static/js/lib/jquery-ui/1.8.13/jquery-ui.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript" src="/static/js/lib/jquery.placeholder-enhanced.js"></script>
     <script type="text/javascript" src="/static/js/lib/bday-picker-1.2.min.js"></script>
     <script type="text/javascript" src="/static/js/tripplanner.js"></script>
@@ -19,8 +19,20 @@
 <body id="" >
 	<div id="outer-wrapper">
 		<div id="inner-wrapper">
-			<div id="header">
-				<h1>BackCountryTracks</h1>
+			<div id="left-side">
+				<h1>
+					<span>BackCountryTracks</span>
+				</h1>
+				<div id="content">
+					<div id="content-feature">
+						<div id="content-feature-heading"></div>
+						<h2>Your adventure awaits you.</h2>
+						<h3>Put your trips, plans, gear, and friends in one place.</h3>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div id="right-side">
 				<div id="login-wrapper">
 					<form id="login-form" action="/app/login" method="POST" enctype="multipart/form-data">
 				    	<input type='text' name='email' id='email' title="Email" placeholder="Email"/>
@@ -31,18 +43,11 @@
 						$('#login-form').tpLogin();
 					</script>
 				</div>
-			</div>
-			<hr />
-			<div id="content">
-				<div id="content-feature">
-					<h2>Your adventure awaits you.</h2>
-					<h3>Put your trips, plans, gear, and friends in one place.</h3>
-				</div>
 				<div id="register-wrapper">
-					<form id="register-form" action="/app/register" method="POST" enctype="multipart/form-data">
-						<div class="form-description">
-							<strong>New to BackCountryTracks?</strong> Join today!
-						</div>
+					<div class="form-description">
+						<strong>New to BackCountryTracks?</strong> Join today!
+					</div>
+					<form id="register-form" action="/app/register" method="POST" enctype="multipart/form-data" autocomplete="off">
 						<input name="first_name" id="first_name" type="text" tabindex="1" title="First Name" placeholder="First Name"/><br />
 						<input name="last_name" id="last_name" type="text" tabindex="2" title="Last Name" placeholder="Last Name" /><br />
 						<input name="email" id="email" type="text" tabindex="3" title="Email" placeholder="Email" /><br />
@@ -57,7 +62,7 @@
 					</form>
 					<div id="thankYouContainer" style="display: none">
 						Thank you for registering! <br />
-						An email has been sent.
+						An email with a confirmation link has been sent to your inbox. Please check your email to complete your registration.
 					</div>
 					<script type="text/javascript" >
 						$("#bday-picker").birthdaypicker({dateFormat: 'bigEndian'})
@@ -65,9 +70,18 @@
 						$(document).placeholderEnhanced();
 					</script>
 				</div>
-				<div class="clear"></div>
 			</div>
 		</div>
+
+		<div id="splash_z1_left">
+			<img src="/static/img/bgnd/splash_z1_left.png" width="446" height="295" alt="hikers"/>
+		</div>
+		<div id="splash_z1_right">
+			<img src="/static/img/bgnd/splash_z1_right.png" width="200" height="120" alt="hikers right"/>
+		</div>
+		<div id="splash_trees"></div>
+		<div id="splash_ground"></div>
+		<div id="splash_bg"></div>
 	</div>
 </body>
 

@@ -29,6 +29,15 @@ class Application(object):
         confirmation_key = self.generate_confirmation_key()
         clean_data['confirmation_key'] = confirmation_key
 
+        #check that the user isn't already in the system
+        user_object = self.bucket.get(email)
+        user = user_object.get_data()
+        if user:
+            result = {'successful': False, 'messages': {
+                'form': ['This email address has already been registered.']
+                }}
+            return result
+
         new_registration = self.bucket.new(email, data = clean_data)
         new_registration.store()
 
@@ -82,6 +91,7 @@ class Application(object):
 
         if user and confirmation_key == user['confirmation_key']:
             user['registration_complete'] = True
+            user_object.set_data(user)
             user_object.store()
             return True
 
@@ -97,7 +107,14 @@ class Application(object):
 
         user_object = self.bucket.get(str(email))
         user = user_object.get_data()
-        if user and user['password'] == str(password):
+
+        if not user:
+            return False
+
+        if 'registration_complete' not in user:
+            return False
+
+        if user['password'] == str(password):
             return True
         else:
             return False

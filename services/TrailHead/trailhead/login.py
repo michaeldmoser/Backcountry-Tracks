@@ -1,13 +1,37 @@
 import pika
 import uuid
 import json
-from tornado import web
+import os
+from tornado import web, template
 
 class BaseHandler(web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("user")
 
 class LoginHandler(BaseHandler):
+    def get(self):
+        template_path = os.path.join(os.path.join(os.path.realpath(__file__) + '/../'), 'templates')
+        loader = template.Loader(template_path)
+
+        title = 'Login'
+        login_message = 'Please login:'
+
+        reason = self.get_cookie('force_login_reason')
+        if reason == 'invalid_login':
+            login_message = 'Your username or password is incorrect. Please try again:'
+        elif reason == 'registration_complete':
+            title = 'Registration Complete'
+            login_message = 'Your registration is complete! Login to continue:'
+
+        self.clear_cookie('force_login_reason')
+
+        html = loader.load('login.html').generate(
+            message = login_message,
+            title = title
+            )
+        self.write(html)
+        self.finish()
+
     @web.asynchronous
     def post(self):
         if 'application/json' not in self.request.headers.get('Content-Type'):
@@ -34,10 +58,13 @@ class LoginHandler(BaseHandler):
         reply = json.loads(body)
         if reply['successful'] == True:
             self.set_secure_cookie("user", reply['email'])
-            self.set_header('X-Location', '/app/home')
+#            self.set_header('X-Location', '/app/home')
+            self.write({'location': '/app/home'})
             self.set_status(202)
         else:
-            self.set_header('X-Location', '/')
+            self.set_cookie("force_login_reason", 'invalid_login')
+#            self.set_header('X-Location', '/app/login')
+            self.write({'location': '/app/login'})
             self.set_status(403)
 
         self.finish()

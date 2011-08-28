@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
 	lang="en">
 <head>
-	<title>Registration Complete</title>
+	<title>{{ escape(title) }}</title>
     <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/css/typography.css" type="text/css" media="screen">
     <link rel="stylesheet" href="/static/css/front.css" type="text/css" media="screen">
@@ -19,14 +19,13 @@
 		<div id="inner-wrapper">
 			<div id="big-login-wrapper">
 				<form id="big-login-form" action="/app/login" method="POST" enctype="multipart/form-data">
-			    	Thank you for completing your registration!
-			    	Login to continue.<br />
+					{{ escape(message) }}<br />
 			    	<input type='text' name='email' id='email' title="Email" placeholder="Email"/>
 			    	<input type='password' name='password' id='password' title="Password" placeholder="Password"/><br />
 			    	<input name="submit" id="submit" type="submit" value="Login" />
 				</form>
 				<script type="text/javascript" >
-					$('#login-form').tpLogin();
+					$('#big-login-form').tpLogin();
 				</script>
 			</div>
 			<script type="text/javascript" >

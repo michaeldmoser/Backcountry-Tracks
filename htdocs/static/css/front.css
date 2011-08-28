@@ -1,39 +1,113 @@
 #outer-wrapper {
-
+	height: 100%;
+	background-color: #D4E2F9;
 	}
 
 #inner-wrapper {
 	width: 960px;
 	margin: 0 auto;
+	position: relative;
+	}
+
+/*
+* SPLASH
+*/
+
+#splash_bg {
+	z-index: -1;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	background-color: #D4E2F9;
+	bottom: 0;
+	}
+
+#splash_z1_left {
+	z-index: 1;
+	width: 446px;
+	height: 295px;
+	position: fixed;
+	bottom: 35px;
+	left: 0;
+	}
+
+#splash_z1_right {
+	z-index: 1;
+	width: 200px;
+	height: 120px;
+	position: fixed;
+	bottom: 35px;
+	right: 0;
+	}
+
+#splash_trees {
+	background: transparent url(/static/img/bgnd/splash_z0_trees.png) repeat-x;
+	z-index: 0;
+	position: fixed;
+	height: 81px;
+	width: 100%;
+	bottom: 35px;
+	right: 0;
+	}
+
+#splash_ground {
+	background: transparent url(/static/img/bgnd/splash_z3_ground.png) repeat-x;
+	z-index: 3;
+	width: 100%;
+	height: 50px;
+	position: fixed;
+	bottom: 0px;
+	}
+
+/*
+* LEFT SIDE
+*/
+
+#left-side {
+	width: 530px;
+	height: 435px;
+	}
+
+#left-side h1 {
+	float: left;
+	height: 80px;
+	width: 200px;
+	margin-left: 20px;
+	background: transparent url(/static/img/header_logo_white.png) 0 -10px no-repeat;
+	}
+
+#left-side h1 span {
+	display: none
+	}
+
+/*
+* RIGHT SIDE
+*/
+
+#right-side {
+	position: absolute;
+	right: -20px;
+	top: 0;
+	width: 350px;
 	}
 
 /*
 * HEADER
 */
-#header {
-	height: 60px;
-	}
 
-#header h1 {
-	float: left;
-	}
-
-#header #login-wrapper {
-	float: right;
+#login-wrapper {
 	height: 40px;
 	padding-top: 16px;
+	margin-right: 20px;
+	float: right;
 	}
 
-#header #login-form .element {
-	float: left;
-	}
-
-#header #login-form input {
+#login-wrapper #login-form input {
 	padding: 2px;
 	}
 
-#header #login-form input[type="text"],
-#header #login-form input[type="password"] {
+#login-wrapper  #login-form input[type="text"],
+#login-wrapper #login-form input[type="password"] {
 	width: 120px;
 	margin-right: 8px;
 	}
@@ -43,70 +117,111 @@
 */
 
 #content {
-	padding-top: 80px;
-	min-height: 420px;
+	top: 160px;
+	left: 0;
+	min-height: 120px;
+	position: absolute;
+	z-index: 4;
 	}
 
 #content-feature {
 	float: left;
-	padding-top: 80px;
 	text-align: center;
 	width: 660px;
+	}
+
+#content-feature #content-feature-heading {
+	height: 80px;
+	width: 660px;
+	background: transparent url(/static/img/splash_your_adventure_awaits.png) top center no-repeat ;
 	}
 
 #content-feature h2{
 	font-size: 36px;
 	text-transform: capitalize;
+	display: none;
 	}
 #content-feature h3{
 	font-size: 16px
 	}
 
-
 /*
 * REGISTRATION FORM
 */
-#content #register-wrapper {
+#register-wrapper {
 	float: right;
 	font-size: 14px;
+	position: absolute;
+	top: 100px;
+	right: 20px;
+	z-index: 4;
 	}
 
-#content #register-form {
+#register-form {
 	width: 300px;
 	float: right;
 	}
 
-#content #register-form .form-description {
+#register-form .form-description {
 	margin-bottom: 8px;
 	}
 
-#content #register-form input[type="text"],
-#content #register-form input[type="password"] {
+#register-form input[type="text"],
+#register-form input[type="password"] {
 	width: 280px;
 	}
 
-#content #register-form input {
+#register-form input {
 	font-size: 16px;
 	padding: 6px;
 	margin: 2px 0;
 	float: right;
 	}
 
+/*
+* BIG LOGIN
+*/
+#big-login-wrapper {
+	font-size: 14px;
+	z-index: 4;
+	margin-top: 100px;
+	}
+
+#big-login-form {
+	width: 400px;
+	margin: 0px auto;
+	}
+
+#big-login-form .form-description {
+	margin-bottom: 8px;
+	}
+
+#big-login-form input[type="text"],
+#big-login-form input[type="password"] {
+	width: 280px;
+	}
+
+#big-login-form input {
+	font-size: 16px;
+	padding: 6px;
+	margin: 2px 0;
+	}
+
 /* Birthday Picker */
-#content #register-form #bday-picker {
+#register-form #bday-picker {
 	padding: 6px;
 	}
 
-#content #register-form #bday-picker label {
+#register-form #bday-picker label {
 	float: left;
 	padding-top: 8px;
 	}
 
-#content #register-form #bday-picker fieldset {
+#register-form #bday-picker fieldset {
 	float: right;
 	}
 
-#content #register-form #bday-picker select {
+#register-form #bday-picker select {
 	font-size: 13px;
 	padding: 3px;
 	margin: 2px 0;
@@ -114,10 +229,12 @@
 	}
 
 /* Errors */
-#content #register-form .register-error {
+#register-form .register-error {
 	padding: 4px;
 	margin-top: 8px;
 	width: 100%;
+	background: #f68d8d;
+	border: 1px solid #cd0a0a;
 	}
 
 /*

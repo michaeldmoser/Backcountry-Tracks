@@ -51,7 +51,7 @@
   $.fn.tpRegistration.handleSuccess = function(data, textStatus, jqXHR) {
     var jsonData = $.parseJSON(data.responseText);
     if (jsonData.successful) {
-      this.options.thankYouElement.dialog();
+      this.options.thankYouElement.dialog({modal: true});
       this.errorElement.hide();
     } else {
       var $this = this;
@@ -103,18 +103,22 @@
       data: data,
       contentType: 'application/json',
       complete: function(data, textStatus, jqXHR) {
-        $.fn.tpLogin.handleComplete.call($this, response)
+        $.fn.tpLogin.handleComplete.call($this, data)
       }
     });
   };
 
-  $.fn.tpLogin.handleComplete = function(response) {
-    var headers = response.getAllResponseHeaders();
-    var results = headers.match('X-Location: (.*)\n');
-    if (results && results.length == 2) {
-      var location = results[1];
-      $.fn.tpLogin.window.location = location;
+  $.fn.tpLogin.handleComplete = function(data) {
+    var jsonData = $.parseJSON(data.responseText);
+    if (jsonData.location) {
+      $.fn.tpLogin.window.location = jsonData.location;
     }
+//    var headers = response.getAllResponseHeaders();
+//    var results = headers.match('X-Location: (.*)\n');
+//    if (results && results.length == 2) {
+//      var location = results[1];
+//
+//    }
   }
 
 })( jQuery );
