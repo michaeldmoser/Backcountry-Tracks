@@ -18,7 +18,8 @@ class WebApplicationFake(object):
         self.ui_modules = {}
         self._wsgi = wsgi
         self.settings = {
-            'cookie_secret': 'test_secret'
+            'cookie_secret': 'test_secret',
+            'login_url': '/login'
             }
 
         return self
