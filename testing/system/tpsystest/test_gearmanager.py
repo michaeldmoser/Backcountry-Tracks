@@ -87,20 +87,20 @@ class AddPieceOfGear(unittest.TestCase):
 
     def test_gear_item_id(self):
         '''Should receive the gear item back with an id added to the object'''
-        self.assertIn('id', cls.response)
+        self.assertIn('id', self.response)
 
     def test_gear_item_owner(self):
         '''Should receive the gear item back with an id added to the object'''
-        self.assertEquals(cls.environ.albert.email, cls.response['owner'])
+        self.assertEquals(self.environ.albert.email, self.response['owner'])
 
     def test_gear_in_database(self):
         '''The new piece of gear should be in the personal_gear database'''
-        bucket = cls.environ.riak.get_database('personal_gear')
+        bucket = self.environ.riak.get_database('personal_gear')
         keys = bucket.get_keys()
-        doc_object = bucket.get(keys[0])
+        doc_object = bucket.get(str(keys[0]))
         pieceofgear = doc_object.get_data()
 
-        self.assertDictContainsSubset(cls.new_peice_of_gear, pieceofgear)
+        self.assertDictContainsSubset(self.new_peice_of_gear, pieceofgear)
 
 
 
