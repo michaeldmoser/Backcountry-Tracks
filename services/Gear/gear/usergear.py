@@ -1,3 +1,4 @@
+import uuid
 
 class UserGear(object):
     list_mapreduce = """
@@ -20,6 +21,23 @@ class UserGear(object):
         mapreduce = self.riak.add(self.gear_bucket_name)
         mapreduce.map(self.list_mapreduce, options={'arg': {'owner': owner}})
         return mapreduce.run()
+
+    def create(self, owner, pieceofgear):
+        '''
+        Add a new piece of gear to an adventurer's gear list
+        '''
+        bucket = self.riak.bucket(self.gear_bucket_name)
+
+        key = str(uuid.uuid4())
+        gear_data = pieceofgear.copy()
+        gear_data['id'] = key
+        gear_data['owner'] = owner
+
+        riak_object = bucket.new(key, data=gear_data)
+        riak_object.store()
+
+        return gear_data
+        
 
     
 

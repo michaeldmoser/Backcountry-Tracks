@@ -30,7 +30,44 @@ class TestUserGearList(unittest.TestCase):
         self.assertEquals(gearlist, actual_list)
 
 
-        
+class TestUserGearCreate(unittest.TestCase):
+
+    def setUp(self):
+        self.owner = 'bob@smith.com'
+        self.pieceofgear = {
+                'name': 'blah',
+                'description': 'bleh',
+                'weight': 'hi',
+                }
+
+        riak = RiakClientFake()
+        self.bucket = riak.bucket('gear')
+
+        self.gear_result = self.pieceofgear.copy()
+        self.gear_result.update({'owner': self.owner})
+
+        gear = UserGear(riak(), 'gear')
+        self.result = gear.create(self.owner, self.pieceofgear)
+
+    def test_create_gear(self):
+        '''Creating a new piece gear saves to database'''
+        document = self.bucket.documents.values()[0]
+        self.assertDictContainsSubset(self.pieceofgear, document)
+
+    def test_should_have_id(self):
+        '''The return should have an ID key'''
+        self.assertIn('id', self.result)
+
+    def test_should_have_owner(self):
+        '''Updated gear object returned'''
+        self.assertDictContainsSubset(self.gear_result, self.result)
+
+    def test_key_id(self):
+        '''The riak object key and the gear id shoudl be the same'''
+        key = self.bucket.documents.keys()[0]
+        id = self.result['id']
+        self.assertEquals(key, id)
+
 
 if __name__ == '__main__':
     unittest.main()
