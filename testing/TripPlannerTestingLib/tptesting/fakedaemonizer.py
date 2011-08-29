@@ -2,8 +2,9 @@ class Daemonizer(object):
     def __init__(self):
         self.daemonized = False
 
-    def __call__(self, pidfile=None):
+    def __call__(self, pidfile=None, signal_map={}):
         self.pidfile = pidfile
+        self.signal_map = signal_map
         return self
 
     def __enter__(self):
@@ -14,5 +15,6 @@ class Daemonizer(object):
         pass
 
 class PidFile(object):
-    pass
+    def __init__(self, path):
+        self.path = path
 

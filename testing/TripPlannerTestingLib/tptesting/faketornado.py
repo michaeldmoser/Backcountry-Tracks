@@ -72,6 +72,8 @@ class HTTPRequestFake(object):
         self.query = query
         self.arguments = cgi.parse_qs(query)
 
+        self._output = ""
+
     def was_called(self, method):
         '''
         Returns True if method was called otherwise returns false
@@ -111,5 +113,6 @@ class HTTPRequestFake(object):
 
     def write(self, chunk):
         self.record_usage(self.finish, chunk)
+        self._output += str(chunk)
 
 

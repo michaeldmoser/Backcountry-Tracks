@@ -4,7 +4,9 @@ from tptesting import environment, fakepika, faketornado, fakedaemonizer
 
 from trailhead.server import TrailHead, RootHandler
 from trailhead.register import RegisterHandler
+from trailhead.gear import UserGearListHandler
 from trailhead.login import LoginHandler
+from trailhead.user import UserHandler
 from trailhead.mq import PikaClient
 
 class TestTrailHeadTornado(unittest.TestCase):
@@ -128,6 +130,17 @@ class TestTrailHeadTornado(unittest.TestCase):
         except ValueError, e:
             self.fail(str(e))
 
+    def test_adds_gear_list_handler(self):
+        '''Adds handler for user gear list'''
+        expected_route = (r'/app/users/(.*)/gear', UserGearListHandler)
+
+        routes = self.webapp.routes
+
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
+
     def test_adds_pika_to_application(self):
         '''PikaClient should be on the application instance'''
         self.assertIsInstance(self.webapp.mq, PikaClient)
@@ -141,6 +154,15 @@ class TestTrailHeadTornado(unittest.TestCase):
         expected_route = (r'/app/login', LoginHandler)
         routes = self.webapp.routes
 
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
+
+    def test_adds_user_handler(self):
+        '''The UserHandler should be added to the routes'''
+        expected_route = (r'/app/user', UserHandler)
+        routes = self.webapp.routes
         try:
             routes.index(expected_route)
         except ValueError, e:

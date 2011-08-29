@@ -87,6 +87,20 @@ class TestPikaClient(unittest.TestCase):
 
         self.assertTrue(binding != dict())
 
+    def test_binding_on_rpc_reply_exchange(self):
+        '''Should create a binding between the rpc_reply exchange and the reply queue'''
+        self.client.connect()
+        self.connection.ioloop.start()
+
+        binding_query = {
+                'exchange': 'rpc_reply',
+                'queue': self.client.rpc_reply,
+                'routing_key': '%s' % self.client.rpc_reply,
+                }
+        binding = self.connection.find_binding(binding_query)
+
+        self.assertTrue(binding != dict())
+
     def test_should_consume_messages_on_reply_queue(self):
         '''Needs to consume messages that are sent to the reply queue'''
         self.client.connect()
@@ -114,6 +128,7 @@ class TestPikaClientReplyHandling(unittest.TestCase):
         self.client.register_rpc_reply(self.correlation_id, self.reply_stub)
 
         method = frame.Method(1, spec.Basic.ConsumeOk())
+        method.delivery_tag = 1
         header = pika.BasicProperties(
                 correlation_id = self.correlation_id,
                 content_type = 'application/json'

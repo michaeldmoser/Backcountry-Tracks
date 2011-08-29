@@ -2,6 +2,11 @@ from tornado.web import Application, RequestHandler
 from trailhead.register import RegisterHandler
 from trailhead.register import ActivateHandler
 from trailhead.login import LoginHandler
+from trailhead.gear import UserGearListHandler
+from trailhead.user import UserHandler
+
+import logging.config
+import yaml
 
 class RootHandler(RequestHandler):
     def get(self):
@@ -20,17 +25,22 @@ class TrailHead(object):
     def run(self):
         daemon_context = self.daemonize(pidfile=self.pidfile)
 
+        config = yaml.load(open('/etc/tripplanner/tpapp.yaml', 'r').read()) 
+
         settings = {
             'cookie_secret': "psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja",
             'login_url': "/"
             }
 
         with daemon_context:
+            logging.config.dictConfig(config['logging'])
             app = self.webapp([
                 (r'/', RootHandler),
                 (r'/app/register', RegisterHandler),
                 (r'/app/activate/(.*)/(.*)', ActivateHandler),
                 (r'/app/login', LoginHandler),
+                (r'/app/users/(.*)/gear', UserGearListHandler),
+                (r'/app/user', UserHandler),
                 ], **settings)
             app.listen(8080)
 

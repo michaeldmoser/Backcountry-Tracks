@@ -4,6 +4,8 @@ import json
 import os
 from tornado import web, template
 
+import logging
+
 class BaseHandler(web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("user")
@@ -47,6 +49,7 @@ class LoginHandler(BaseHandler):
                 reply_to = self.application.mq.rpc_reply,
                 )
         mq.register_rpc_reply(correlation_id, self.respond_to_login)
+        logging.debug('Sending login message for %s' % self.request.body)
         mq.channel.basic_publish(
                 exchange = 'adventurer',
                 routing_key = 'adventurer.login',
@@ -55,6 +58,7 @@ class LoginHandler(BaseHandler):
                 )
 
     def respond_to_login(self, headers, body):
+        logging.debug('Got response for %s' % body)
         reply = json.loads(body)
         if reply['successful'] == True:
             self.set_secure_cookie("user", reply['email'])

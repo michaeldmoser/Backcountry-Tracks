@@ -1,3 +1,10 @@
+var current_user = null;
+var UserModel = Backbone.Model.extend({
+	url: function () {
+		return "/app/user";
+	}
+});
+
 var ApplicationModel = Backbone.Model.extend({
 	initialize: function () {
 		_.bindAll(this, 'activate');
@@ -13,7 +20,10 @@ var GearItem = Backbone.Model.extend({
 });
 
 var GearCollection = Backbone.Collection.extend({
-	model: GearItem
+	model: GearItem,
+	url: function () {
+		return '/app/users/' + current_user.get('email') + '/gear';
+	}
 });
 
 var GearListItemView = Backbone.View.extend({
@@ -360,6 +370,7 @@ var GearListView = Backbone.View.extend({
 		$(this.controls_el).append(this.add_form.el);
 
 		this.models.bind('add');
+		this.models.bind('change', this.render);
 	},
 
 	init_controls: function () {
@@ -469,36 +480,13 @@ var GearManagerApp = Backbone.View.extend({
 		var app_title = $('<h1 />').html('Gear Manager');
 		$(this.el).append(app_title);
 
-		this.gear = new GearCollection([
-			{'name': 'Backpack', 'description': 'This is a backpack', 'weight': '24 oz'},
-			{'name': 'Alcohol Stove', 'description': 'A stove that uses alcohol for fuel', 'weight': '2 oz'},
-			{'name': 'Tarp', 'description': 'A tarp to protect against wind and rain', 'weight': '7 oz'},
-			{'name': 'Sleeping pad', 'description': 'Closed cell foam pad', 'weight': '7 oz'},
-			{'name': 'Sleeping quilt', 'description': '800 power down quilt', 'weight': '10 oz'},
-			{'name': 'Backpack', 'description': 'This is a backpack', 'weight': '24 oz'},
-			{'name': 'Alcohol Stove', 'description': 'A stove that uses alcohol for fuel', 'weight': '2 oz'},
-			{'name': 'Tarp', 'description': 'A tarp to protect against wind and rain', 'weight': '7 oz'},
-			{'name': 'Sleeping pad', 'description': 'Closed cell foam pad', 'weight': '7 oz'},
-			{'name': 'Sleeping quilt', 'description': '800 power down quilt', 'weight': '10 oz'},
-			{'name': 'Backpack', 'description': 'This is a backpack', 'weight': '24 oz'},
-			{'name': 'Alcohol Stove', 'description': 'A stove that uses alcohol for fuel', 'weight': '2 oz'},
-			{'name': 'Tarp', 'description': 'A tarp to protect against wind and rain', 'weight': '7 oz'},
-			{'name': 'Sleeping pad', 'description': 'Closed cell foam pad', 'weight': '7 oz'},
-			{'name': 'Sleeping quilt', 'description': '800 power down quilt', 'weight': '10 oz'},
-			{'name': 'Backpack', 'description': 'This is a backpack', 'weight': '24 oz'},
-			{'name': 'Alcohol Stove', 'description': 'A stove that uses alcohol for fuel', 'weight': '2 oz'},
-			{'name': 'Tarp', 'description': 'A tarp to protect against wind and rain', 'weight': '7 oz'},
-			{'name': 'Sleeping pad', 'description': 'Closed cell foam pad', 'weight': '7 oz'},
-			{'name': 'Sleeping quilt', 'description': '800 power down quilt', 'weight': '10 oz'},
-			{'name': 'Backpack', 'description': 'This is a backpack', 'weight': '24 oz'},
-			{'name': 'Alcohol Stove', 'description': 'A stove that uses alcohol for fuel', 'weight': '2 oz'},
-			{'name': 'Tarp', 'description': 'A tarp to protect against wind and rain', 'weight': '7 oz'},
-			{'name': 'Sleeping pad', 'description': 'Closed cell foam pad', 'weight': '7 oz'},
-			{'name': 'Sleeping quilt', 'description': '800 power down quilt', 'weight': '10 oz'},
-		]);	
+		this.gear = new GearCollection();	
+		
 		this.gearview = new GearListView({
 			'models': this.gear
 		});
+		var gearview = this.gearview;
+		this.gear.fetch({'success':function () { gearview.render(); }});
 
 		$(this.el).append(this.gearview.el);
 	},
@@ -652,28 +640,36 @@ var Portal = function (deps, containers) {
 };
 
 (function () {
-	var deps = {
-		'applications': {
-			'HomeManager': {
-				'manager': HomeManagerApp,
-				'model': new ApplicationModel({
-					'name': 'Home',
-					'icon': '/static/imgs/home.png'
-				})
-			},
-			'GearManager': {
-				'manager': GearManagerApp,
-				'model': new ApplicationModel({
-					'name': 'Gear Manager',
-					'icon': '/static/img/gear_manager.png'
-				})
-			}
+	current_user = new UserModel();
+	current_user.fetch({
+		'success': function () {
+			var deps = {
+				'applications': {
+					'HomeManager': {
+						'manager': HomeManagerApp,
+						'model': new ApplicationModel({
+							'name': 'Home',
+							'icon': '/static/imgs/home.png'
+						})
+					},
+					'GearManager': {
+						'manager': GearManagerApp,
+						'model': new ApplicationModel({
+							'name': 'Gear Manager',
+							'icon': '/static/img/gear_manager.png'
+						})
+					}
+				},
+				'AppChooser': AppChooserView
+			};
+
+			var portal = new Portal(deps);
 		},
-		'AppChooser': AppChooserView
-	};
-
-	var portal = new Portal(deps);
-
+		'error': function (model, response) {
+			urlparts = window.location.href.split('app');
+			window.location.href = urlparts[0];
+		}
+	});
 })();
 
 

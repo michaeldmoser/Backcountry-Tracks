@@ -4,6 +4,7 @@ from os import path
 import uuid
 import mailbox
 import urllib2
+from urllib2 import HTTPError
 
 import pika.adapters
 import pika.connection
@@ -219,6 +220,27 @@ class TestAdventurerServiceLogins(unittest.TestCase):
             self.assertEquals(login_reply, expected_reply)
         utils.try_until(1, verify_successful_login)
 
+class TestAdventurerUserData(unittest.TestCase):
+
+    def test_retrieve_user_data(self):
+        '''Can retrieve user related data for currently logged in user'''
+        environ = environment.create()
+        environ.make_pristine()
+        environ.bringup_infrastructure()
+
+        ramona = environ.ramona
+        environ.create_user(ramona)
+        login_session = ramona.login()
+
+        user_profile_url = environ.trailhead_url + '/user'
+        request = urllib2.Request(user_profile_url)
+
+        response = login_session.open(request)
+        body = response.read()
+
+        user_data = json.loads(body)
+
+        self.assertEquals(user_data, ramona)
 
 if __name__ == '__main__':
     unittest.main()

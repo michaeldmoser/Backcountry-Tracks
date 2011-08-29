@@ -39,6 +39,8 @@ class PikaClient(object):
                 routing_key='adventurer.login.%s' % self.rpc_reply)
         self.channel.queue_bind(exchange='registration', queue=self.rpc_reply,
                 routing_key='registration.activate.%s' % self.rpc_reply)
+        self.channel.queue_bind(exchange='rpc_reply', queue=self.rpc_reply,
+                routing_key='%s' % self.rpc_reply)
         self.channel.queue_bind(exchange='registration', queue=self.rpc_reply,
                 routing_key='registration.register.%s' % self.rpc_reply)
 
