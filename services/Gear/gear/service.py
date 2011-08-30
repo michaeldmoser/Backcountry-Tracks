@@ -19,7 +19,6 @@ class GearService(object):
         self.channel.basic_consume(self.process_request, queue=user_gear_queue)
 
     def process_request(self, channel, method, header, data):
-        logging.debug('Received request for gear list: %s' % data)
         request = json.loads(data)
 
         properties = pika.BasicProperties(
@@ -27,6 +26,7 @@ class GearService(object):
                 correlation_id = header.correlation_id
                 )
 
+        logging.debug('Received request for personal gear: %s' % data)
         method = getattr(self.geardb, request['method'])
         response = method(*request['params'])
 

@@ -16,6 +16,17 @@ var ApplicationModel = Backbone.Model.extend({
 });
 
 var GearItem = Backbone.Model.extend({
+	initialize: function () {
+		_.bindAll(this, 'url');
+	},
+
+	url: function () {
+		var url = '/app/users/' + current_user.get('email') + '/gear';
+		if (this.id)
+			url = url + "/" + this.id;
+
+		return url;
+	}
 
 });
 
@@ -388,6 +399,7 @@ var GearListView = Backbone.View.extend({
 	},
 
 	add_gear: function (new_gear) {
+		new_gear.save();
 		this.models.add(new_gear, {silent: true});
 		this.hide_add_form();
 		this.render();
