@@ -31,13 +31,24 @@ class Controller(object):
         self.begin_consuming()
 
     def begin_consuming(self):
-        self.channel.basic_consume(self.process_registration, queue='register')
+        self.channel.basic_consume(self.process_registration, queue='register_rpc')
         self.channel.basic_consume(self.process_login, queue='login_rpc')
         self.channel.basic_consume(self.process_activation, queue='activate_rpc')
 
     def process_registration(self, channel, method, header, data):
-        self.app_instance.register(json.loads(data))
-#         TODO: The message needs to be ack()'ed
+        result = self.app_instance.register(json.loads(data))
+
+        properties = pika.BasicProperties(
+                correlation_id = header.correlation_id,
+                content_type = 'application/json'
+                )
+
+        register_reply = json.dumps(result)
+        self.channel.basic_publish(exchange='registration',
+                routing_key='registration.register.%s' % header.reply_to,
+                properties=properties,
+                body=register_reply)
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
     def process_activation(self, channel, method, header, data):
         params = json.loads(data)
@@ -58,6 +69,7 @@ class Controller(object):
                 routing_key='registration.activate.%s' % header.reply_to,
                 properties=properties,
                 body=activate_reply)
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
     def process_login(self, channel, method, header, data):
         login = json.loads(data)
@@ -76,6 +88,6 @@ class Controller(object):
                 routing_key='adventurer.login.%s' % header.reply_to,
                 properties=properties,
                 body=login_reply)
-
+        self.channel.basic_ack(delivery_tag = method.delivery_tag)
 
 

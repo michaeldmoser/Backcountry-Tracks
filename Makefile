@@ -7,7 +7,7 @@ install-infrastructure: install-rabbitmq install-riak install-nginx
 
 install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal
 
-install-dependencies: install-libyaml
+install-dependencies: install-libyaml install-python-setproctitle
 
 install-libyaml: /usr/lib/libyaml.so /usr/include/yaml.h /usr/include/python2.7/Python.h
 
@@ -96,10 +96,16 @@ config/nginx/nginx.conf: /usr/sbin/nginx /usr/local/lib/python2.7/dist-packages/
 
 config/nginx.in/nginx.conf:
 
-app-config: /etc/tpapp.yaml
+install-python-setproctitle: /usr/lib/pyshared/python2.7/setproctitle.so
 
-/etc/tpapp.yaml: config/tpapp.yaml
-	sudo ln -sf `pwd`/config/tpapp.yaml /etc/tpapp.yaml
+/usr/lib/pyshared/python2.7/setproctitle.so:
+	sudo apt-get install python-setproctitle
+
+app-config: /etc/tripplanner/tpapp.yaml
+
+/etc/tripplanner/tpapp.yaml: config/tpapp.yaml
+	sudo mkdir /etc/tripplanner -p
+	sudo ln -sf `pwd`/config/tpapp.yaml /etc/tripplanner/tpapp.yaml
 
 config/tpapp.yaml:
 	python tools/build-tpapp-dev-config.py
