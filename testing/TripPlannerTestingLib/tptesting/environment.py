@@ -182,8 +182,11 @@ class TpEnvironment(object):
         self.nginx.stop()
 
     def create_user(self, user):
+        user_data = user.copy()
+        user_data['registration_complete'] = True
+
         adventurers = self.riak.get_database('adventurers')
-        adventurer = adventurers.new(user.email, data=user)
+        adventurer = adventurers.new(user.email, data=user_data)
         adventurer.store()
 
     def clear_mbox(self):

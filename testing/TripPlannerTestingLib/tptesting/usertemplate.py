@@ -15,7 +15,6 @@ class UserTemplate(dict):
       password:: The password for this user
 
     '''
-
     def set_trailhead_url(self, url):
         self.trailhead_url = url
 
