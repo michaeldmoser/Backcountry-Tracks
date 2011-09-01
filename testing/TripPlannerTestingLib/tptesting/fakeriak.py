@@ -325,7 +325,7 @@ class RiakObjectFake(object):
 		raise NotImplementedError
 
     def delete(self, rw=None):
-		raise NotImplementedError
+        del self.bucket.documents[self.key]
 
     def clear(self) :
 		raise NotImplementedError
