@@ -2,6 +2,7 @@ import unittest
 
 import urllib2
 import json
+import uuid
 
 from tptesting import environment, utils
 
@@ -103,6 +104,63 @@ class AddPieceOfGear(unittest.TestCase):
         self.assertDictContainsSubset(self.new_peice_of_gear, pieceofgear)
 
 
+class EditPieceOfGear(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.environ = environment.create()
+        cls.environ.make_pristine()
+        cls.environ.bringup_infrastructure()
+
+
+        gear = cls.environ.gear
+        albert = cls.environ.albert
+        cls.environ.create_user(albert)
+
+        login_session = albert.login() 
+
+        cls.old_gear = {
+                'name': 'Hard Shell Jacket',
+                'description': 'Wind / Rain proof jacket',
+                'weight': '19',
+                'owner': albert.email
+                }
+
+        cls.gear_id = cls.environ.gear.add_item(**cls.old_gear)
+        cls.old_gear['id'] = cls.gear_id
+
+        gear_url = cls.environ.trailhead_url + '/users/' + albert.email + \
+                '/gear/' + cls.gear_id
+
+        cls.updated_gear = {
+                'name': 'Patagonia Torrent Shell',
+                'description': 'Wind / Rain proof jacket',
+                'weight': '19',
+                'owner': albert.email
+                }
+        gear_list_request = urllib2.Request(
+                gear_url,
+                data=json.dumps(cls.updated_gear),
+                headers={'Content-Type': 'application/json'} 
+                )
+        gear_list_request.get_method = lambda: 'PUT'
+
+        cls.response = login_session.open(gear_list_request)
+        body = cls.response.read()
+        cls.response = json.loads(body)
+
+    def test_gear_item_returned(self):
+        '''Should receive the gear item back'''
+        self.assertEquals(self.updated_gear, self.response)
+
+    def test_gear_in_database(self):
+        '''The new piece of gear should be in the personal_gear database'''
+        bucket = self.environ.riak.get_database('personal_gear')
+        keys = bucket.get_keys()
+        doc_object = bucket.get(str(keys[0]))
+        pieceofgear = doc_object.get_data()
+
+        self.assertDictContainsSubset(self.updated_gear, pieceofgear)
 
 
 if __name__ == '__main__':

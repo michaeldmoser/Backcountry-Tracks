@@ -26,7 +26,7 @@ class GearService(object):
                 correlation_id = header.correlation_id
                 )
 
-        logging.debug('Received request for personal gear: %s' % data)
+        logging.info('Received %s request' % request['method'])
         method = getattr(self.geardb, request['method'])
         response = method(*request['params'])
 

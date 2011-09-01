@@ -46,11 +46,19 @@ class UserGearListHandler(BaseHandler):
         pieceofgear = json.loads(self.request.body)
         self.__json_rpc_request('create', [user, pieceofgear])
 
+    @web.authenticated
+    @web.asynchronous
+    def put(self, owner, gear_id):
+        pieceofgear = json.loads(self.request.body)
+        logging.info("Received gear update for %s:%s" % (owner, gear_id))
+        self.__json_rpc_request('update', [owner, gear_id, pieceofgear])
+
     def respond_to_get(self, headers, body):
         logging.debug('Received response:\n%s' % body)
         self.set_status(200)
         self.set_header('Content-Type', 'application/json')
         self.write(body)
         self.finish()
+
 
 

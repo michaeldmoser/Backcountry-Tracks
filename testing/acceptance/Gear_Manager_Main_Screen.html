@@ -56,13 +56,6 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name">Suite Teardown</td>
-<td>Close the browser</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td class="name">Resource</td>
 <td>testing/acceptance/__init__.html</td>
 <td></td>
@@ -248,6 +241,97 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>The new piece of gear should be in the list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Edit a gear item">Edit a gear item</a></td>
+<td>Given I have some basic gear in my gear list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I Open the Gear Manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and click to edit the Quilt gear item</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and change the name to Down Quilt</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and change the weight to 13</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and click the gear's save button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the gear list should have a Down Quilt in it</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the Down Quilt gear item's weight should be 13</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then refresh the screen</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and open the gear manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the gear list should have a Down Quilt in it</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the Down Quilt gear item's weight should be 13</td>
 <td></td>
 <td></td>
 <td></td>
@@ -705,6 +789,111 @@ td.name, th.name {
 <td>Reload Page</td>
 <td></td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I open the gear manager">I open the gear manager</a></td>
+<td>open the gear manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_click to edit the ${EDIT_GEAR} gear item">click to edit the ${EDIT_GEAR} gear item</a></td>
+<td>Click Element</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${EDIT_GEAR}")]/../../div[@class="gear_list_management_buttons"]/img</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${ACTIVE_GEAR}</td>
+<td>${EDIT_GEAR}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_change the name to ${NEW_GEAR_NAME}">change the name to ${NEW_GEAR_NAME}</a></td>
+<td>Input text</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${ACTIVE_GEAR}")]/../../div[@class="gear_list_add_form"]//input[@name="gear_name"]</td>
+<td>${NEW_GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_change the weight to ${NEW_GEAR_WEIGHT}">change the weight to ${NEW_GEAR_WEIGHT}</a></td>
+<td>Input text</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${ACTIVE_GEAR}")]/../../div[@class="gear_list_add_form"]//input[@name="gear_weight"]</td>
+<td>${NEW_GEAR_WEIGHT}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_click the gear's save button">click the gear's save button</a></td>
+<td>Click element</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${ACTIVE_GEAR}")]/../../div[@class="gear_list_add_form"]/div[contains(@class, "save")]/img</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the gear list should have a ${FIND_GEAR} in it">the gear list should have a ${FIND_GEAR} in it</a></td>
+<td>Page Should Contain Element</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li//div[contains(text(), "${FIND_GEAR}")]</td>
+<td>message="Could not find ${FIND_GEAR} in the gear list"</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the ${FIND_GEAR} gear item's weight should be ${EXPECTED_WEIGHT}">the ${FIND_GEAR} gear item's weight should be ${EXPECTED_WEIGHT}</a></td>
+<td>Element Should Contain</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li//div[contains(text(), "${FIND_GEAR}")]/../div[contains(@class, "gear_weight")]</td>
+<td>${EXPECTED_WEIGHT}</td>
 <td></td>
 </tr>
 <tr>

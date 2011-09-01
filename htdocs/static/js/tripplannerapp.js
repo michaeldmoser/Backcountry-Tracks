@@ -62,6 +62,7 @@ var GearListItemView = Backbone.View.extend({
 	},
 
 	gear_save: function (gear_item) {
+		this.model.save();
 		this.render();
 		this.edit_done();
 	},

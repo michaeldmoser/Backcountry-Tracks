@@ -39,7 +39,8 @@ class TrailHead(object):
                 (r'/app/register', RegisterHandler),
                 (r'/app/activate/(.*)/(.*)', ActivateHandler),
                 (r'/app/login', LoginHandler),
-                (r'/app/users/(.*)/gear', UserGearListHandler),
+                (r'/app/users/([^/]+)/gear$', UserGearListHandler),
+                (r'/app/users/([^/]+)/gear/([^/]+)$', UserGearListHandler),
                 (r'/app/user', UserHandler),
                 ], **settings)
             app.listen(8080)

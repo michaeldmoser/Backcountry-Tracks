@@ -132,7 +132,18 @@ class TestTrailHeadTornado(unittest.TestCase):
 
     def test_adds_gear_list_handler(self):
         '''Adds handler for user gear list'''
-        expected_route = (r'/app/users/(.*)/gear', UserGearListHandler)
+        expected_route = (r'/app/users/([^/]+)/gear$', UserGearListHandler)
+
+        routes = self.webapp.routes
+
+        try:
+            routes.index(expected_route)
+        except ValueError, e:
+            self.fail(str(e))
+
+    def test_adds_gear_handler(self):
+        '''Adds handler for user gear'''
+        expected_route = (r'/app/users/([^/]+)/gear/([^/]+)$', UserGearListHandler)
 
         routes = self.webapp.routes
 

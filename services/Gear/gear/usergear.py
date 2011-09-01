@@ -37,6 +37,21 @@ class UserGear(object):
         riak_object.store()
 
         return gear_data
+
+    def update(self, owner, gear_id, pieceofgear):
+        '''
+        Update a piece of gear in the adventurer's gear list
+        '''
+        bucket = self.riak.bucket(self.gear_bucket_name)
+
+        gear_object = bucket.get(str(gear_id))
+        gear_object.set_data(pieceofgear)
+        gear_object.store()
+
+        return gear_object.get_data()
+
+
+
         
 
     

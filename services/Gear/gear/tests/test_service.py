@@ -128,6 +128,56 @@ class TestCreateGear(unittest.TestCase):
         body = json.loads(self.reply.body)
         self.assertEquals(body, self.gear_return)
 
+class TestUpdateGear(unittest.TestCase):
+
+    def setUp(self):
+        user = 'bob@smith.com'
+        new_gear = {
+                'name': 'Backpack',
+                'description': '',
+                'weight': '48',
+                'id': str(uuid.uuid4()),
+                'owner': user,
+                }
+        self.gear_return = new_gear.copy()
+
+        class GearDbStub(object):
+            def update(stub, user, gear_id, pieceofgear):
+                return self.gear_return
+
+        mq = fakepika.SelectConnectionFake()
+        mq.ioloop.start()
+        channel = mq._channel # Is this cheating? Should we make it not cheating?
+
+        configuration = {
+                'queues': {
+                    'user_gear': 'gear_user_rpc'
+                    }
+                }
+
+        gearep = GearService(channel, configuration, GearDbStub())
+        gearep.start()
+
+        self.properties = pika.BasicProperties(
+                content_type = 'application/json',
+                correlation_id = str(uuid.uuid4()),
+                reply_to = str(uuid.uuid4())
+                )
+        request = {
+                'jsonrpc': '2.0',
+                'method': 'update',
+                'params': [user, new_gear['id'], new_gear],
+                'id': self.properties.correlation_id,
+                }
+        mq.inject('gear_user_rpc', self.properties, json.dumps(request))
+        mq.trigger_consume('gear_user_rpc')
+
+        self.reply = mq.published_messages[0]
+
+    def test_reply(self):
+        body = json.loads(self.reply.body)
+        self.assertEquals(body, self.gear_return)
+
 
 
 if __name__ == '__main__':
