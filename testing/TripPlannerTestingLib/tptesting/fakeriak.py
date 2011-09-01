@@ -18,6 +18,9 @@ Checking the data
 >>> self.assertEquals(albert, environ.albert)
 """
 
+import uuid
+
+
 class RiakClientFake(object):
 
     def __init__(self):
@@ -193,6 +196,10 @@ class RiakBucketFake(object):
 
         obj = RiakObjectFake(self.client, self, key=key)
         obj.set_data(document)
+
+        # in production this is not random data but for testing purposes this will work
+        # for the time being
+        obj._vclock = str(uuid.uuid4())
         return obj
 
 
@@ -306,7 +313,13 @@ class RiakObjectFake(object):
 		raise NotImplementedError
 
     def store(self, w=None, dw=None, return_body=True):
-        self.bucket.documents[self.key] = self.__data
+        if self.bucket.documents.has_key(self.key) and \
+                self._vclock is None:
+            self.__data = self.bucket.documents[self.key]
+        else:
+            self.bucket.documents[self.key] = self.__data
+
+        return self
 
     def reload(self, r=None, vtag=None):
 		raise NotImplementedError
