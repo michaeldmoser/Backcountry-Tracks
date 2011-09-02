@@ -311,6 +311,81 @@ class TestUserGearUpdate(unittest.TestCase):
         reply_to = self.sent_message.properties.reply_to
         self.assertEquals(self.application.mq.rpc_reply, reply_to)
 
+class TestUserGearDelete(unittest.TestCase):
+    '''
+    Tests the process of receiving a DELETE on /users/<user@email.com>/gear/<id>
+    and sending a delete json rpc request
+    '''
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.adventurer = self.environ.douglas
+
+        self.gear_id = str(uuid.uuid4())
+        url = '/app/users/%s/gear/%s' % (self.adventurer.email, self.gear_id)
+        self.handler, self.application, self.pika = setup_handler(UserGearListHandler,
+                'DELETE', url, user=self.adventurer.email)
+        self.request = self.handler.request
+
+        self.handler.delete(self.adventurer.email, self.gear_id)
+
+        self.sent_message = self.pika.published_messages[0]
+
+    def test_rpc_response(self):
+        '''Should return a list of gear for the user'''
+        self.handler.finish() # Tornado does this automatically for non-async methods
+        headers, body = self.request._output.split('\r\n\r\n')
+        self.assertEquals('', body)
+
+    def test_response_status(self):
+        '''Should respond with a 204 HTTP status'''
+        self.assertEquals(self.handler._status_code, 204)
+
+    def test_send_create_request_body(self):
+        '''Sends a JSON-RPC message request for creating a piece of gear'''
+        sent_request = json.loads(self.sent_message.body)
+        del sent_request['id'] # we don't care about the id in this context
+
+        expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'delete',
+                'params': [self.adventurer.email, self.gear_id],
+                }
+        self.assertEquals(expected_request, sent_request)
+
+    def test_gear_exchange_used(self):
+        '''Should send the message via the gear exchange'''
+        exchange = self.sent_message.exchange
+        self.assertEquals('gear', exchange)
+
+    def test_routing_key(self):
+        '''Should use the gear.user.rpc routing key'''
+        routing_key = self.sent_message.routing_key
+        self.assertEquals('gear.user.rpc', routing_key)
+
+    def test_content_type(self):
+        '''Should use application/json-rpc content-type'''
+        content_type = self.sent_message.properties.content_type
+        self.assertEquals('application/json-rpc', content_type)
+        
+    def test_delivery_mode(self):
+        '''Does not need to be a persisted message'''
+        delivery_mode = self.sent_message.properties.delivery_mode
+        self.assertIsNone(delivery_mode)
+
+    def test_correlation_id_jsonrpc_id(self):
+        '''The messages correlation_id and the json-rpc id should be the same'''
+        sent_request = json.loads(self.sent_message.body)
+        json_id = sent_request['id']
+        correlation_id = self.sent_message.properties.correlation_id
+
+        self.assertEquals(json_id, correlation_id)
+
+    def test_reply_to(self):
+        '''The reply_to should route back to the TrailHead service'''
+        reply_to = self.sent_message.properties.reply_to
+        self.assertEquals(self.application.mq.rpc_reply, reply_to)
+
 
 
 if __name__ == '__main__':

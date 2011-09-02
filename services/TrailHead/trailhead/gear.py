@@ -53,6 +53,12 @@ class UserGearListHandler(BaseHandler):
         logging.info("Received gear update for %s:%s" % (owner, gear_id))
         self.__json_rpc_request('update', [owner, gear_id, pieceofgear])
 
+    @web.authenticated
+    def delete(self, owner, gear_id):
+        logging.info("Received gear delete for %s:%s" % (owner, gear_id))
+        self.__json_rpc_request('delete', [owner, gear_id])
+        self.set_status(204)
+
     def respond_to_get(self, headers, body):
         logging.debug('Received response:\n%s' % body)
         self.set_status(200)

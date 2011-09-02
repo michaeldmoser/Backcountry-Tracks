@@ -30,6 +30,9 @@ class GearService(object):
         method = getattr(self.geardb, request['method'])
         response = method(*request['params'])
 
+        if response is None:
+            return
+
         logging.debug('Publish response to %s to routing key %s' % (header.correlation_id, header.reply_to))
         self.channel.basic_publish(
                 exchange = 'rpc_reply',

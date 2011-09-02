@@ -103,6 +103,28 @@ class TestUserGearUpdate(unittest.TestCase):
         id = self.result['id']
         self.assertEquals(key, id)
 
+class TestUserGearDelete(unittest.TestCase):
+
+    def setUp(self):
+        self.owner = 'bob@smith.com'
+        self.pieceofgear = {
+                'name': 'blah',
+                'description': 'bleh',
+                'weight': 'hi',
+                'owner': self.owner,
+                'id': str(uuid.uuid4()),
+                }
+
+        riak = RiakClientFake()
+        self.bucket = riak.bucket('gear')
+        self.bucket.add_document(self.pieceofgear['id'], self.pieceofgear)
+
+        gear = UserGear(riak(), 'gear')
+        self.result = gear.delete(self.owner, self.pieceofgear['id'])
+
+    def test_delete_gear(self):
+        '''Delete a piece gear saves to database'''
+        self.assertEquals(len(self.bucket.documents), 0)
 
 if __name__ == '__main__':
     unittest.main()

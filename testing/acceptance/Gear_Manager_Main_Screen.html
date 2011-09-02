@@ -343,6 +343,62 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Delete a gear item">Delete a gear item</a></td>
+<td>Given I have some basic gear in my gear list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I Open the Gear Manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and click to delete the Quilt gear item</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the gear list should not have a Quilt in it</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then refresh the screen</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and open the gear manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the gear list should not have a Quilt in it</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table id="keywords" border="1">
 <tr>
@@ -894,6 +950,48 @@ td.name, th.name {
 <td>Element Should Contain</td>
 <td>xpath=//div[@class="gear_listing"]/ul/li//div[contains(text(), "${FIND_GEAR}")]/../div[contains(@class, "gear_weight")]</td>
 <td>${EXPECTED_WEIGHT}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_click to delete the ${GEAR_NAME} gear item">click to delete the ${GEAR_NAME} gear item</a></td>
+<td>Click Element</td>
+<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${GEAR_NAME}")]/../../div[@class="gear_list_management_buttons"]/img[@alt="Delete"]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${ACTIVE_GEAR}</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the gear list should not have a ${GEAR_NAME} in it">the gear list should not have a ${GEAR_NAME} in it</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>1</td>
+<td>.1</td>
+<td>Page Should Not Contain</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${GEAR_NAME}</td>
+<td></td>
 <td></td>
 </tr>
 <tr>

@@ -50,9 +50,11 @@ class UserGear(object):
 
         return gear_object.get_data()
 
-
-
-        
-
-    
+    def delete(self, owner, gear_id):
+        '''
+        Remove a piece of gear from the adventurer's gear list
+        '''
+        bucket = self.riak.bucket(self.gear_bucket_name)
+        gear_object = bucket.get(str(gear_id))
+        gear_object.delete()
 

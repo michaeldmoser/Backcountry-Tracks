@@ -179,6 +179,55 @@ class TestUpdateGear(unittest.TestCase):
         self.assertEquals(body, self.gear_return)
 
 
+class TestDeleteGear(unittest.TestCase):
+
+    def setUp(self):
+        user = 'bob@smith.com'
+        new_gear = {
+                'name': 'Backpack',
+                'description': '',
+                'weight': '48',
+                'id': str(uuid.uuid4()),
+                'owner': user,
+                }
+        self.gear_return = new_gear.copy()
+
+        class GearDbStub(object):
+            def delete(stub, user, gear_id):
+                pass
+
+        mq = fakepika.SelectConnectionFake()
+        mq.ioloop.start()
+        channel = mq._channel # Is this cheating? Should we make it not cheating?
+
+        configuration = {
+                'queues': {
+                    'user_gear': 'gear_user_rpc'
+                    }
+                }
+
+        gearep = GearService(channel, configuration, GearDbStub())
+        gearep.start()
+
+        self.properties = pika.BasicProperties(
+                content_type = 'application/json',
+                correlation_id = str(uuid.uuid4()),
+                reply_to = str(uuid.uuid4())
+                )
+        request = {
+                'jsonrpc': '2.0',
+                'method': 'delete',
+                'params': [user, new_gear['id']],
+                'id': self.properties.correlation_id,
+                }
+        mq.inject('gear_user_rpc', self.properties, json.dumps(request))
+        mq.trigger_consume('gear_user_rpc')
+
+        self.reply = mq.published_messages
+
+    def test_reply(self):
+        self.assertEquals(len(self.reply), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

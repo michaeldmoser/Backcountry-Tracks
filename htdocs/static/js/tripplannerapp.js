@@ -42,7 +42,7 @@ var GearListItemView = Backbone.View.extend({
 
 	initialize: function () {
 		_.bindAll(this, 'render', 'mouseovered', 'mouseouted',
-			'edit_requested', 'edit_done', 'gear_save');	
+			'edit_requested', 'edit_done', 'gear_save', 'delete_requested');	
 
 		this.build_management_buttons();
 		this.build_row();
@@ -96,20 +96,28 @@ var GearListItemView = Backbone.View.extend({
 
 	build_management_buttons: function () {
 		this.edit_button = $(document.createElement('img')).attr({
-			'src': '/static/img/22x22/actions/edit-rename.png',
+			'src': '/static/img/icons/fugue/edit.png',
 			'alt': 'Edit',
-			'height': '22',
-			'weight': '22'
+			'height': '16',
+			'weight': '16'
+		});
+		this.delete_button =$(document.createElement('img')).attr({
+			'src': '/static/img/icons/fugue/minus-button.png',
+			'alt': 'Delete',
+			'height': '16',
+			'weight': '16'
 		});
 
 		this.management_buttons = $(document.createElement('div'));
 		this.management_buttons.attr('class', 'gear_list_management_buttons');
 
 		this.management_buttons.append(this.edit_button);
+		this.management_buttons.append(this.delete_button);
 		this.management_buttons.hide();
 		$(this.el).append(this.management_buttons);
 
 		$(this.edit_button).click(this.edit_requested);
+		$(this.delete_button).click(this.delete_requested);
 	},
 
 	edit_requested: function (ev) {
@@ -132,6 +140,14 @@ var GearListItemView = Backbone.View.extend({
 		$(this.row).fadeIn(400, function () {
 			$(row).css('position', 'static');
 		});
+	},
+
+	delete_requested: function (ev) {
+		this.model.destroy();
+		var after_slide_up = _.bind(function () {
+			$(this.el).remove();
+		}, this);
+		$(this.el).slideUp(400, after_slide_up);	
 	},
 
 	render: function () {
