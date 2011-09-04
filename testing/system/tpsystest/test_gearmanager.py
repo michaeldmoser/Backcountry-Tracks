@@ -34,7 +34,7 @@ class RetrieveGearList(unittest.TestCase):
         body = cls.response.read()
         cls.gear_list = json.loads(body)
 
-    def notest_list_of_gear_has_stove(self):
+    def test_list_of_gear_has_stove(self):
         """Test /app/users/<user>/gear returns a list of gear with a stove in it"""
         stove = {
                 'name': 'Alcohol Stove',
@@ -44,7 +44,7 @@ class RetrieveGearList(unittest.TestCase):
                 }
         self.assertIn(stove, self.gear_list)
 
-    def notest_list_of_gear_has_backpack(self):
+    def test_list_of_gear_has_backpack(self):
         """Test /app/users/<user>/gear returns a list of gear with a backpack in it"""
         backpack = {
                 'name': 'Backpack',
@@ -86,15 +86,15 @@ class AddPieceOfGear(unittest.TestCase):
         body = cls.response.read()
         cls.response = json.loads(body)
 
-    def notest_gear_item_id(self):
+    def test_gear_item_id(self):
         '''Should receive the gear item back with an id added to the object'''
         self.assertIn('id', self.response)
 
-    def notest_gear_item_owner(self):
+    def test_gear_item_owner(self):
         '''Should receive the gear item back with an id added to the object'''
         self.assertEquals(self.environ.albert.email, self.response['owner'])
 
-    def notest_gear_in_database(self):
+    def test_gear_in_database(self):
         '''The new piece of gear should be in the personal_gear database'''
         bucket = self.environ.riak.get_database('personal_gear')
         keys = bucket.get_keys()
@@ -149,11 +149,11 @@ class EditPieceOfGear(unittest.TestCase):
         body = cls.response.read()
         cls.response = json.loads(body)
 
-    def notest_gear_item_returned(self):
+    def test_gear_item_returned(self):
         '''Should receive the gear item back'''
         self.assertEquals(self.updated_gear, self.response)
 
-    def notest_gear_in_database(self):
+    def test_gear_in_database(self):
         '''The new piece of gear should be in the personal_gear database'''
         bucket = self.environ.riak.get_database('personal_gear')
         keys = bucket.get_keys()
