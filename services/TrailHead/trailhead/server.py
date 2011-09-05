@@ -4,6 +4,7 @@ from trailhead.register import ActivateHandler
 from trailhead.login import LoginHandler
 from trailhead.gear import UserGearListHandler
 from trailhead.user import UserHandler
+from trailhead.trips import TripsHandler
 
 import logging.config
 import yaml
@@ -42,6 +43,7 @@ class TrailHead(object):
                 (r'/app/users/([^/]+)/gear$', UserGearListHandler),
                 (r'/app/users/([^/]+)/gear/([^/]+)$', UserGearListHandler),
                 (r'/app/user', UserHandler),
+                (r'/app/trips$', TripsHandler),
                 ], **settings)
             app.listen(8080)
 

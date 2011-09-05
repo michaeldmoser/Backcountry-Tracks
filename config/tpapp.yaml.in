@@ -44,6 +44,12 @@ services:
         database:
             host: localhost
             bucket: adventurers
+    Trips/trips:
+        queues:
+            rpc: trips_rpc
+        database:
+            host: localhost
+            bucket: trips
 
 logging:
     version: 1

@@ -52,3 +52,16 @@ smtp:
 mbox_file: '/var/mail/{{ user }}'
 
 user: '{{ user }}'
+
+trips:
+    - 
+        name: BWCA 2011 - Pow Wow Trail
+        start: "2011-09-16"
+        end: "2011-09-18"
+        description: A two day hike on the Powwow trail in the Boundary Waters.
+
+buckets:
+    trips: trips
+    gear: personal_gear
+    adventurers: adventurers
+

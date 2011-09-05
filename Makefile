@@ -5,7 +5,7 @@ infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal
+install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal install-trips
 
 install-dependencies: install-libyaml install-python-setproctitle
 
@@ -197,6 +197,14 @@ services/Gear/setup.py:
 	
 services/Gear/Gear.egg-info:
 	cd services/Gear && sudo python setup.py develop
+
+install-trips: services/Trips/setup.py services/Trips/Trips.egg-info
+
+services/Trips/setup.py:
+	cd services/Trips && sudo python setup.py develop
+	
+services/Trips/Trips.egg-info:
+	cd services/Trips && sudo python setup.py develop
 
 install-trailhead: services/TrailHead/setup.py services/TrailHead/TrailHead.egg-info
 

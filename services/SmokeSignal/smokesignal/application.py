@@ -40,3 +40,11 @@ class SmokeSignalApp(object):
         channel.queue_declare(queue = 'user_gear_rpc', durable=True)
         channel.queue_bind(queue = 'user_gear_rpc', exchange = 'gear',
                 routing_key = 'gear.user.rpc')
+
+        # trips  
+        channel.exchange_declare(exchange = 'trips', durable = True,
+                type = 'topic')
+        channel.queue_declare(queue = 'trips_rpc', durable=True)
+        channel.queue_bind(queue = 'trips_rpc', exchange = 'trips',
+                routing_key = 'trips.rpc')
+

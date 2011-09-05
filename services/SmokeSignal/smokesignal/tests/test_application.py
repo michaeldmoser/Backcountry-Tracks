@@ -50,13 +50,13 @@ class TestSmokeSignalAppRegistration(unittest.TestCase):
             'auto_delete': False,
             'arguments': {}
             }
-        actual_queue = self.pika_class.get_queue_declaration('register')
+        actual_queue = self.pika_class.get_queue_declaration('register_rpc')
         self.assertDictContainsSubset(expected_queue_declare, actual_queue)
 
     def test_creates_binding(self):
         '''Creates the exchange<->queue binding'''
         expected_binding = {
-            'queue': 'register',
+            'queue': 'register_rpc',
             'exchange': 'registration',
             'routing_key': 'registration.register',
             }
@@ -171,6 +171,45 @@ class TestSmokeSignalAdventurerRPC(unittest.TestCase):
         actual_binding = self.pika_class.find_binding(expected_binding)
         self.assertDictContainsSubset(expected_binding, actual_binding)
     
+class TestSmokeSignalTrips(unittest.TestCase):
+    def setUp(self):
+        self.pika_class = fakepika.BlockingConnectionFake()
+        pika_connection = self.pika_class()
+
+        app = SmokeSignalApp(pika_connection)
+        app.run()
+
+    def test_trips_exchange(self):
+        '''Creates an exchange for Trips related messages'''
+        expected_exchange_declare = {
+            'type': 'topic',
+            'durable': True,
+            'auto_delete': False,
+            'internal': False,
+            'arguments': {}
+            }
+        actual_exchange = self.pika_class.get_exchange_declaration('trips')
+        self.assertDictContainsSubset(expected_exchange_declare, actual_exchange)
+
+    def test_user_trips_rpc_queue(self):
+        '''Creates the user_trips_rpc queue'''
+        expected_queue_declare = {
+            'durable': True,
+            'auto_delete': False,
+            'arguments': {}
+            }
+        actual_queue = self.pika_class.get_queue_declaration('trips_rpc')
+        self.assertDictContainsSubset(expected_queue_declare, actual_queue)
+
+    def test_creates_binding(self):
+        '''Creates the exchange<->queue binding for user trips RPCs'''
+        expected_binding = {
+            'queue': 'trips_rpc',
+            'exchange': 'trips',
+            'routing_key': 'trips.rpc',
+            }
+        actual_binding = self.pika_class.find_binding(expected_binding)
+        self.assertDictContainsSubset(expected_binding, actual_binding)
 
 if __name__ == '__main__':
     unittest.main()
