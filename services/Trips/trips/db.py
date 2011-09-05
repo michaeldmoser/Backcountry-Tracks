@@ -31,6 +31,18 @@ class TripsDb(object):
 
         return data
 
+    def update(self, owner, trip_id, trip):
+        '''
+        Update a trip in the adventurer's list of trips
+        '''
+        bucket = self.riak.bucket(self.bucket_name)
+
+        gear_object = bucket.get(str(trip_id))
+        gear_object.set_data(trip)
+        gear_object.store()
+
+        return gear_object.get_data()
+
     # FIXME: This is bad style but I know that I'll be copying this code soon
     #def list(self, owner):
     #    '''
@@ -40,17 +52,6 @@ class TripsDb(object):
     #    mapreduce.map(self.list_mapreduce, options={'arg': {'owner': owner}})
     #    return mapreduce.run()
 
-    #def update(self, owner, gear_id, pieceofgear):
-    #    '''
-    #    Update a piece of gear in the adventurer's gear list
-    #    '''
-    #    bucket = self.riak.bucket(self.gear_bucket_name)
-
-    #    gear_object = bucket.get(str(gear_id))
-    #    gear_object.set_data(pieceofgear)
-    #    gear_object.store()
-
-    #    return gear_object.get_data()
 
     #def delete(self, owner, gear_id):
     #    '''

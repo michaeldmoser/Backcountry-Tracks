@@ -8,9 +8,9 @@ import logging
 
 from trailhead.login import BaseHandler
 
-class TripsHandler(BaseHandler):
+class TripsBaseHandler(BaseHandler):
 
-    def __json_rpc_request(self, method, params):
+    def json_rpc_request(self, method, params):
         mq = self.application.mq
         correlation_id = str(uuid.uuid4())
 
@@ -42,11 +42,26 @@ class TripsHandler(BaseHandler):
         self.write(body)
         self.finish()
 
+class TripsHandler(TripsBaseHandler):
+    '''
+    Manage a collection of trips: Add to, list, etc
+    '''
 
     @web.authenticated
     @web.asynchronous
     def post(self):
         trip_data = json.loads(self.request.body)
-        self.__json_rpc_request('create', [self.current_user, trip_data])
+        self.json_rpc_request('create', [self.current_user, trip_data])
 
+
+class TripHandler(TripsBaseHandler):
+    '''
+    Manages an individual trip: Update, delete
+    '''
+
+    @web.authenticated
+    @web.asynchronous
+    def put(self, trip_id):
+        trip_data = json.loads(self.request.body)
+        self.json_rpc_request('update', [self.current_user, trip_id, trip_data])
 

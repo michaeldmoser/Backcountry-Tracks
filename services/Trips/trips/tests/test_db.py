@@ -42,6 +42,38 @@ class TestTripsDbCreate(unittest.TestCase):
         id = self.result['id']
         self.assertEquals(key, id)
 
+class TestTripsDbUpdate(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.owner = 'bob@smith.com'
+        self.trip = self.environ.data['trips'][0].copy()
+        self.trip.update({
+                'owner': self.owner,
+                'id': str(uuid.uuid4()),
+                })
+
+        riak = RiakClientFake()
+        self.bucket = riak.bucket('trips')
+        self.bucket.add_document(self.trip['id'], self.trip)
+
+        self.trip_result = self.trip.copy()
+        self.trip_result['name'] = 'booya'
+
+        tripsdb = TripsDb(riak(), 'trips')
+        self.result = tripsdb.update(self.owner, self.trip['id'], self.trip_result)
+
+    def test_update_trip(self):
+        '''Updating a piece trip saves to database'''
+        document = self.bucket.documents.values()[0]
+        self.assertEquals(self.trip_result, document)
+
+    def test_key_id(self):
+        '''The riak object key and the trip id should be the same'''
+        key = self.bucket.documents.keys()[0]
+        id = self.result['id']
+        self.assertEquals(key, id)
+
 if __name__ == "__main__":
     unittest.main()
 
