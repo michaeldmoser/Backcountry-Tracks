@@ -23,6 +23,7 @@ from .nginx import NginxEnvironment
 from .trailhead import TrailheadEnvironment
 from .gear import Gear
 from .groupleader import GroupLeaderEnvironment
+from .trips import TripsEnvironment
 
 default_logging_config = {
         'version': 1,
@@ -109,6 +110,7 @@ class TpEnvironment(object):
         self.nginx = NginxEnvironment(self)
         self.trailhead = TrailheadEnvironment(self)
         self.groupleader = GroupLeaderEnvironment(self)
+        self.trips = TripsEnvironment(self)
 
         self.gear = Gear(self)
 
