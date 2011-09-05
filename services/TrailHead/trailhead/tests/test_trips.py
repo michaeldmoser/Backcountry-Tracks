@@ -20,7 +20,7 @@ class TestTripCreate(unittest.TestCase):
         self.environ = environment.create()
         self.adventurer = self.environ.douglas
 
-        self.trip_data = self.environ.trips[0]
+        self.trip_data = self.environ.data['trips'][0]
         request_body = json.dumps(self.trip_data)
         headers = {'Content-Type': 'application/json'}
 

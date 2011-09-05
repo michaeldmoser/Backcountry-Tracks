@@ -12,7 +12,7 @@ class TestTripsDbCreate(unittest.TestCase):
     def setUp(self):
         environ = environment.create()
         self.owner = 'bob@smith.com'
-        self.trip = environ.trips[0]
+        self.trip = environ.data['trips'][0]
 
         riak = RiakClientFake()
         self.bucket = riak.bucket('trips')

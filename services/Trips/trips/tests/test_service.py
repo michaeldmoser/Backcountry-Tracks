@@ -12,7 +12,7 @@ class TestCreateTrip(unittest.TestCase):
     def setUp(self):
         environ = environment.create()
         user = 'bob@smith.com'
-        new_trip = environ.trips[0] 
+        new_trip = environ.data['trips'][0] 
 
         self.trip_return = new_trip.copy()
         self.trip_return.update({'id': str(uuid.uuid4()), 'owner': user})
