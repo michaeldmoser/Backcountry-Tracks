@@ -74,6 +74,29 @@ class TestTripsDbUpdate(unittest.TestCase):
         id = self.result['id']
         self.assertEquals(key, id)
 
+class TestTripsDbDelete(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.owner = 'bob@smith.com'
+        self.trip = self.environ.data['trips'][0].copy()
+        self.trip.update({
+                'owner': self.owner,
+                'id': str(uuid.uuid4()),
+                })
+
+
+        riak = RiakClientFake()
+        self.bucket = riak.bucket('trips')
+        self.bucket.add_document(self.trip['id'], self.trip)
+
+        tripsdb = TripsDb(riak(), 'trips')
+        self.result = tripsdb.delete(self.owner, self.trip['id'])
+
+    def test_delete_trip(self):
+        '''Delete a trips saves to database'''
+        self.assertEquals(len(self.bucket.documents), 0)
+
 if __name__ == "__main__":
     unittest.main()
 

@@ -65,3 +65,9 @@ class TripHandler(TripsBaseHandler):
         trip_data = json.loads(self.request.body)
         self.json_rpc_request('update', [self.current_user, trip_id, trip_data])
 
+    @web.authenticated
+    def delete(self, trip_id):
+        logging.info("Received trip delete for %s:%s" % (self.current_user, trip_id))
+        self.json_rpc_request('delete', [self.current_user, trip_id])
+        self.set_status(204)
+

@@ -43,6 +43,14 @@ class TripsDb(object):
 
         return gear_object.get_data()
 
+    def delete(self, owner, trip_id):
+        '''
+        Remove a trip from the adventurer's trip list
+        '''
+        bucket = self.riak.bucket(self.bucket_name)
+        gear_object = bucket.get(str(trip_id))
+        gear_object.delete()
+
     # FIXME: This is bad style but I know that I'll be copying this code soon
     #def list(self, owner):
     #    '''
@@ -53,12 +61,5 @@ class TripsDb(object):
     #    return mapreduce.run()
 
 
-    #def delete(self, owner, gear_id):
-    #    '''
-    #    Remove a piece of gear from the adventurer's gear list
-    #    '''
-    #    bucket = self.riak.bucket(self.gear_bucket_name)
-    #    gear_object = bucket.get(str(gear_id))
-    #    gear_object.delete()
 
 

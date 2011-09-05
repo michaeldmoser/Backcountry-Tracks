@@ -103,5 +103,42 @@ class EditTrip(unittest.TestCase):
 
         self.assertDictContainsSubset(self.updated_trip, trip)
 
+class DeleteTrip(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.environ = environment.create()
+        cls.environ.make_pristine()
+        cls.environ.bringup_infrastructure()
+
+
+        trips = cls.environ.trips
+        albert = cls.environ.albert
+        cls.environ.create_user(albert)
+
+        login_session = albert.login() 
+
+        cls.trip = cls.environ.data['trips'][0].copy()
+        cls.trip['owner'] = albert.email
+        cls.trip_id = cls.environ.trips.add(**cls.trip)
+        cls.trip['id'] = cls.trip_id
+
+        trip_url = cls.environ.trailhead_url + '/trips/' + cls.trip_id
+
+        trip_delete_request = urllib2.Request(trip_url)
+        trip_delete_request.get_method = lambda: 'DELETE'
+
+        cls.response = login_session.open(trip_delete_request)
+
+    def test_gear_item_returned(self):
+        '''Should receive 204 no content'''
+        self.assertEquals(204, self.response.code)
+
+    def test_gear_in_database(self):
+        '''The new piece of gear should be in the trips database'''
+        bucket = self.environ.riak.get_database('trips')
+        keys = bucket.get_keys()
+        self.assertEquals([], keys)
+
 if __name__ == "__main__":
     unittest.main()
