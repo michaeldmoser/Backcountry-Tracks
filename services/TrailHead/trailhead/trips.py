@@ -53,6 +53,11 @@ class TripsHandler(TripsBaseHandler):
         trip_data = json.loads(self.request.body)
         self.json_rpc_request('create', [self.current_user, trip_data])
 
+    @web.authenticated
+    @web.asynchronous
+    def get(self):
+        self.json_rpc_request('list', [self.current_user])
+
 
 class TripHandler(TripsBaseHandler):
     '''

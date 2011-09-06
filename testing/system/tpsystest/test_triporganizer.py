@@ -140,5 +140,49 @@ class DeleteTrip(unittest.TestCase):
         keys = bucket.get_keys()
         self.assertEquals([], keys)
 
+class RetrieveTripList(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.environ = environment.create()
+        cls.environ.make_pristine()
+        cls.environ.bringup_infrastructure()
+
+
+        trips = cls.environ.trips
+        albert = cls.environ.albert
+        cls.environ.create_user(albert)
+
+
+        cls.trips_data = []
+        for trip in cls.environ.data['trips']:
+            stored_trip = trip.copy()
+            trip_id = trips.add(albert.email, trip['name'], trip['description'],
+                    trip['start'], trip['end'])
+            stored_trip.update({
+                'id': trip_id,
+                'owner': albert.email
+                })
+            cls.trips_data.append(stored_trip)
+
+        login_session = albert.login() 
+
+        trips_list_url = cls.environ.trailhead_url + '/trips'
+        trips_list_request = urllib2.Request(
+                trips_list_url
+                )
+
+        cls.response = login_session.open(trips_list_request)
+        body = cls.response.read()
+        cls.trips_list = json.loads(body)
+
+    def test_list_of_trips_has_0(self):
+        """Test /app/trips returns a list of trips"""
+        self.assertIn(self.trips_data[0], self.trips_list)
+
+    def test_list_of_trips_has_2(self):
+        """Test /app/trips returns a list of trips"""
+        self.assertIn(self.trips_data[2], self.trips_list)
+
 if __name__ == "__main__":
     unittest.main()

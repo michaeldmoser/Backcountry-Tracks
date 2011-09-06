@@ -97,6 +97,29 @@ class TestTripsDbDelete(unittest.TestCase):
         '''Delete a trips saves to database'''
         self.assertEquals(len(self.bucket.documents), 0)
 
+class TestTripsList(unittest.TestCase):
+
+    def test_get_list(self):
+        """get list of trips"""
+        environ = environment.create()
+        trips_data = environ.data['trips']
+        
+        owner = 'bob@smith.com'
+        def add_owner(trip):
+            owned_trip = trip.copy()
+            owned_trip['owner'] = owner
+            return owned_trip
+        trips_list = map(add_owner, trips_data)
+
+        riak = RiakClientFake()
+        riak.add_mapreduce_result(trips_list, TripsDb.list_mapreduce, 
+                {'arg': {'owner': owner}})
+
+        trips = TripsDb(riak(), 'trips')
+
+        actual_list = trips.list(owner)
+        self.assertEquals(trips_list, actual_list)
+
 if __name__ == "__main__":
     unittest.main()
 

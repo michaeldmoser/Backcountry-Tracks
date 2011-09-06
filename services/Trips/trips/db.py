@@ -51,14 +51,13 @@ class TripsDb(object):
         gear_object = bucket.get(str(trip_id))
         gear_object.delete()
 
-    # FIXME: This is bad style but I know that I'll be copying this code soon
-    #def list(self, owner):
-    #    '''
-    #    Return a list of all pieces of gear owned by @owner
-    #    '''
-    #    mapreduce = self.riak.add(self.gear_bucket_name)
-    #    mapreduce.map(self.list_mapreduce, options={'arg': {'owner': owner}})
-    #    return mapreduce.run()
+    def list(self, owner):
+        '''
+        Return a list of all trips owned by @owner
+        '''
+        mapreduce = self.riak.add(self.bucket_name)
+        mapreduce.map(self.list_mapreduce, options={'arg': {'owner': owner}})
+        return mapreduce.run()
 
 
 

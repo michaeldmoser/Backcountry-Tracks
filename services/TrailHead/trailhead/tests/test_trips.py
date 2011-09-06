@@ -278,6 +278,63 @@ class TestTripsDelete(unittest.TestCase):
         reply_to = self.sent_message.properties.reply_to
         self.assertEquals(self.application.mq.rpc_reply, reply_to)
 
+class TestTripsList(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+
+        url = '/app/trips'
+        self.handler, self.application, self.pika = setup_handler(TripsHandler,
+                'GET', url, user=self.environ.douglas.email)
+
+        self.handler.get()
+        self.sent_message = self.pika.published_messages[0]
+
+    def test_send_request_for_gear_body(self):
+        '''Sends a JSON-RPC message request for listing gear'''
+        sent_request = json.loads(self.sent_message.body)
+        del sent_request['id'] # we don't care about the id in this context
+
+        expected_request = {
+                'jsonrpc': '2.0',
+                'method': 'list',
+                'params': [self.environ.douglas.email],
+                }
+        self.assertEquals(expected_request, sent_request)
+
+    def test_gear_exchange_used(self):
+        '''Should send the message via the gear exchange'''
+        exchange = self.sent_message.exchange
+        self.assertEquals('trips', exchange)
+
+    def test_routing_key(self):
+        '''Should use the trips.rpc routing key'''
+        routing_key = self.sent_message.routing_key
+        self.assertEquals('trips.rpc', routing_key)
+
+    def test_content_type(self):
+        '''Should use application/json-rpc content-type'''
+        content_type = self.sent_message.properties.content_type
+        self.assertEquals('application/json-rpc', content_type)
+        
+    def test_delivery_mode(self):
+        '''Does not need to be a persisted message'''
+        delivery_mode = self.sent_message.properties.delivery_mode
+        self.assertEquals(delivery_mode, 2)
+
+    def test_correlation_id_jsonrpc_id(self):
+        '''The messages correlation_id and the json-rpc id should be the same'''
+        sent_request = json.loads(self.sent_message.body)
+        json_id = sent_request['id']
+        correlation_id = self.sent_message.properties.correlation_id
+
+        self.assertEquals(json_id, correlation_id)
+
+    def test_reply_to(self):
+        '''The reply_to should route back to the TrailHead service'''
+        reply_to = self.sent_message.properties.reply_to
+        self.assertEquals(self.application.mq.rpc_reply, reply_to)
+
 if __name__ == "__main__":
     unittest.main()
 
