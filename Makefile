@@ -1,9 +1,11 @@
 
-dev-environ: install-dependencies install-infrastructure install-services infrastructure-dev-config testing-framework
+dev-environ: install-dependencies install-infrastructure install-libraries install-services infrastructure-dev-config testing-framework
 	
 infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
+
+install-libraries: install-messaging
 
 install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal install-trips
 
@@ -229,6 +231,14 @@ services/SmokeSignal/setup.py:
 	
 services/SmokeSignal/SmokeSignal.egg-info:
 	cd services/SmokeSignal && sudo python setup.py develop
+
+install-messaging: lib/Messaging/setup.py lib/Messaging/BackcountryTracks_Messaging.egg-info
+
+lib/Messaging/setup.py:
+	cd lib/Messaging && sudo python setup.py develop
+	
+lib/Messaging/BackcountryTracks_Messaging.egg-info:
+	cd lib/Messaging && sudo python setup.py develop
 
 varrun: /var/run/tripplanner
 
