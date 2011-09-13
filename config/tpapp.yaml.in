@@ -34,7 +34,7 @@ messaging:
 services:
     Gear/gear:
         queues:
-            user_gear: user_gear_rpc
+            rpc: user_gear_rpc
         reply_exchange: rpc_reply
         database:
             host: localhost

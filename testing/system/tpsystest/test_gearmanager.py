@@ -19,9 +19,9 @@ class RetrieveGearList(unittest.TestCase):
         albert = cls.environ.albert
         cls.environ.create_user(albert)
 
-        gear.add_item(albert.email, 'Alcohol Stove', 'Stove that burns alcohol', '2');
-        gear.add_item(albert.email, 'Backpack', 'Backpack for carrying things', '37');
-        gear.add_item(albert.email, 'Tarp', 'For shelter', '18');
+        cls.stove_id = gear.add_item(albert.email, 'Alcohol Stove', 'Stove that burns alcohol', '2');
+        cls.backpack_id = gear.add_item(albert.email, 'Backpack', 'Backpack for carrying things', '37');
+        cls.tarp_id = gear.add_item(albert.email, 'Tarp', 'For shelter', '18');
 
         login_session = albert.login() 
 
@@ -40,7 +40,8 @@ class RetrieveGearList(unittest.TestCase):
                 'name': 'Alcohol Stove',
                 'description': 'Stove that burns alcohol',
                 'weight': '2',
-                'owner': 'albert.corley@example.com'
+                'owner': 'albert.corley@example.com',
+                'id': self.stove_id
                 }
         self.assertIn(stove, self.gear_list)
 
@@ -50,7 +51,8 @@ class RetrieveGearList(unittest.TestCase):
                 'name': 'Backpack',
                 'description': 'Backpack for carrying things',
                 'weight': '37',
-                'owner': 'albert.corley@example.com'
+                'owner': 'albert.corley@example.com',
+                'id': self.backpack_id
                 }
         self.assertIn(backpack, self.gear_list)
 

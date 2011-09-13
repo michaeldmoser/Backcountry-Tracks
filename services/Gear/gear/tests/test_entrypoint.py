@@ -16,7 +16,7 @@ class TestServiceCreation(unittest.TestCase):
         self.riak = fakeriak.RiakClientFake()
 
         class GearEntryPointSUT(GearEntryPoint):
-            def _GearEntryPoint__gearservice(sut):
+            def _GearEntryPoint__service(sut):
                 return self.servicespy
 
             def _GearEntryPoint__usergear(sut):

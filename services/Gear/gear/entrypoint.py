@@ -15,9 +15,9 @@ class GearEntryPoint(object):
         from gear.usergear import UserGear
         return UserGear
 
-    def __gearservice(self):
-        from gear.service import GearService
-        return GearService
+    def __service(self):
+        from bctmessaging.services import MessagingServiceController
+        return MessagingServiceController
 
     def __riak(self):
         from riak import RiakClient
@@ -28,7 +28,7 @@ class GearEntryPoint(object):
 
     def on_channel_opened(self, channel):
         self.channel = channel
-        service = self.__gearservice()
+        service = self.__service()
 
         riakclient = self.__riak()
         riak = riakclient(host=self.config['database']['host'])
