@@ -13,8 +13,8 @@ class EntryPoint(object):
         return TripsDb
 
     def __service(self):
-        from trips.service import TripsService
-        return TripsService
+        from bctmessaging.services import MessagingServiceController
+        return MessagingServiceController
 
     def __riak(self):
         from riak import RiakClient
