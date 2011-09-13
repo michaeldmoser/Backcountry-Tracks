@@ -15,8 +15,8 @@ class EntryPoint(object):
         return AdventurerRepository
 
     def __service(self):
-        from .service import AdventurerService
-        return AdventurerService
+        from bctmessaging.services import MessagingServiceController
+        return MessagingServiceController
 
     def __riak(self):
         from riak import RiakClient

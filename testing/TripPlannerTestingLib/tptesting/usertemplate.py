@@ -38,6 +38,9 @@ class UserTemplate(dict):
         return self['password']
     password = property(fget=__get_password)
 
+    def mark_registered(self):
+        self['registration_complete'] = True
+
     def login(self):
         jar = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(jar))
