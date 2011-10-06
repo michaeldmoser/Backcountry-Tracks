@@ -5,10 +5,10 @@ import uuid
 import json
 
 from tptesting import fakepika
-from bctmessaging.tests.utils import create_messaging_channel, create_service_sut
-from bctmessaging.services import MessagingServiceController
+from bctmessaging.tests.utils import create_messaging_channel, create_endpoint_sut
+from bctmessaging.endpoints import MessagingEndPointController
 
-class TestMessagingServiceController(unittest.TestCase):
+class TestMessagingEndPointController(unittest.TestCase):
 
     def setUp(self):
         self.service_return = {
@@ -27,7 +27,7 @@ class TestMessagingServiceController(unittest.TestCase):
         self.rpc_args = [1, 2, 'three', 'four', {'five': 'six'}]
         method_name = 'service_method'
 
-        mq, request, self.properties = create_service_sut(self.spy_service,
+        mq, request, self.properties = create_endpoint_sut(self.spy_service,
                 method_name, queue_name=self.queue_name, rpc_args=self.rpc_args,
                 reply_exchange_name=self.reply_exchange)
 
@@ -81,7 +81,7 @@ class TestDictArguments(unittest.TestCase):
         method_name = 'service_method'
         rpc_args = {'arg3': 'three', 'arg1': 'one', 'arg2': 'two'}
 
-        create_service_sut(spy_service, method_name, rpc_args=rpc_args)
+        create_endpoint_sut(spy_service, method_name, rpc_args=rpc_args)
 
         actual_args = {
                 'arg1': spy_service.arg1,
@@ -102,7 +102,7 @@ class TestAlternateMethod(unittest.TestCase):
         rpc_args = {'arg3': 'three', 'arg1': 'one', 'arg2': 'two'}
         method_name = "alternate_method"
 
-        create_service_sut(stub_service, method_name, rpc_args=rpc_args)
+        create_endpoint_sut(stub_service, method_name, rpc_args=rpc_args)
 
 if __name__ == '__main__':
     unittest.main()

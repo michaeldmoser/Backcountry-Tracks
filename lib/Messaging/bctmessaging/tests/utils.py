@@ -4,7 +4,7 @@ import json
 
 from tptesting import fakepika
 
-from bctmessaging.services import MessagingServiceController
+from bctmessaging.endpoints import MessagingEndPointController
 
 def create_messaging_channel():
     '''
@@ -17,17 +17,17 @@ def create_messaging_channel():
 
     return channel, mq
 
-def create_service_sut(service_double, method_name, queue_name="rpc_queue",
+def create_endpoint_sut(service_double, method_name, queue_name="rpc_queue",
        reply_exchange_name="rpc_rpley", rpc_args=[]):
     '''
-    Builds a MessagingServiceController for testing and then injects a message
+    Builds a MessagingEndPointController for testing and then injects a message
     for consumption.
     '''
     channel, mq = create_messaging_channel()
 
     config = {'queues': {'rpc': queue_name}, 'reply_exchange': reply_exchange_name}
 
-    controller = MessagingServiceController(channel, config, service_double)
+    controller = MessagingEndPointController(channel, config, service_double)
     controller.start()
 
     properties = pika.BasicProperties(

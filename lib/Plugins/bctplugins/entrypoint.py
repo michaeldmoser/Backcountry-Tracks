@@ -1,8 +1,8 @@
-from bctmessaging.services import MessagingServiceController
+from bctmessaging.endpoints import MessagingEndPointController
 from riak import RiakClient
 
 class EntryPoint(object):
-    controller = MessagingServiceController
+    controller = MessagingEndPointController
     database = RiakClient
 
     def __init__(self, configuration, environ):

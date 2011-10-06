@@ -4,7 +4,7 @@ import json
 import logging
 
 
-class MessagingServiceController(object):
+class MessagingEndPointController(object):
     '''
     Decomposes JSON-RPC messages from the AMQP server and converts them
     to method calls on the provided @service
