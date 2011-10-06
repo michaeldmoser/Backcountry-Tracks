@@ -5,7 +5,7 @@ infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-libraries: install-messaging install-plugins
+install-libraries: install-messaging install-plugins install-servicelib
 
 install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal install-trips
 
@@ -247,6 +247,14 @@ lib/Plugins/setup.py:
 	
 lib/Plugins/BackcountryTracks_Plugins.egg-info:
 	cd lib/Plugins && sudo python setup.py develop
+
+install-servicelib: lib/Services/setup.py lib/Services/BackcountryTracks_Services.egg-info
+
+lib/Services/setup.py:
+	cd lib/Services && sudo python setup.py develop
+	
+lib/Services/BackcountryTracks_Services.egg-info:
+	cd lib/Services && sudo python setup.py develop
 
 varrun: /var/run/tripplanner
 
