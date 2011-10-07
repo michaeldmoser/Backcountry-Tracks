@@ -120,6 +120,34 @@ class TestTripsList(unittest.TestCase):
         actual_list = trips.list(owner)
         self.assertEquals(trips_list, actual_list)
 
+class TestAdventurerRepositoryGet(unittest.TestCase):
+
+    def test_returns_requested_user(self):
+        '''Should return requested user'''
+        bucket_name = 'adventurer'
+        environ = environment.create()
+        riakclient = RiakClientFake()
+        riakclient()
+        adventurer_bucket = riakclient.bucket(bucket_name)
+        adventurer_bucket.add_document(environ.ramona.email, environ.ramona)
+
+        adventurer = BasicCRUDService(riakclient, bucket_name)
+
+        user = adventurer.get(environ.ramona.email)
+        self.assertEquals(environ.ramona, user)
+
+    def test_no_document_exists(self):
+        '''No such document'''
+        bucket_name = 'adventurer'
+        environ = environment.create()
+        riakclient = RiakClientFake()
+        riakclient()
+        riakclient.bucket(bucket_name) # make sure the bucket is created
+
+        adventurer = BasicCRUDService(riakclient, bucket_name)
+        user = adventurer.get(environ.ramona.email)
+        self.assertIsNone(user)
+
 if __name__ == "__main__":
     unittest.main()
 

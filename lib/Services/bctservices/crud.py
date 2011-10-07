@@ -59,6 +59,11 @@ class BasicCRUDService(object):
         mapreduce.map(self.list_mapreduce, options={'arg': {'owner': owner}})
         return mapreduce.run()
 
+    def get(self, obj_id):
+        bucket = self.riak.bucket(self.bucket_name)
+        document_object = bucket.get(obj_id)
+        return document_object.get_data()
+
 
 
 
