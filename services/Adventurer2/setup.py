@@ -6,7 +6,7 @@ setup(
     packages = ['adventurer2'],
     test_suite = 'adventurer2',
     entry_points = {
-        'tripplanner.service': ['adventurer = adventurer2.entrypoint:EntryPoint']
+        'tripplanner.service': ['adventurer = adventurer2:EntryPoint']
         }
     )
 
