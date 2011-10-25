@@ -3,6 +3,7 @@ import unittest
 import json
 import pika
 from tptesting import faketornado, environment, fakepika
+from trailhead.tests.utils import setup_handler
 
 from trailhead.mq import PikaClient
 from trailhead.login import LoginHandler
@@ -15,23 +16,13 @@ class TestLoginHTTPRequest(unittest.TestCase):
             'email': environ.ramona.email,
             'password': environ.ramona.password,
             }
-        self.request = faketornado.HTTPRequestFake(
-                'post',
-                '/app/login',
-                headers = {'Content-Type': 'multipart/form-data'}
-                )
-        self.request.body = json.dumps(self.credentials)
 
-        pika_connection_class = fakepika.SelectConnectionFake()
-        self.application = faketornado.WebApplicationFake()
-        self.application()
-        self.application.mq = PikaClient(pika_connection_class, dict())
-        self.application.mq.connect()
-        pika_connection_class.ioloop.start()
-        self.pika = pika_connection_class
+        body = json.dumps(self.credentials);
+        headers = {'Content-Type': 'multipart/form-data'}
+        self.handler, self.application, self.pikd = setup_handler(LoginHandler,
+                'POST', '/app/login',  body=body, headers=headers)
+        self.request = self.handler.request
 
-        self.handler = LoginHandler(self.application, self.request)
-        self.handler._transforms = []
         self.handler.post()
 
     def test_rejects_non_json_content(self):
@@ -45,6 +36,7 @@ class TestLoginHTTPRequest(unittest.TestCase):
 
 
 class TestSendsLoginRequest(unittest.TestCase):
+
     def setUp(self):
         environ = environment.create()
 
@@ -52,22 +44,13 @@ class TestSendsLoginRequest(unittest.TestCase):
             'email': environ.ramona.email,
             'password': environ.ramona.password,
             }
-        request = faketornado.HTTPRequestFake(
-                'post',
-                '/app/login',
-                headers = {'Content-Type': 'application/json'}
-                )
-        request.body = json.dumps(self.credentials)
 
-        pika_connection_class = fakepika.SelectConnectionFake()
-        self.application = faketornado.WebApplicationFake()
-        self.application()
-        self.application.mq = PikaClient(pika_connection_class, dict())
-        self.application.mq.connect()
-        pika_connection_class.ioloop.start()
-        self.pika = pika_connection_class
+        body = json.dumps(self.credentials);
+        headers = {'Content-Type': 'application/json'}
+        self.handler, self.application, self.pika = setup_handler(LoginHandler,
+                'POST', '/app/login',  body=body, headers=headers)
+        self.request = self.handler.request
 
-        self.handler = LoginHandler(self.application, request)
         self.handler.post()
 
     def test_sends_login_request_message(self):
@@ -116,24 +99,14 @@ class TestLoginReply(unittest.TestCase):
             'email': environ.ramona.email,
             'password': environ.ramona.password,
             }
-        self.request = faketornado.HTTPRequestFake(
-                'post',
-                '/app/login',
-                headers = {'Content-Type': 'application/json'}
-                )
-        self.request.body = json.dumps(self.credentials)
 
-        pika_connection_class = fakepika.SelectConnectionFake()
-        self.application = faketornado.WebApplicationFake()
-        self.application()
-        self.application.mq = PikaClient(pika_connection_class, dict())
-        self.application.mq.connect()
-        pika_connection_class.ioloop.start()
-        self.pika = pika_connection_class
+        body = json.dumps(self.credentials);
+        headers = {'Content-Type': 'application/json'}
+        self.handler, self.application, self.pika = setup_handler(LoginHandler,
+                'POST', '/app/login',  body=body, headers=headers)
+        self.request = self.handler.request
 
-        self.handler = LoginHandler(self.application, self.request)
         self.handler.post()
-        self.handler._transforms = []
 
         login_request = self.pika.published_messages[0]
         self.headers = pika.BasicProperties(
@@ -151,14 +124,17 @@ class TestLoginReply(unittest.TestCase):
         self.assertEquals(self.handler._status_code, 202)
 
     def test_process_valid_login_location(self):
-        '''Sets location to /app/home'''
+        '''Sets location to /app/home when login successful'''
         body = json.dumps(dict(successful = True, email = 'test@example.org'))
         reply_queue = self.application.mq.rpc_reply
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
 
-        location = self.handler._headers['X-Location']
-        self.assertEquals(location, '/app/home')
+        headers, body = self.request._output.split('\r\n\r\n')
+        actual_location = json.loads(body)
+        expected_location = {'location': '/app/home'}
+
+        self.assertEquals(actual_location, expected_location)
 
     def test_process_invalid_login_status(self):
         '''Uses 403 forbidden status code on invalid login'''
@@ -170,14 +146,17 @@ class TestLoginReply(unittest.TestCase):
         self.assertEquals(self.handler._status_code, 403)
 
     def test_process_invalid_login_location(self):
-        '''Sets location to /'''
+        '''Sets location to /app/login when login invalid'''
         body = json.dumps(dict(successful = False, email = 'test@example.org'))
         reply_queue = self.application.mq.rpc_reply
         self.pika.inject(reply_queue, self.headers, body)
         self.pika.trigger_consume(reply_queue)
 
-        location = self.handler._headers['X-Location']
-        self.assertEquals(location, '/')
+        headers, body = self.request._output.split('\r\n\r\n')
+        actual_location = json.loads(body)
+        expected_location = {'location': '/app/login'}
+
+        self.assertEquals(actual_location, expected_location)
 
     def test_finishes_request(self):
         '''Report being finished to tornado'''
@@ -187,10 +166,6 @@ class TestLoginReply(unittest.TestCase):
         self.pika.trigger_consume(reply_queue)
 
         self.assertTrue(self.request.was_called(self.request.finish))
-
-
-
-
 
 if __name__ == '__main__':
     unittest.main()

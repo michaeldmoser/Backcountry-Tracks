@@ -17,7 +17,9 @@ class TestApplicationLogin(unittest.TestCase):
         riak_class = fakeriak.RiakClientFake()
         riak_class()
         bucket = riak_class.bucket('adventurer')
-        bucket.add_document(self.environ.albert.email, dict(self.environ.albert))
+        albert = self.environ.albert
+        albert.mark_registered()
+        bucket.add_document(albert.email, dict(albert))
 
         self.app = Application(bucket = bucket)
 
@@ -59,7 +61,9 @@ class TestServiceLogin(unittest.TestCase):
         riak_class = fakeriak.RiakClientFake()
         riak_class()
         bucket = riak_class.bucket('adventurer')
-        bucket.add_document(environ.douglas.email, dict(environ.douglas))
+        douglas = environ.douglas
+        douglas.mark_registered()
+        bucket.add_document(douglas.email, dict(douglas))
 
         app = Application(bucket = bucket)
         def application_injector():
@@ -70,7 +74,6 @@ class TestServiceLogin(unittest.TestCase):
             'email': environ.douglas.email,
             'password': environ.douglas.password
             })
-        method = frame.Method(1, spec.Basic.ConsumeOk())
         properties = pika.BasicProperties(
                 content_type = 'application/json',
                 correlation_id = str(uuid.uuid4()),

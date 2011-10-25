@@ -170,55 +170,42 @@ class TestAdventurerServiceRegistration(unittest.TestCase):
 #
 #        utils.try_until(1, check_registration_complete)
 
-class TestAdventurerServiceLogins(unittest.TestCase):
+class TestAdventurerLogin(unittest.TestCase):
 
-    def notest_returns_successful_login(self):
-        '''Valid credentials should return a sucessful login'''
+    @classmethod
+    def setUpClass(cls):
         environ = environment.create()
         environ.make_pristine()
+        environ.bringup_infrastructure()
 
-        environ.rabbitmq.start()
-        environ.riak.start()
-        environ.adventurer.start()
+        ramona = environ.ramona
+        ramona.mark_registered()
+        environ.create_user(ramona)
 
-        channel = environ.rabbitmq.channel()
-        reply_to_queue = channel.queue_declare(auto_delete=True)
-        reply_to = reply_to_queue.method.queue
-        reply_routing = 'adventurer.login.' + reply_to
-        channel.queue_bind(exchange='adventurer', queue=reply_to,
-                routing_key=reply_routing)
+        login_url = environ.trailhead_url + '/login'
+        credentials = {
+                'email': ramona.email,
+                'password': ramona.password
+                }
 
-        environ.adventurer.create_user('albert')
-
-        properties = pika.BasicProperties(
-                content_type = 'application/json',
-                correlation_id = str(uuid.uuid4()),
-                reply_to = reply_to
+        login_request = urllib2.Request(
+                login_url,
+                json.dumps(credentials),
+                headers = {'Content-Type': 'application/json'}
                 )
+        cls.response = urllib2.urlopen(login_request)
+        cls.response_text = cls.response.read()
 
-        login_message = json.dumps({
-                'email': environ.albert.email,
-                'password': environ.albert.password,
-                })
-        channel.basic_publish(
-                exchange = 'adventurer',
-                routing_key = 'adventurer.login',
-                properties = properties,
-                body = login_message
-                )
+    def test_login_successful_reply(self):
+        '''User logins with valid credentials via REST API, return new location in response body'''
+        location = json.loads(self.response_text)
+        expected_location = {"location": "/app/home"}
+        self.assertEquals(expected_location, location)
 
-        def verify_successful_login():
-            method, header, body = channel.basic_get(queue=reply_to)
-            if method.name == 'Basic.GetEmpty':
-                self.fail("No login reply received")
+    def test_login_successful_status(self):
+        '''User logins with valid credentials via REST API, HTTP status code 202'''
+        self.assertEquals(self.response.code, 202)
 
-            login_reply = json.loads(body)
-            expected_reply = {
-                    'successful': True,
-                    'email': environ.albert.email
-                    }
-            self.assertEquals(login_reply, expected_reply)
-        utils.try_until(1, verify_successful_login)
 
 class TestAdventurerUserData(unittest.TestCase):
 
