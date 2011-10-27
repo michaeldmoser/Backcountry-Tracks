@@ -11,7 +11,7 @@ class TestSubmitRegistration(unittest.TestCase):
     def setUpClass(cls):
         cls.environ = environment.create()
         cls.environ.make_pristine()
-        cls.environ.rabbitmq.start()
+        cls.environ.bringup_infrastructure()
 
         mq_params = pika.ConnectionParameters('localhost')
         mq_conn = pika.BlockingConnection(mq_params)
@@ -25,13 +25,11 @@ class TestSubmitRegistration(unittest.TestCase):
                 )
         cls.channel = channel
 
-        cls.environ.nginx.start()
-        cls.environ.start_trailhead()
 
         register_url = '/'.join([cls.environ.trailhead_url, 'register'])
         cls.register_request = urllib2.Request(
                 register_url,
-                json.dumps(cls.environ.albert),
+                json.dumps(cls.environ.albert.registration_data()),
                 headers = {'Content-Type': 'application/json'}
                 )
         cls.albert = cls.environ.albert
@@ -49,10 +47,7 @@ class TestSubmitRegistration(unittest.TestCase):
                 self.fail(str(e))
 
             status_code = response.code
-            self.assertEquals(status_code, 202)
-
-            response_data = response.read()
-            self.assertEquals(len(response_data), 0)
+            self.assertEquals(status_code, 200)
 
         utils.try_until(1, assert_valid_response)
 
@@ -68,7 +63,7 @@ class TestSubmitRegistration(unittest.TestCase):
 
         method, header, body = self.channel.basic_get(queue='test_registration')
         actual_registration = json.loads(body)
-        self.assertEquals(actual_registration, self.albert)
+        self.assertEquals(actual_registration, self.albert.registration_data())
 
 
 if __name__ == '__main__':

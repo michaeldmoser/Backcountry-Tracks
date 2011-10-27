@@ -58,6 +58,7 @@ class TestRegisterHandlerHttp(unittest.TestCase):
         pika_connection_class.ioloop.start()
 
         handler = RegisterHandler(application(), request)
+        handler._transforms = []
         handler.post()
 
         self.assertEquals(handler._status_code, 400)

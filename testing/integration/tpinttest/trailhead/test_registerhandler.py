@@ -11,10 +11,7 @@ class TestRegisterHandler(unittest.TestCase):
     def setUpClass(cls):
         cls.environ = environment.create()
         cls.environ.make_pristine()
-        cls.environ.rabbitmq.start_server()
-
-        cls.environ.nginx.start()
-        cls.environ.start_trailhead()
+        cls.environ.bringup_infrastructure()
 
         cls.register_url = '/'.join([cls.environ.trailhead_url, 'register'])
 
@@ -58,7 +55,7 @@ class TestRegisterHandler(unittest.TestCase):
         response = urlopen(self.register_request)
 
         status_code = response.code
-        self.assertEquals(status_code, 202)
+        self.assertEquals(status_code, 200)
 
     def test_rejects_non_json_mime_type(self):
         '''Should reject content-types that are no application/json'''

@@ -141,7 +141,11 @@ class TestLoginHTTPResponse(unittest.TestCase):
             assert self.response is not None
         utils.try_until(1, wait_for_response)
 
-        self.assertIn('/', self.response.info().getheader('X-Location'))
+        response_data = self.response.read()
+        redirect_to = json.loads(response_data)
+        expected_redirect = {"location": "/app/login"}
+
+        self.assertEquals(redirect_to, expected_redirect)
 
     def test_send_valid_login_response(self):
         '''
@@ -167,7 +171,11 @@ class TestLoginHTTPResponse(unittest.TestCase):
             assert self.response is not None
         utils.try_until(1, wait_for_response)
 
-        self.assertIn('/app/home', self.response.info().getheader('X-Location'))
+        response_data = self.response.read()
+        redirect_to = json.loads(response_data)
+        expected_redirect = {"location": "/app/home"}
+
+        self.assertEquals(redirect_to, expected_redirect)
 
 
 if __name__ == '__main__':

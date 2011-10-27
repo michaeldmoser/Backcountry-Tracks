@@ -31,15 +31,6 @@ class TestScript(unittest.TestCase):
         except ValueError:
             self.fail('trailhead daemon is not running')
 
-    def test_creates_pidfile(self):
-        '''Should create a pid'''
-        pidfile_path = self.environ.trailhead['pidfile']
-
-        def assert_file_exists():
-            assert(path.exists(pidfile_path))
-
-        utils.try_until(0.5, assert_file_exists)
-
     def test_list_port(self):
         '''Should listen on port 8080 using HTTP'''
         hostname = self.environ.hostname

@@ -38,11 +38,11 @@ class TestRegistrationRouting(unittest.TestCase):
 
     def test_register_queue_exists(self):
         '''The register queue should exist'''
-        self.assertIn('register', self.queues)
+        self.assertIn('register_rpc', self.queues)
 
     def test_register_queue_config(self):
         '''register queue should be durable, no auto_delete, and no args'''
-        actual_register = self.queues.get('register', {})
+        actual_register = self.queues.get('register_rpc', {})
         expected_register = {
                 'durable': True,
                 'auto_delete': False,
@@ -55,7 +55,7 @@ class TestRegistrationRouting(unittest.TestCase):
         binding_needle = {
                 'source_name': 'registration',
                 'source_kind': 'exchange',
-                'destination_name': 'register',
+                'destination_name': 'register_rpc',
                 'destination_kind': 'queue',
                 'routing_key': 'registration.register',
                 'arguments': '[]',

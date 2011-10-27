@@ -15,6 +15,7 @@ class RegisterHandler(BaseHandler):
     def post(self):
         if 'application/json' not in self.request.headers.get('Content-Type'):
             self.set_status(400)
+            self.finish()
             return
 
         mq = self.application.mq
