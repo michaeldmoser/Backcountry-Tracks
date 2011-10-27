@@ -23,6 +23,7 @@ class RegisterHandler(BaseHandler):
                 content_type = 'application/json',
                 correlation_id = correlation_id,
                 reply_to = self.application.mq.rpc_reply,
+                delivery_mode = 2
                 )
         mq.register_rpc_reply(correlation_id, self.respond_to_request)
         mq.channel.basic_publish(

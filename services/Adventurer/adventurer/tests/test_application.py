@@ -4,78 +4,62 @@ import types
 from tptesting import environment
 
 from adventurer.application import Application
-from tptesting.fakeriak import RiakBucketFake
+from tptesting.fakeriak import RiakClientFake
 from uuid import uuid4
 
 class TestApplication(unittest.TestCase):
     def setUp(self):
-        pass
+        self.environ = environment.create()
+        self.riak = RiakClientFake()
+        self.fakemail = FakeMailer()
 
-    def tearDown(self):
-        pass
+        self.bucket = self.riak.bucket('adventurer')
 
     def test_registration_is_saved(self):
         """The registration is saved to Riak"""
-        environ = environment.create()
-        riakspy = RiakBucketSpy()
-        fakemail = FakeMailer()
-
-        app = Application(bucket = riakspy, mailer = fakemail)
+        app = Application(bucket = self.bucket, mailer = self.fakemail)
         def confirmation_key_generator():
             return 'generated_confirmation_key'
         app.generate_confirmation_key = confirmation_key_generator
 
-        user = environ.albert.copy()
+        user = self.environ.albert.registration_data()
         app.register(user)
         expected_data = user
         expected_data['confirmation_key'] = 'generated_confirmation_key'
 
-        expected = {
-                'key': environ.albert['email'],
-                'data': expected_data
-                }
-        actual = {
-                'key': riakspy.key,
-                'data': riakspy.data
-                }
+        riak_object = self.bucket.get(self.environ.albert['email'])
+        actual_data = riak_object.get_data()
 
-        self.assertEquals(actual, expected)
+        self.assertEquals(actual_data, expected_data)
 
     def test_registration_casts_unicode_email_to_string(self):
         """Registration allows Unicode emails"""
-        environ = environment.create()
-        riakspy = RiakBucketSpy()
-        fakemail = FakeMailer()
-
-        app = Application(bucket = riakspy, mailer = fakemail)
-        user = environ.albert.copy()
+        app = Application(bucket = self.bucket, mailer = self.fakemail)
+        user = self.environ.albert.registration_data()
         user['email'] = unicode('email@test.com')
         app.register(user)
 
-        self.assertEquals(type(riakspy.key), types.StringType)
+        riak_object = self.bucket.get('email@test.com')
+        registered_user = riak_object.get_data()
+
+        self.assertIsNotNone(registered_user)
 
     def test_registration_sends_confirmation_email(self):
         """Registration sends confirmation email"""
-        environ = environment.create()
-        fakebucket = RiakBucketFake(None, None)
         mailerspy = MailerSpy()
-
-        app = Application(bucket = fakebucket, mailer = mailerspy)
-        user = environ.albert.copy()
+        app = Application(bucket = self.bucket, mailer = mailerspy)
+        user = self.environ.albert.registration_data()
         app.register(user)
 
         self.assertTrue(mailerspy.to, user['email'])
 
     def test_confirmation_email_contains_link_with_confirmation_key(self):
         """Registration email contains confirmation key"""
-        environ = environment.create()
+        trailhead_url = self.environ.get_config_for('trailhead_url');
 
-        riakspy = RiakBucketSpy()
         mailerspy = MailerSpy()
-        trailhead_url = environ.get_config_for('trailhead_url');
-
         app = Application(
-                bucket = riakspy,
+                bucket = self.bucket,
                 mailer = mailerspy,
                 trailhead_url = trailhead_url
                 )
@@ -83,7 +67,8 @@ class TestApplication(unittest.TestCase):
         def confirmation_key_generator():
             return 'generated_confirmation_key'
         app.generate_confirmation_key = confirmation_key_generator
-        user = environ.albert.copy()
+        user = self.environ.albert.copy()
+        user['password_again'] = user['password']
         app.register(user)
 
         expected_link = '%s/activate/%s/%s' % (
@@ -94,14 +79,6 @@ class TestApplication(unittest.TestCase):
 
         self.assertIn(expected_link, mailerspy.body)
 
-class RiakBucketSpy(object):
-    def new(spy, key, data=None):
-        class RiakObjectSpy(object):
-            def store(rspy):
-                spy.key = key
-                spy.data = data
-        return RiakObjectSpy()
-
 class FakeMailer:
     def send(self, *args):
         pass
@@ -110,6 +87,7 @@ class MailerSpy:
     def __init__(self):
         self.to = None
         self.body = None
+
     def send(self, from_address, from_line, to, subject, body):
         self.to = to
         self.body = body

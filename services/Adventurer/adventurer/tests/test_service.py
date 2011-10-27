@@ -132,11 +132,10 @@ class TestControllerConsumeMessage(unittest.TestCase):
         albert_json = json.dumps(albert)
 
         method = frame.Method(1, spec.Basic.ConsumeOk())
-        properties = pika.BasicProperties(content_type = 'application/json')
-        header = frame.Header(1, len(albert_json), properties)
+        properties = pika.BasicProperties(content_type = 'application/json', correlation_id = 'asdf')
 
-        self.pika_connection.inject('register', header, albert_json)
-        self.pika_connection.trigger_consume('register')
+        self.pika_connection.inject('register_rpc', properties, albert_json)
+        self.pika_connection.trigger_consume('register_rpc')
 
         self.assertEquals(self.AdventurerApplicationSpy.register_data, albert)
 

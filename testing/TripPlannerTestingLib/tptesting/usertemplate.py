@@ -61,4 +61,10 @@ class UserTemplate(dict):
 
         return opener
 
+    def registration_data(self):
+        registration = self.copy()
+        registration['password_again'] = self['password']
+
+        return registration
+
 

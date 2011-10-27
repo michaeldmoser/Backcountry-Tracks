@@ -25,8 +25,8 @@ class TestRegisterHandler(unittest.TestCase):
 
 class TestRegisterHandlerHttp(unittest.TestCase):
 
-    def test_returned_status_code_202(self):
-        """On a good post should return a 202 Accepted status code"""
+    def test_returned_status_code_200(self):
+        """On a good post should return a 200 Accepted status code"""
         request = faketornado.HTTPRequestFake(
                 'post',
                 '/app/register',
@@ -41,7 +41,7 @@ class TestRegisterHandlerHttp(unittest.TestCase):
         handler = RegisterHandler(application(), request)
         handler.post()
 
-        self.assertEquals(handler._status_code, 202)
+        self.assertEquals(handler._status_code, 200)
 
     def test_returned_status_code_400(self):
         """On a bad post should return a 400 bad data status code"""
