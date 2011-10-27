@@ -34,6 +34,7 @@ class ServiceBuilder(object):
         self.setproctitle = setproctitle
 
     def __call__(self, dist, name, config):
+        log.debug("Loading entry point: %s, %s, %s" % (dist, self.group, name))
         entry_point = self.load_entry_point(dist, self.group, name)
         service = self.Service(dist, name, entry_point, config,
                 self.environ, self.setproctitle)
@@ -47,9 +48,14 @@ class Services(object):
     def __call__(self, config):
         self.config = config
         for service, config in self.config['services'].items():
-            dist, name = service.split('/')
-            service = self.load_service(dist, name, config)
-            self.services.append(service)
+            try:
+                dist, name = service.split('/')
+                service = self.load_service(dist, name, config)
+                self.services.append(service)
+            except Exception:
+                trace_back = traceback.format_exc()
+                log.error("Error with %s/%s server:\n%s" % (dist, name, trace_back))
+                raise
         return self
 
     def spawn(self):

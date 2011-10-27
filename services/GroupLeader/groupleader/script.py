@@ -15,7 +15,8 @@ def build_daemonizer():
 
 def build_load_services(config):
     from .services import Services, ServiceBuilder, Service
-    from .environment import Environment, MessagingBuilder
+    from .environment import Environment
+    from bctmessaging.connection import MessagingBuilder
     from pkg_resources import load_entry_point
     from multiprocessing import Process
 
