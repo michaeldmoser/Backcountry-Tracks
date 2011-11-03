@@ -262,6 +262,9 @@ class RiakBucketFake(object):
 
 class RiakObjectFake(object):
     def __init__(self, client, bucket, key=None):
+        if isinstance(key, unicode):
+            raise TypeError('Unicode keys are not supported.')
+
         self.key = key
         self.client = client
         self.bucket = bucket

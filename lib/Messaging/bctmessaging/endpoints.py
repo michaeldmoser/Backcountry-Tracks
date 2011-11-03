@@ -33,7 +33,7 @@ class MessagingEndPointController(object):
                 correlation_id = header.correlation_id
                 )
 
-        logging.info('Received %s request' % request['method'])
+        logging.info('Received %s request with correlation id %s' % (request['method'], header.correlation_id))
         method = getattr(self.service, request['method'])
         params = request['params']
 
@@ -43,6 +43,7 @@ class MessagingEndPointController(object):
             response = method(*request['params'])
 
         if response is None:
+            logging.debug('Completed request, no response... %s' % header.correlation_id)
             return
 
         logging.debug('Publish response to %s to routing key %s' % (header.correlation_id, header.reply_to))

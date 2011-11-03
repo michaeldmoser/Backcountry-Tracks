@@ -137,8 +137,10 @@ class DeleteTrip(unittest.TestCase):
     def test_gear_in_database(self):
         '''The new piece of gear should be in the trips database'''
         bucket = self.environ.riak.get_database('trips')
-        keys = bucket.get_keys()
-        self.assertEquals([], keys)
+        def key_should_not_exist():
+            keys = bucket.get_keys()
+            self.assertEquals([], keys)
+        utils.try_until(100, key_should_not_exist)
 
 class RetrieveTripList(unittest.TestCase):
 

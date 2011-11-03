@@ -61,7 +61,7 @@ class BasicCRUDService(object):
 
     def get(self, obj_id):
         bucket = self.riak.bucket(self.bucket_name)
-        document_object = bucket.get(obj_id)
+        document_object = bucket.get(str(obj_id))
         return document_object.get_data()
 
 

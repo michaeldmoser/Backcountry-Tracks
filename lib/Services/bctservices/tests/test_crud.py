@@ -148,6 +148,21 @@ class TestAdventurerRepositoryGet(unittest.TestCase):
         user = adventurer.get(environ.ramona.email)
         self.assertIsNone(user)
 
+    def test_unicode_keys(self):
+        '''Should accept unicode keys'''
+        bucket_name = 'adventurer'
+        environ = environment.create()
+        riakclient = RiakClientFake()
+        riakclient()
+        adventurer_bucket = riakclient.bucket(bucket_name)
+        adventurer_bucket.add_document(environ.ramona.email, environ.ramona)
+
+        adventurer = BasicCRUDService(riakclient, bucket_name)
+
+        user = adventurer.get(unicode(environ.ramona.email))
+        self.assertEquals(environ.ramona, user)
+
+
 if __name__ == "__main__":
     unittest.main()
 

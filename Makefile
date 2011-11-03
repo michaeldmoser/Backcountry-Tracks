@@ -47,9 +47,9 @@ install-rabbitmq: /usr/sbin/rabbitmq-server
 install-riak: /usr/sbin/riak
 	
 /usr/sbin/riak: /usr/bin/erl
-	wget http://downloads.basho.com/riak/riak-0.14/riak_0.14.0-1_amd64.deb
-	sudo dpkg -i riak_0.14.0-1_amd64.deb
-	rm riak_0.14.0-1_amd64.deb
+	wget http://downloads.basho.com/riak/CURRENT/riak_1.0.1-1_amd64.deb
+	sudo dpkg -i riak_1.0.1-1_amd64.deb
+	rm riak_1.0.1-1_amd64.deb
 	sudo touch /usr/sbin/riak
 
 riak-config: config/riak/app.config

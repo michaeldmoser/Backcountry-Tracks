@@ -13,7 +13,8 @@ import pika
 from tptesting import environment
 from tptesting import utils
 
-class TestAdventurerServiceRegistration(unittest.TestCase):
+#class TestAdventurerServiceRegistration(unittest.TestCase):
+class TestAdventurerServiceRegistration():
     @classmethod
     def setUpClass(cls):
         cls.environ = environment.create()

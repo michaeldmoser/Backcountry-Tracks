@@ -203,10 +203,12 @@ class DeletePieceOfGear(unittest.TestCase):
     def test_gear_in_database(self):
         '''The new piece of gear should be in the personal_gear database'''
         bucket = self.environ.riak.get_database('personal_gear')
-        keys = bucket.get_keys()
-        self.assertEquals([], keys)
-
+        def gear_not_in_database():
+            keys = bucket.get_keys()
+            self.assertEquals([], keys)
+        utils.try_until(100, gear_not_in_database)
 
 
 if __name__ == '__main__':
     unittest.main()
+
