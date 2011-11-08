@@ -140,12 +140,12 @@ testing/etc/tptesting.yaml:
 tptesting.yaml: 
 	python testing/bin/build-testing-yaml.py
 
-robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg
+robotframework: /usr/local/bin/pybot /usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.8.egg-info 
 
 /usr/local/bin/pybot:
 	sudo easy_install robotframework
 
-/usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.7-py2.7.egg:
+/usr/local/lib/python2.7/dist-packages/robotframework_seleniumlibrary-2.8.egg-info:
 	sudo easy_install robotframework-seleniumlibrary
 
 testing/bin/run_unittests.py:
