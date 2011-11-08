@@ -48,7 +48,7 @@ class TrailHead(object):
                 ], **settings)
             app.listen(8080)
 
-        self.ioloop_instance = self.ioloop.IOLoop.instance()
-        app.mq = self.mqclient
-        self.ioloop_instance.add_timeout(1000, app.mq.connect)
-        self.ioloop_instance.start()
+            self.ioloop_instance = self.ioloop.IOLoop.instance()
+            app.mq = self.mqclient
+            self.ioloop_instance.add_timeout(1000, app.mq.connect)
+            self.ioloop_instance.start()
