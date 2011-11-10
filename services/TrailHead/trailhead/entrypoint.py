@@ -23,7 +23,8 @@ class EntryPoint(object):
         self.trailhead = TrailHead(
                 ioloop = tornado.ioloop,
                 webapp = Application,
-                mqclient = mqclient
+                mqclient = mqclient,
+                config = self.config
                 )
         self.trailhead.run()
 

@@ -14,16 +14,21 @@ class RootHandler(RequestHandler):
 
 class TrailHead(object):
 
-    def __init__(self, ioloop=None, webapp=None, mqclient=None):
+    def __init__(self, ioloop=None, webapp=None, mqclient=None, config={}):
         self.ioloop = ioloop
         self.webapp = webapp
         self.mqclient = mqclient
+        self.config = config
+
+        self.default_config = {
+                'cookie_secret': 'tde2HDb+R9evlg/vUMDlaBUTPSMF1kgtnpKhvkgOXNQ=',
+                'login_url': '/app/login'
+                }
 
     def run(self):
-        settings = {
-            'cookie_secret': "psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja",
-            'login_url': "/"
-            }
+        settings = self.default_config.copy()
+        settings.update(self.config)
+        
 
         app = self.webapp([
             (r'/', RootHandler),
@@ -36,7 +41,10 @@ class TrailHead(object):
             (r'/app/trips$', TripsHandler),
             (r'/app/trips/([0-9a-f-]+)$', TripHandler),
             ], **settings)
-        app.listen(8080)
+        
+        port = self.config.get('port', 8080)
+        address = self.config.get('address', 'localhost')
+        app.listen(port, address=address)
 
         self.ioloop_instance = self.ioloop.IOLoop.instance()
         app.mq = self.mqclient
