@@ -155,8 +155,11 @@ class TpEnvironment(object):
         self.rabbitmq.start()
         self.riak.start()
         self.adventurer.start()
-        self.trailhead.start()
         self.groupleader.start()
+
+        def check_trailhead_start():
+            urllib2.urlopen("http://localhost:8080/")
+        wait_for_start(check_trailhead_start, urllib2.URLError)
 
     def teardown(self):
         '''
@@ -169,7 +172,6 @@ class TpEnvironment(object):
         '''
         Removes pid files
         '''
-        self.trailhead.remove_pidfile()
         self.adventurer.remove_pidfile()
 
     def kill_processes(self):
@@ -177,7 +179,6 @@ class TpEnvironment(object):
         Shutdowns all services
         '''
         self.groupleader.stop()
-        self.trailhead.stop()
         self.adventurer.stop()
         self.riak.stop()
         self.rabbitmq.stop()

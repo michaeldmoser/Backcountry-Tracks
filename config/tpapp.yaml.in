@@ -53,6 +53,9 @@ services:
         database:
             host: localhost
             bucket: trips
+    TrailHead/trailhead:
+        cookie_secret: psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja
+        login_url: "/"
 
 logging:
     version: 1

@@ -12,7 +12,7 @@ setup(
         lockfile
     ''',
     entry_points = {
-        'console_scripts': ['trailhead = trailhead.script:main']
+        'tripplanner.service': ['trailhead = trailhead:EntryPoint'],
         }
     )
 

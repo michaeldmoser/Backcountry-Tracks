@@ -56,36 +56,14 @@ class TestTrailHeadTornado(unittest.TestCase):
                 self.routes = routes
                 return self
 
-        class Daemonizer(object):
-            def __init__(self):
-                self.daemonized = False
-
-            def __call__(self, pidfile=None):
-                self.pidfile = pidfile
-                return self
-
-            def __enter__(self):
-                self.daemonized = True
-                return self
-
-            def __exit__(self, exc_type, exc_value, traceback):
-                pass
-
-        class PidFile(object):
-            pass
-
         self.ioloop = TornadoIoLoopSpy()
         self.webapp = TornadoWebApplication()
-        self.daemonizer = Daemonizer()
-        self.pidfile = PidFile()
         self.pika_class = fakepika.SelectConnectionFake()
 
         self.trailhead = TrailHead(
-                daemonizer=self.daemonizer,
                 ioloop=self.ioloop,
                 webapp=self.webapp,
                 mqclient=PikaClient(self.pika_class, None), # fake it till you make it
-                pidfile=self.pidfile
                 )
         self.trailhead.run()
         # FIXME: Need to find a better way to activate this in tests
@@ -93,15 +71,6 @@ class TestTrailHeadTornado(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def test_pidfile_argument(self):
-        '''Properly creates a pidfile'''
-        self.assertEquals(self.pidfile, self.daemonizer.pidfile)
-
-    def test_process_daemonizes(self):
-        '''The trailhead process should daemonize'''
-        assert(self.daemonizer.daemonized)
-
 
     def test_adds_root_handler(self):
         """Adds a root handler to Tornado"""

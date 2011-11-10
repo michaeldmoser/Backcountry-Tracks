@@ -18,6 +18,7 @@ class Service(object):
             log.debug('Start service: %s/%s' % (self.dist, self.name))
             self.setproctitle('GroupLeader: %s/%s' % (self.dist, self.name))
             self.entry_point(self.config, self.environ).start()
+            log.debug('Process (%s/%s) finished' % (self.dist, self.name))
         except Exception:
             trace_back = traceback.format_exc()
             log.error(trace_back)
