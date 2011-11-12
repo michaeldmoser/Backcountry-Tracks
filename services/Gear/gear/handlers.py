@@ -6,7 +6,7 @@ import json
 
 import logging
 
-from trailhead.login import BaseHandler
+from trailhead.handlers import BaseHandler
 
 class UserGearListHandler(BaseHandler):
 

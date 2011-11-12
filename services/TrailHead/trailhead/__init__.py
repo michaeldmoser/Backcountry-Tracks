@@ -1,1 +1,4 @@
-from trailhead.entrypoint import EntryPoint
+from .entrypoint import EntryPoint
+
+from .handlers import BaseHandler
+

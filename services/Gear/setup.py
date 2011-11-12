@@ -9,7 +9,8 @@ setup(
         pika
     ''',
     entry_points = {
-        'tripplanner.service': ['gear = gear:GearEntryPoint']
+        'tripplanner.service': ['gear = gear:GearEntryPoint'],
+        'tripplanner.trailhead.handler': ['gear = gear.handlers:UserGearListHandler']
         }
     )
 

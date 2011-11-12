@@ -3,11 +3,6 @@ import unittest
 from tptesting import environment, fakepika, faketornado, fakedaemonizer
 
 from trailhead.server import TrailHead, RootHandler
-from trailhead.register import RegisterHandler
-from trailhead.gear import UserGearListHandler
-from trailhead.trips import TripsHandler, TripHandler
-from trailhead.login import LoginHandler
-from trailhead.user import UserHandler
 from trailhead.mq import PikaClient
 
 class TestTrailHeadTornado(unittest.TestCase):
@@ -28,7 +23,8 @@ class TestTrailHeadTornado(unittest.TestCase):
                 'port': 8081,
                 'address': 'localhost',
                 'cookie_secret': 'trailhead',
-                'login_url': '/app/login'
+                'login_url': '/app/login',
+                'handlers': []
                 }
 
         self.trailhead = TrailHead(
@@ -51,67 +47,15 @@ class TestTrailHeadTornado(unittest.TestCase):
 
     def test_settings(self):
         '''Sets the correct settings for Tornado'''
-        self.assertEquals(self.config, self.webapp.settings)
+        expected_settings = self.config.copy()
+        del expected_settings['handlers']
+        self.assertEquals(expected_settings, self.webapp.settings)
 
     def test_listens_on_configured_port(self):
         '''Setup to listen on configured port'''
         correct_usage = self.webapp.verify_usage(self.webapp.listen,
                 (self.config['port'],), {'address': self.config['address']})
         self.assertTrue(correct_usage)
-
-    def test_adds_register_handler(self):
-        '''Add a register handler to Tornado'''
-        expected_route = (r'/app/register', RegisterHandler)
-        routes = self.webapp.handlers
-
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
-
-    def test_adds_gear_list_handler(self):
-        '''Adds handler for user gear list'''
-        expected_route = (r'/app/users/([^/]+)/gear$', UserGearListHandler)
-
-        routes = self.webapp.handlers
-
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
-
-    def test_adds_gear_handler(self):
-        '''Adds handler for user gear'''
-        expected_route = (r'/app/users/([^/]+)/gear/([^/]+)$', UserGearListHandler)
-
-        routes = self.webapp.handlers
-
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
-
-    def test_adds_trips_handler(self):
-        '''Adds handler for working with collections of trips'''
-        expected_route = (r'/app/trips$', TripsHandler)
-
-        routes = self.webapp.handlers
-
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
-
-    def test_adds_trip_handler(self):
-        '''Adds handler for managing a trip'''
-        expected_route = (r'/app/trips/([0-9a-f-]+)$', TripHandler)
-
-        routes = self.webapp.handlers
-
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
 
     def test_adds_pika_to_application(self):
         '''PikaClient should be on the application instance'''
@@ -121,30 +65,10 @@ class TestTrailHeadTornado(unittest.TestCase):
         '''Should create a connection to the message queue'''
         self.assertTrue(self.pika_class.was_called(self.pika_class.__init__))
 
-    def test_adds_login_handler(self):
-        '''The login handler should be added to the routes'''
-        expected_route = (r'/app/login', LoginHandler)
-        routes = self.webapp.handlers
-
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
-
-    def test_adds_user_handler(self):
-        '''The UserHandler should be added to the routes'''
-        expected_route = (r'/app/user', UserHandler)
-        routes = self.webapp.handlers
-        try:
-            routes.index(expected_route)
-        except ValueError, e:
-            self.fail(str(e))
-
 class TestTrailHeadConfiguration(unittest.TestCase):
 
     def setUp(self):
         self.environ = environment.create()
-
         self.ioloop = faketornado.ioloop
         self.webapp = faketornado.WebApplicationFake()
         self.pika_class = fakepika.SelectConnectionFake()
@@ -190,6 +114,76 @@ class TestTrailHeadConfiguration(unittest.TestCase):
         actual_url = self.webapp.settings['login_url']
         expected_url = '/app/login'
         self.assertEquals(expected_url, actual_url)
+
+class TestHandlerLoading(unittest.TestCase):
+
+    def test_loads_handler(self):
+        '''Loads the configured handler'''
+        self.environ = environment.create()
+        self.ioloop = faketornado.ioloop
+        self.webapp = faketornado.WebApplicationFake()
+        self.pika_class = fakepika.SelectConnectionFake()
+
+        config = {
+                'handlers': [
+                    ['/app/login', 'Adventurer/login'] ,
+                    ['/app/activate/(.*)/(.*)', 'Adventurer/activate'],
+                    ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
+                    ]
+                }
+
+        class LoginHandler(object):
+            pass
+
+        class ActivateHandler(object):
+            pass
+
+        class TripHandler(object):
+            pass
+
+        class LoadEntryPoint(object):
+            def __init__(self):
+                self.entry_points = {
+                        'Adventurer': {
+                            'tripplanner.trailhead.handler': {
+                                'login': LoginHandler,
+                                'activate': ActivateHandler
+                                }
+                            },
+                        'Trips': {
+                            'tripplanner.trailhead.handler': {
+                                'trip': TripHandler
+                                }
+                            }
+                        }
+
+            def __call__(self, dist, group, name):
+                try:
+                    dist = self.entry_points[dist]
+                    group = dist[group]
+                    handler = group[name]
+                except KeyError:
+                    raise ImportError
+
+                return handler
+        load_entry_point = LoadEntryPoint()
+
+        trailhead = TrailHead(
+                ioloop=self.ioloop,
+                webapp=self.webapp,
+                mqclient=PikaClient(self.pika_class, None),
+                config=config,
+                load_entry_point = load_entry_point
+                )
+        trailhead.run()
+
+        self.webapp.handlers.pop(0)
+        expected_handlers = [
+                ('/app/login', LoginHandler),
+                ('/app/activate/(.*)/(.*)', ActivateHandler),
+                ('/app/trips/([0-9a-f-]+)$', TripHandler),
+                ]
+        self.assertEquals(expected_handlers, self.webapp.handlers)
 
 
 if __name__ == '__main__':

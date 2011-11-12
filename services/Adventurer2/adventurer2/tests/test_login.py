@@ -5,8 +5,7 @@ import pika
 from tptesting import faketornado, environment, fakepika
 from trailhead.tests.utils import setup_handler
 
-from trailhead.mq import PikaClient
-from trailhead.login import LoginHandler
+from adventurer2.login import LoginHandler
 
 class TestLoginHTTPRequest(unittest.TestCase):
     def setUp(self):
@@ -32,8 +31,6 @@ class TestLoginHTTPRequest(unittest.TestCase):
     def test_finishes_request(self):
         '''Inform tornado the request is finished'''
         self.assertTrue(self.request.was_called(self.request.finish))
-
-
 
 class TestSendsLoginRequest(unittest.TestCase):
 

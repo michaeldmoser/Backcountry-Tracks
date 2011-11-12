@@ -3,7 +3,7 @@ import pika
 import uuid
 from tornado import web
 from tornado.web import RequestHandler
-from trailhead.login import BaseHandler
+from trailhead.handlers import BaseHandler
 
 class RegisterHandler(BaseHandler):
 

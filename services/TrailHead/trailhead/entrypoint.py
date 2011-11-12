@@ -4,9 +4,7 @@ import tornado.ioloop
 import pika
 from pika.adapters.tornado_connection import TornadoConnection
 
-from trailhead.register import RegisterHandler
 from trailhead.mq import PikaClient
-
 from trailhead.server import TrailHead
 
 

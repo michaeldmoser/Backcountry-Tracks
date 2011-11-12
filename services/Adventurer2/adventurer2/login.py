@@ -6,9 +6,8 @@ from tornado import web, template
 
 import logging
 
-class BaseHandler(web.RequestHandler):
-    def get_current_user(self):
-        return self.get_secure_cookie("user")
+from trailhead.handlers import BaseHandler
+
 
 class LoginHandler(BaseHandler):
     def get(self):

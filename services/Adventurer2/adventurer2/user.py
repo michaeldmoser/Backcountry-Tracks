@@ -4,7 +4,7 @@ import json
 import uuid
 import pika
 
-from .login import BaseHandler
+from trailhead.handlers import BaseHandler
 
 from tornado import web
 

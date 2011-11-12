@@ -5,8 +5,9 @@ import json
 from tptesting import faketornado, fakepika, environment
 
 from tornado.web import RequestHandler
-from trailhead.register import RegisterHandler
 from trailhead.mq import PikaClient
+
+from adventurer2.register import RegisterHandler
 
 class TestRegisterHandler(unittest.TestCase):
     def setUp(self):
