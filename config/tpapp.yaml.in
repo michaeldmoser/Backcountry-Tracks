@@ -46,6 +46,9 @@ services:
         database:
             host: localhost
             bucket: adventurers
+        stmp:
+            host: localhost
+            port: 25
     Trips/trips:
         queues:
             rpc: trips_rpc

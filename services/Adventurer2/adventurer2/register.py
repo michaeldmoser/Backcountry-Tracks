@@ -26,11 +26,18 @@ class RegisterHandler(BaseHandler):
                 reply_to = self.application.mq.rpc_reply,
                 delivery_mode = 2
                 )
+
+        jsonrpc = {
+                'jsonrpc': '2.0',
+                'method': 'register',
+                'params': json.loads(self.request.body),
+                'id': correlation_id
+                }
         mq.register_rpc_reply(correlation_id, self.respond_to_request)
         mq.channel.basic_publish(
-                exchange = 'registration',
-                routing_key = 'registration.register',
-                body = self.request.body,
+                exchange = 'adventurer',
+                routing_key = 'adventurer.rpc',
+                body = json.dumps(jsonrpc),
                 properties = properties
                 )
 

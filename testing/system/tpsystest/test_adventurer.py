@@ -13,164 +13,6 @@ import pika
 from tptesting import environment
 from tptesting import utils
 
-#class TestAdventurerServiceRegistration(unittest.TestCase):
-class TestAdventurerServiceRegistration():
-    @classmethod
-    def setUpClass(cls):
-        cls.environ = environment.create()
-        cls.environ.make_pristine()
-
-        cls.environ.rabbitmq.start_server()
-        cls.environ.riak.start()
-
-        mq_params = pika.ConnectionParameters(host='localhost')
-        mq_conn = pika.BlockingConnection(mq_params)
-        channel = mq_conn.channel()
-        channel.exchange_declare(exchange='registration', type='topic')
-        channel.queue_declare(
-                queue = 'register',
-                durable = False,
-                exclusive = False,
-                auto_delete = True
-                )
-        channel.queue_bind(
-                exchange = 'registration',
-                queue = 'register',
-                routing_key = 'registration.register'
-                )
-        cls.channel = channel
-
-        cls.environ.adventurer.start()
-
-        cls.albert = cls.environ.albert
-
-        adventurer_config = cls.environ.get_config_for('adventurer')
-        cls.pidfile_path = adventurer_config['pidfile']
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.environ.teardown()
-
-    def notest_daemonized_process(self):
-        '''We should have a running process with a pidfile'''
-        def check_for_pidfile():
-            assert path.exists(self.pidfile_path), 'PID file does not exist'
-        utils.try_until(1, check_for_pidfile)
-
-        pid = open(self.pidfile_path, 'r').read().strip()
-        cmdline_path = path.join('/proc', pid, 'cmdline')
-        assert path.exists(cmdline_path), 'Could not find the process'
-
-        cmdline = open(cmdline_path, 'r').read()
-        assert '/usr/local/bin/adventurer' in cmdline, 'Not the correct process'
-
-    def notest_retrieves_and_saves_regitrations(self):
-        """Service should retrieve registrations from rabbitmq and save to riak"""
-        registration_message = json.dumps(self.environ.albert)
-        properties = pika.BasicProperties(
-                content_type="application/json",
-                delivery_mode=2
-                )
-
-        self.channel.basic_publish(
-                exchange='registration',
-                routing_key='registration.register',
-                properties=properties,
-                body=registration_message
-                )
-
-        def check_registration_stored():
-            try:
-                user_bucket = self.environ.riak.get_database('adventurers')
-                albert_user = user_bucket.get(self.albert.email)
-                albert_data = albert_user.get_data()
-            except Exception, e:
-                raise AssertionError(str(e))
-
-            # remove confirmation key from data so we
-            # get a true comparison
-            del albert_data['confirmation_key']
-            self.assertEquals(albert_data, self.albert)
-        utils.try_until(1, check_registration_stored)
-
-    def notest_regitration_sends_confirmation_email(self):
-        """Service should sends confirmation email for upon registration"""
-        registration_message = json.dumps(self.environ.albert)
-        properties = pika.BasicProperties(
-                content_type="application/json",
-                delivery_mode=2
-                )
-
-        self.channel.basic_publish(
-                exchange='registration',
-                routing_key='registration.register',
-                properties=properties,
-                body=registration_message
-                )
-
-        self.environ.clear_mbox()
-        mbox_path = self.environ.get_config_for('mbox_file')
-        self.mbox = mailbox.mbox(mbox_path)
-        assert len(self.mbox) == 0, 'Mailbox not pristine'
-
-        def check_email_sent():
-            mbox_path = self.environ.get_config_for('mbox_file')
-            mbox = mailbox.mbox(mbox_path)
-            assert len(mbox) == 1
-
-        utils.try_until(1, check_email_sent)
-
-    def notest_email_contains_link_for_completing_registration(self):
-        """Confirmation email contains link to complete registration"""
-        registration_message = json.dumps(self.environ.albert)
-        properties = pika.BasicProperties(
-                content_type="application/json",
-                delivery_mode=2
-                )
-
-        self.channel.basic_publish(
-                exchange='registration',
-                routing_key='registration.register',
-                properties=properties,
-                body=registration_message
-                )
-
-        self.environ.clear_mbox()
-        mbox_path = self.environ.get_config_for('mbox_file')
-        self.mbox = mailbox.mbox(mbox_path)
-        assert len(self.mbox) == 0, 'Mailbox not pristine'
-
-        def get_email_message():
-            mbox_path = self.environ.get_config_for('mbox_file')
-            mbox = mailbox.mbox(mbox_path)
-            assert len(mbox) == 1
-
-        utils.try_until(1, get_email_message)
-
-        self.mbox = mailbox.mbox(mbox_path)
-        for key, message in self.mbox.items():
-            continue
-
-        trailhead_url = self.environ.get_config_for('trailhead_url')
-        url = 'href="%s/activate/%s/' % (trailhead_url, self.albert['email'])
-        self.assertIn(url, message.as_string())
-
-    def notest_confirmation_request_activates_account(self):
-        pass
-#        urllib2.urlopen(self.register_url)
-#
-#        def check_registration_complete():
-#            try:
-#                user_bucket = self.environ.riak.get_database('adventurers')
-#                albert_user = user_bucket.get(self.albert.email)
-#                albert_data = albert_user.get_data()
-#            except Exception, e:
-#                raise AssertionError(str(e))
-#
-#            self.assertTrue(albert_data['registration_complete'])
-#
-#        utils.try_until(1, check_registration_complete)
-
 class TestAdventurerLogin(unittest.TestCase):
 
     @classmethod
@@ -230,6 +72,70 @@ class TestAdventurerUserData(unittest.TestCase):
         user_data = json.loads(body)
 
         self.assertEquals(user_data, ramona)
+
+class TestAdventurerRegistration(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.environ = environment.create()
+        cls.environ.make_pristine()
+        cls.environ.bringup_infrastructure()
+
+        cls.ramona = cls.environ.ramona.registration_data()
+
+
+        register_url = cls.environ.trailhead_url + '/register'
+        cls.request = urllib2.Request(
+                register_url,
+                json.dumps(cls.ramona),
+                headers = {'Content-Type': 'application/json'}
+                )
+
+        cls.response = urllib2.urlopen(cls.request)
+        cls.body = cls.response.read()
+
+    def test_registrations_saved(self):
+        """Service should retrieve registrations from rabbitmq and save to riak"""
+        user_bucket = self.environ.riak.get_database('adventurers')
+        ramona_user = user_bucket.get(self.ramona['email'])
+        ramona_data = ramona_user.get_data()
+
+        # remove confirmation key from data so we
+        # get a true comparison
+        del ramona_data['confirmation_key']
+
+        self.assertEquals(ramona_data, self.ramona)
+
+    def test_registration_successful_http_status_code(self):
+        """Submitting a valid registration should return successful"""
+        self.assertEquals(self.response.code, 200)
+
+    def test_regitration_sends_confirmation_email(self):
+        """Service should send confirmation email for registration"""
+        def check_email_sent():
+            mbox_path = self.environ.get_config_for('mbox_file')
+            mbox = mailbox.mbox(mbox_path)
+            assert len(mbox) == 1
+
+        utils.try_until(1, check_email_sent)
+
+    def test_email_contains_link_for_completing_registration(self):
+        """Confirmation email contains link to complete registration"""
+        mbox_path = self.environ.get_config_for('mbox_file')
+        def get_email_message():
+            mbox = mailbox.mbox(mbox_path)
+            assert len(mbox) == 1
+
+        utils.try_until(1, get_email_message)
+
+        self.mbox = mailbox.mbox(mbox_path)
+        for key, message in self.mbox.items():
+            continue
+
+        trailhead_url = self.environ.get_config_for('trailhead_url')
+        url = 'href="%s/activate/%s/' % (trailhead_url, self.ramona['email'])
+        self.assertIn(url, message.as_string())
+
 
 if __name__ == '__main__':
     unittest.main()
