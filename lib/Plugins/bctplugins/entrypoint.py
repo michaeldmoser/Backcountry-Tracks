@@ -22,3 +22,28 @@ class EntryPoint(object):
         controller = self.controller(self.channel, self.config, service)
         controller.start()
 
+class MessagingEntryPointFactory(object):
+    controller = MessagingEndPointController
+    database = RiakClient
+
+    def __init__(self, configuration, environ):
+        self.environ = environ
+        self.config = configuration
+
+    def assemble_controller(self):
+        return MessagingEndPointController
+
+    def assemble_service(self):
+        raise NotImplementedError("An assemble_service() method must be provided")
+
+    def start(self):
+        self.environ.open_messaging_channel(self.on_channel_opened)
+
+    def on_channel_opened(self, channel):
+        self.channel = channel
+
+        service = self.assemble_service()
+        controller_class = self.assemble_controller()
+        controller = controller_class(self.channel, self.config, service)
+        controller.start()
+
