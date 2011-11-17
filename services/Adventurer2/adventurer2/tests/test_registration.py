@@ -88,6 +88,42 @@ class TestAdventurerRepository(unittest.TestCase):
 
         self.assertIn(expected_link, mailerspy.body)
 
+class TestActivation(unittest.TestCase):
+    def setUp(self):
+        self.environ = environment.create()
+        self.riak = RiakClientFake()
+        self.bucket_name = 'adventurer'
+        self.bucket = self.riak.bucket(self.bucket_name)
+        self.fakemail = FakeMailer()
+
+        self.confirmation_key = '1234'
+        self.douglas = self.environ.douglas
+        self.douglas['confirmation_key'] = self.confirmation_key
+        self.bucket.add_document(self.douglas.email, self.douglas)
+
+        self.app = AdventurerRepository(
+                bucket_name = self.bucket_name, 
+                mailer = self.fakemail, 
+                db = self.riak
+                )
+
+    def test_successful_registration(self):
+        '''Returns successful dict() for completed registration'''
+        activation_result = self.app.activate(self.douglas.email, self.confirmation_key)
+        self.assertEquals({'successful': True}, activation_result)
+
+    def test_failed_registration(self):
+        '''Returns unsuccessful dict() for a bad activation'''
+        activation_result = self.app.activate(self.douglas.email, 'bad_key')
+        self.assertEquals({'successful': False}, activation_result)
+
+    def test_user_marked_as_registered(self):
+        '''The user's entry in the database is recorded as registered'''
+        self.app.activate(self.douglas.email, self.confirmation_key)
+        user_entry = self.bucket.documents[self.douglas.email]
+        self.assertTrue(user_entry['registration_complete'])
+
+
 class FakeMailer:
     def send(self, *args):
         pass

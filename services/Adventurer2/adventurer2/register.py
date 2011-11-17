@@ -50,22 +50,25 @@ class ActivateHandler(BaseHandler):
     @web.asynchronous
     def get(self, email, confirmation_code):
 
+        correlation_id = str(uuid.uuid4())
         data = json.dumps({
-            'email': email,
-            'confirmation_code': confirmation_code
+            'jsonrpc': '2.0',
+            'method': 'activate',
+            'params': [email, confirmation_code],
+            'id': correlation_id
             })
 
         mq = self.application.mq
-        correlation_id = str(uuid.uuid4())
         properties = pika.BasicProperties(
                 content_type = 'application/json',
                 correlation_id = correlation_id,
                 reply_to = self.application.mq.rpc_reply,
+                delivery_mode = 2,
                 )
         mq.register_rpc_reply(correlation_id, self.respond_to_request)
         mq.channel.basic_publish(
-                exchange = 'registration',
-                routing_key = 'registration.activate',
+                exchange = 'adventurer',
+                routing_key = 'adventurer.rpc',
                 body = data,
                 properties = properties
                 )
@@ -80,3 +83,4 @@ class ActivateHandler(BaseHandler):
             self.set_status(403)
             self.set_header('Location', '/')
         self.finish()
+

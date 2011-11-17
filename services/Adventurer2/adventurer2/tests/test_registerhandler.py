@@ -8,7 +8,7 @@ from tornado.web import RequestHandler
 from trailhead.mq import PikaClient
 from trailhead.tests.utils import setup_handler
 
-from adventurer2.register import RegisterHandler
+from adventurer2.register import RegisterHandler, ActivateHandler
 
 class TestRegisterHandler(unittest.TestCase):
 
@@ -84,6 +84,52 @@ class TestPublishesRegistration(unittest.TestCase):
         '''Message should be published as durable'''
         actual_durability = self.pika.published_messages[0].properties.delivery_mode
         self.assertEquals(actual_durability, 2)
+
+class TestActivateHandler(unittest.TestCase):
+    def setUp(self):
+        self.environ = environment.create()
+        body = json.dumps(self.environ.douglas)
+        self.activate_code = '1234'
+        headers = {'Content-Type': 'application/json; charset=UTF-8'}
+        url = '/app/activate/%s/%s' % (self.environ.douglas.email, self.activate_code)
+        self.handler, self.application, self.pika = setup_handler(ActivateHandler, 'POST',
+                url, headers=headers, body=body)
+
+        self.handler.get(self.environ.douglas.email, self.activate_code)
+
+    def test_publishes_activation_message(self):
+        '''Publishes command message to activate user'''
+        command_message_body = json.loads(self.pika.published_messages[0].body)
+        expected_body = {
+                'jsonrpc': '2.0',
+                'method': 'activate',
+                'params': [self.environ.douglas.email, self.activate_code],
+                'id': self.pika.published_messages[0].properties.correlation_id
+                }
+
+        self.assertEquals(command_message_body, expected_body)
+
+    def test_publishes_to_correct_exchange(self):
+        '''Publishes command message to the adventurer exchange'''
+        published_exchange = self.pika.published_messages[0].exchange
+        self.assertEquals(published_exchange, 'adventurer')
+
+    def test_publishes_with_routing_key(self):
+        '''Publishes command message with correct routing key'''
+        routing_key = self.pika.published_messages[0].routing_key
+        self.assertEquals(routing_key, 'adventurer.rpc')
+
+    def test_correct_content_type(self):
+        '''Publishes message using json mime type'''
+        actual_mime_type = self.pika.published_messages[0].properties.content_type
+        self.assertEquals(actual_mime_type, 'application/json')
+
+    def test_durablability(self):
+        '''Message should be published as durable'''
+        actual_durability = self.pika.published_messages[0].properties.delivery_mode
+        self.assertEquals(actual_durability, 2)
+
+
 
 if __name__ == '__main__':
     unittest.main()
