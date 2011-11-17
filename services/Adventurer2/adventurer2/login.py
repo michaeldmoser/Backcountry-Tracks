@@ -49,10 +49,16 @@ class LoginHandler(BaseHandler):
                 )
         mq.register_rpc_reply(correlation_id, self.respond_to_login)
         logging.debug('Sending login message for %s' % self.request.body)
+        message = {
+                'jsonrpc': '2.0',
+                'method': 'login',
+                'params': json.loads(self.request.body),
+                'id': correlation_id
+                }
         mq.channel.basic_publish(
                 exchange = 'adventurer',
-                routing_key = 'adventurer.login',
-                body = self.request.body,
+                routing_key = 'adventurer.rpc',
+                body = json.dumps(message),
                 properties = properties
                 )
 

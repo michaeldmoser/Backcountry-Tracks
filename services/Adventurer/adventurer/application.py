@@ -97,24 +97,24 @@ class Application(object):
 
         return False
 
-    def login(self, email, password):
-        '''
-        Validates user crendentials and returns true if the email/password combination exists
-        '''
-        form = LoginForm(**dict(email = email, password = password))
-        if not form.validate():
-            return False
-
-        user_object = self.bucket.get(str(email))
-        user = user_object.get_data()
-
-        if not user:
-            return False
-
-        if 'registration_complete' not in user:
-            return False
-
-        if user['password'] == str(password):
-            return True
-        else:
-            return False
+#    def login(self, email, password):
+#        '''
+#        Validates user crendentials and returns true if the email/password combination exists
+#        '''
+#        form = LoginForm(**dict(email = email, password = password))
+#        if not form.validate():
+#            return False
+#
+#        user_object = self.bucket.get(str(email))
+#        user = user_object.get_data()
+#
+#        if not user:
+#            return False
+#
+#        if 'registration_complete' not in user:
+#            return False
+#
+#        if user['password'] == str(password):
+#            return True
+#        else:
+#            return False

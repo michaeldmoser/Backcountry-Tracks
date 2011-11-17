@@ -93,5 +93,42 @@ class AdventurerRepository(BasicCRUDService):
         output.append(u'</body></html>')
         return '\r\n'.join(output)
 
+    def login(self, email='', password=''):
+        '''
+        Validates user crendentials and returns true if the email/password combination exists
+        '''
+        form = LoginForm(email = email, password = password)
+        if not form.validate():
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+        user_object = self.bucket.get(str(email))
+        user = user_object.get_data()
+
+        if not user:
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+        if 'registration_complete' not in user:
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+        if user['password'] == str(password):
+            return {
+                    'successful': True,
+                    'email': email
+                    }
+        else:
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
 
 
