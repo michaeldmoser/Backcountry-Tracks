@@ -2,16 +2,17 @@ from setuptools import setup
 
 setup(
     name = 'Adventurer',
-    version = '0.1',
+    version = '0.2',
     packages = ['adventurer'],
     test_suite = 'adventurer',
-    install_requires = '''
-        pika
-        python-daemon
-        lockfile
-    ''',
     entry_points = {
-        'console_scripts': ['adventurer = adventurer.script:main']
+        'tripplanner.service': ['adventurer = adventurer:EntryPoint'],
+        'tripplanner.trailhead.handler': [
+            'register = adventurer.register:RegisterHandler',
+            'activate = adventurer.register:ActivateHandler',
+            'user = adventurer.user:UserHandler',
+            'login = adventurer.login:LoginHandler',
+            ],
         }
     )
 

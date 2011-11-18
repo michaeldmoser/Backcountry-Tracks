@@ -4,7 +4,7 @@ import json, pika
 from tptesting import faketornado, environment, fakepika
 from trailhead.tests.utils import setup_handler
 
-from adventurer2.user import UserHandler
+from adventurer.user import UserHandler
 
 class TestUserHandlerGet(unittest.TestCase):
 

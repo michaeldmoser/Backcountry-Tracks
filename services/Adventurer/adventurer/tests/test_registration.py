@@ -3,7 +3,7 @@ import types
 
 from tptesting import environment
 
-from adventurer2.service import AdventurerRepository
+from adventurer.service import AdventurerRepository
 from tptesting.fakeriak import RiakClientFake
 from uuid import uuid4
 

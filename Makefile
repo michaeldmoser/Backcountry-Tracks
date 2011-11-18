@@ -7,7 +7,7 @@ install-infrastructure: install-rabbitmq install-riak install-nginx
 
 install-libraries: install-messaging install-plugins install-servicelib
 
-install-services: install-groupleader install-adventurer2 install-gear install-trailhead install-adventurer varrun install-smokesignal install-trips
+install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips
 
 install-dependencies: install-libyaml install-python-setproctitle
 
@@ -184,13 +184,13 @@ services/GroupLeader/setup.py:
 services/GroupLeader/GroupLeader.egg-info:
 	cd services/GroupLeader && sudo python setup.py develop
 
-install-adventurer2: services/Adventurer2/setup.py services/Adventurer2/Adventurer2.egg-info
+install-adventurer: services/Adventurer/setup.py services/Adventurer/Adventurer.egg-info
 
-services/Adventurer2/setup.py:
-	cd services/Adventurer2 && sudo python setup.py develop
+services/Adventurer/setup.py:
+	cd services/Adventurer && sudo python setup.py develop
 	
-services/Adventurer2/Adventurer2.egg-info:
-	cd services/Adventurer2 && sudo python setup.py develop
+services/Adventurer/Adventurer.egg-info:
+	cd services/Adventurer && sudo python setup.py develop
 
 install-gear: services/Gear/setup.py services/Gear/Gear.egg-info
 
@@ -215,14 +215,6 @@ services/TrailHead/setup.py:
 	
 services/TrailHead/TrailHead.egg-info:
 	cd services/TrailHead && sudo python setup.py develop
-
-install-adventurer: services/Adventurer/setup.py services/Adventurer/Adventurer.egg-info
-
-services/Adventurer/setup.py:
-	cd services/Adventurer && sudo python setup.py develop
-
-services/Adventurer/Adventurer.egg-info:
-	cd services/Adventurer && sudo python setup.py develop
 
 install-smokesignal: services/SmokeSignal/setup.py services/SmokeSignal/SmokeSignal.egg-info
 	

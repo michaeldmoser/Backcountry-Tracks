@@ -39,7 +39,7 @@ services:
         database:
             host: localhost
             bucket: personal_gear
-    Adventurer2/adventurer:
+    Adventurer/adventurer:
         queues:
             rpc: adventurer_rpc
         reply_exchange: rpc_reply
@@ -60,12 +60,12 @@ services:
         cookie_secret: psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja
         login_url: "/"
         handlers: 
-            - ['/app/register', 'Adventurer2/register']
-            - ['/app/activate/(.*)/(.*)', 'Adventurer2/activate']
-            - ['/app/login', 'Adventurer2/login']
+            - ['/app/register', 'Adventurer/register']
+            - ['/app/activate/(.*)/(.*)', 'Adventurer/activate']
+            - ['/app/login', 'Adventurer/login']
             - ['/app/users/([^/]+)/gear', 'Gear/gear']
             - ['/app/users/([^/]+)/gear/([^/]+)$', 'Gear/gear']
-            - ['/app/user', 'Adventurer2/user']
+            - ['/app/user', 'Adventurer/user']
             - ['/app/trips$', 'Trips/trips']
             - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
 

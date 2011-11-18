@@ -1,93 +1,145 @@
-import json
-import pika
+import uuid
+import logging
+log = logging.getLogger('Adventurer/service')
 
-class Controller(object):
+from bctservices.crud import BasicCRUDService
+from .forms import LoginForm, RegisterForm
 
-    def __init__(self, daemonizer=None, pidfile=None, pika_params=None,
-            pika_connection=None, application=None):
-        self.daemonizer = daemonizer
-        self.pidfile = pidfile
-        self.pika_params = pika_params
-        self.pika_connection = pika_connection
-        self.application = application
+class AdventurerRepository(BasicCRUDService):
 
-    def run(self):
-        self.daemoncontext = self.daemonizer(pidfile=self.pidfile)
-        with self.daemoncontext:
-            self.app_instance = self.application()
-            connection = self.pika_connection(self.pika_params,
-                    self.on_connection_opened)
-            connection.ioloop.start()
+    def __init__(self,
+            bucket_name = 'adventurers',
+            mailer = None,
+            db = None,
+            trailhead_url = 'http://www.backcountrytracks.com/app'
+            ):
+        self.riak = db
+        self.bucket_name = bucket_name
+        self.bucket = self.riak.bucket(bucket_name)
+        self.trailhead_url = trailhead_url
+        self.mailer = mailer
 
-    def on_connection_opened(self, connection):
-        self.connection = connection
-        self.open_channel()
+    def register(self, **data):
+        '''
+        Registers a new adventurer with the system by saving it to the database
+        and sends an email to the user for completing the registration
+        '''
+        form = RegisterForm(**data)
+        if not form.validate():
+            log.debug('Failed form validation: %s' % str(form.errors))
+            result = {'successful': False, 'messages': form.errors}
+            return result
 
-    def open_channel(self):
-        self.connection.channel(self.on_channel_opened)
+        clean_data = form.data
+        email = str(clean_data['email'])
+        confirmation_key = self.generate_confirmation_key()
+        clean_data['confirmation_key'] = confirmation_key
 
-    def on_channel_opened(self, channel):
-        self.channel = channel
-        self.begin_consuming()
+        #check that the user isn't already in the system
+        user_object = self.bucket.get(email)
+        user = user_object.get_data()
+        if user:
+            log.debug('Duplicate registration for %s' % user['email'])
+            result = {'successful': False, 'messages': {
+                'form': ['This email address has already been registered.']
+                }}
+            return result
 
-    def begin_consuming(self):
-        self.channel.basic_consume(self.process_registration, queue='register_rpc')
-        self.channel.basic_consume(self.process_login, queue='login_rpc')
-        self.channel.basic_consume(self.process_activation, queue='activate_rpc')
+        new_registration = self.bucket.new(email, data = clean_data)
+        new_registration.store()
 
-    def process_registration(self, channel, method, header, data):
-        result = self.app_instance.register(json.loads(data))
-
-        properties = pika.BasicProperties(
-                correlation_id = header.correlation_id,
-                content_type = 'application/json'
+        self.send_complete_registration_email(
+                email,
+                clean_data['first_name'],
+                clean_data['last_name'],
+                confirmation_key
                 )
 
-        register_reply = json.dumps(result)
-        self.channel.basic_publish(exchange='registration',
-                routing_key='registration.register.%s' % header.reply_to,
-                properties=properties,
-                body=register_reply)
-        self.channel.basic_ack(delivery_tag = method.delivery_tag)
+        log.debug('Completed registration for %s' % email)
+        result = {'successful': True}
+        return result
 
-    def process_activation(self, channel, method, header, data):
-        params = json.loads(data)
-        email = params['email']
-        confirmation_code = params['confirmation_code']
+    def generate_confirmation_key(self):
+        return str(uuid.uuid4())
 
-        result = self.app_instance.activate(email, confirmation_code)
-
-        properties = pika.BasicProperties(
-                correlation_id = header.correlation_id,
-                content_type = 'application/json'
+    def send_complete_registration_email(self, email, first_name, last_name, confirmation_key):
+        '''
+        Sends a registration confirmation message to user with a link to complete registration
+        '''
+        from_address = 'noreply@example.org'
+        from_line = 'BackCountryTracks Registration'
+        subject = 'BackCountryTracks Registration'
+        body = self._build_complete_registration_email_body(
+                email,
+                first_name,
+                last_name,
+                confirmation_key
                 )
 
-        activate_reply = json.dumps({
-            'successful': result
-            })
-        self.channel.basic_publish(exchange='registration',
-                routing_key='registration.activate.%s' % header.reply_to,
-                properties=properties,
-                body=activate_reply)
-        self.channel.basic_ack(delivery_tag = method.delivery_tag)
+        self.mailer.send(from_address, from_line, email, subject, body)
 
-    def process_login(self, channel, method, header, data):
-        login = json.loads(data)
-        result = self.app_instance.login(login['email'], login['password'])
+    def _build_complete_registration_email_body(self, email, first_name, last_name, confirmation_key):
+        output = []
+        message = "%s %s, welcome to BackCountryTracks.com!" \
+            "To complete your registration, click on the link below or copy and paste it into your browser's location bar." \
+            "Once you have completed your registration, you can login to your BackCountryTracks.com account!" % (first_name, last_name)
 
-        properties = pika.BasicProperties(
-                correlation_id = header.correlation_id,
-                content_type = 'application/json'
-                )
+        href = u'%s/activate/%s/%s' % (self.trailhead_url, email, confirmation_key)
+        link = u'<a href="%s">%s</a>' % (href, href)
 
-        login_reply = json.dumps({
-            'successful': result,
-            'email': login['email']
-            })
-        self.channel.basic_publish(exchange='adventurer',
-                routing_key='adventurer.login.%s' % header.reply_to,
-                properties=properties,
-                body=login_reply)
-        self.channel.basic_ack(delivery_tag = method.delivery_tag)
+        output.append(u'<html><head><title>Welcome to BackCountryTracks.com!</title></head><body>')
+        output.append(u'<p>%s</p>' % message)
+        output.append(u'<p>%s</p>' % link)
+        output.append(u'</body></html>')
+        return '\r\n'.join(output)
+
+    def login(self, email='', password=''):
+        '''
+        Validates user crendentials and returns true if the email/password combination exists
+        '''
+        form = LoginForm(email = email, password = password)
+        if not form.validate():
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+        user_object = self.bucket.get(str(email))
+        user = user_object.get_data()
+
+        if not user:
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+        if 'registration_complete' not in user:
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+        if user['password'] == str(password):
+            return {
+                    'successful': True,
+                    'email': email
+                    }
+        else:
+            return {
+                    'successful': False,
+                    'email': email
+                    }
+
+    def activate(self, email, confirmation_key):
+        user_object = self.bucket.get(str(email))
+        user = user_object.get_data()
+
+        if user and confirmation_key == user['confirmation_key']:
+            user['registration_complete'] = True
+            user_object.set_data(user)
+            user_object.store()
+            return {'successful': True}
+
+        return {'successful': False}
 
 

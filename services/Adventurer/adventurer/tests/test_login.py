@@ -5,9 +5,9 @@ import pika
 from tptesting import faketornado, environment, fakepika, fakeriak
 from trailhead.tests.utils import setup_handler
 
-from adventurer2.tests.test_registration import FakeMailer
-from adventurer2.login import LoginHandler
-from adventurer2.service import AdventurerRepository
+from adventurer.tests.test_registration import FakeMailer
+from adventurer.login import LoginHandler
+from adventurer.service import AdventurerRepository
 
 class TestLoginHTTPRequest(unittest.TestCase):
     def setUp(self):

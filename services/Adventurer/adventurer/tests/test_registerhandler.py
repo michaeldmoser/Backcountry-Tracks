@@ -8,7 +8,7 @@ from tornado.web import RequestHandler
 from trailhead.mq import PikaClient
 from trailhead.tests.utils import setup_handler
 
-from adventurer2.register import RegisterHandler, ActivateHandler
+from adventurer.register import RegisterHandler, ActivateHandler
 
 class TestRegisterHandler(unittest.TestCase):
 

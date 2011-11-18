@@ -143,7 +143,6 @@ class TpEnvironment(object):
         self.remove_pid_files()
 
         self.rabbitmq.make_pristine()
-        self.adventurer.make_pristine()
         self.riak.make_pristine()
         self.clear_mbox()
 
@@ -154,7 +153,6 @@ class TpEnvironment(object):
         self.nginx.start()
         self.rabbitmq.start()
         self.riak.start()
-        self.adventurer.start()
         self.groupleader.start()
 
         def check_trailhead_start():
@@ -172,14 +170,12 @@ class TpEnvironment(object):
         '''
         Removes pid files
         '''
-        self.adventurer.remove_pidfile()
 
     def kill_processes(self):
         '''
         Shutdowns all services
         '''
         self.groupleader.stop()
-        self.adventurer.stop()
         self.riak.stop()
         self.rabbitmq.stop()
         self.nginx.stop()
