@@ -69,6 +69,36 @@ services:
             - ['/app/trips$', 'Trips/trips']
             - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
 
+message_routing:
+    exchanges:
+        - 
+            exchange: rpc
+            durable: True
+            type: topic
+    queues:
+        - 
+            queue: user_gear_rpc
+            durable: True
+        - 
+            queue: adventurer_rpc
+            durable: True
+        - 
+            queue: trips_rpc
+            durable: True
+    bindings:
+        - 
+            exchange: rpc
+            queue: user_gear_rpc
+            routing_key: rpc.gear
+        - 
+            exchange: rpc
+            queue: adventurer_rpc
+            routing_key: rpc.adventurer
+        - 
+            exchange: rpc
+            queue: trips_rpc
+            routing_key: rpc.trips
+
 logging:
     version: 1
     formatters:
