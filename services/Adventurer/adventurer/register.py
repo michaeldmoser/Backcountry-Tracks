@@ -18,28 +18,13 @@ class RegisterHandler(BaseHandler):
             self.finish()
             return
 
-        mq = self.application.mq
-        correlation_id = str(uuid.uuid4())
-        properties = pika.BasicProperties(
-                content_type = 'application/json',
-                correlation_id = correlation_id,
-                reply_to = self.application.mq.rpc_reply,
-                delivery_mode = 2
-                )
+        remoting = self.application.mq.remoting
+        service = remoting.service('Adventurer')
+        registration_data = json.loads(self.request.body)
+        command = service.register(**registration_data)
+        command.persistant = True
 
-        jsonrpc = {
-                'jsonrpc': '2.0',
-                'method': 'register',
-                'params': json.loads(self.request.body),
-                'id': correlation_id
-                }
-        mq.register_rpc_reply(correlation_id, self.respond_to_request)
-        mq.channel.basic_publish(
-                exchange = 'adventurer',
-                routing_key = 'adventurer.rpc',
-                body = json.dumps(jsonrpc),
-                properties = properties
-                )
+        remoting.call(command, callback=self.respond_to_request)
 
     def respond_to_request(self, headers, body):
         reply = json.loads(body)
@@ -49,29 +34,13 @@ class RegisterHandler(BaseHandler):
 class ActivateHandler(BaseHandler):
     @web.asynchronous
     def get(self, email, confirmation_code):
+        remoting = self.application.mq.remoting
+        service = remoting.service('Adventurer')
+        registration_data = json.loads(self.request.body)
+        command = service.activate(email, confirmation_code)
+        command.persistant = True
 
-        correlation_id = str(uuid.uuid4())
-        data = json.dumps({
-            'jsonrpc': '2.0',
-            'method': 'activate',
-            'params': [email, confirmation_code],
-            'id': correlation_id
-            })
-
-        mq = self.application.mq
-        properties = pika.BasicProperties(
-                content_type = 'application/json',
-                correlation_id = correlation_id,
-                reply_to = self.application.mq.rpc_reply,
-                delivery_mode = 2,
-                )
-        mq.register_rpc_reply(correlation_id, self.respond_to_request)
-        mq.channel.basic_publish(
-                exchange = 'adventurer',
-                routing_key = 'adventurer.rpc',
-                body = data,
-                properties = properties
-                )
+        remoting.call(command, callback=self.respond_to_request)
 
     def respond_to_request(self, headers, body):
         reply = json.loads(body)

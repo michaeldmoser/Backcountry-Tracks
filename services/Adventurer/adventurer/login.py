@@ -40,39 +40,22 @@ class LoginHandler(BaseHandler):
             self.finish()
             return
 
-        mq = self.application.mq
-        correlation_id = str(uuid.uuid4())
-        properties = pika.BasicProperties(
-                content_type = 'application/json',
-                correlation_id = correlation_id,
-                reply_to = self.application.mq.rpc_reply,
-                )
-        mq.register_rpc_reply(correlation_id, self.respond_to_login)
-        logging.debug('Sending login message for %s' % self.request.body)
-        message = {
-                'jsonrpc': '2.0',
-                'method': 'login',
-                'params': json.loads(self.request.body),
-                'id': correlation_id
-                }
-        mq.channel.basic_publish(
-                exchange = 'adventurer',
-                routing_key = 'adventurer.rpc',
-                body = json.dumps(message),
-                properties = properties
-                )
+        remoting = self.application.mq.remoting
+        service = remoting.service('Adventurer')
 
-    def respond_to_login(self, headers, body):
+        credentials = json.loads(self.request.body)
+        command = service.login(**credentials)
+
+        remoting.call(command, callback=self.respond_to_login)
+
+    def respond_to_login(self, body):
         logging.debug('Got response for %s' % body)
-        reply = json.loads(body)
-        if reply['successful'] == True:
-            self.set_secure_cookie("user", reply['email'])
-#            self.set_header('X-Location', '/app/home')
+        if body['successful'] == True:
+            self.set_secure_cookie("user", body['email'])
             self.write({'location': '/app/home'})
             self.set_status(202)
         else:
             self.set_cookie("force_login_reason", 'invalid_login')
-#            self.set_header('X-Location', '/app/login')
             self.write({'location': '/app/login'})
             self.set_status(403)
 

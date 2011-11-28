@@ -35,14 +35,14 @@ services:
     Gear/gear:
         queues:
             rpc: user_gear_rpc
-        reply_exchange: rpc_reply
+        reply_exchange: rpc
         database:
             host: localhost
             bucket: personal_gear
     Adventurer/adventurer:
         queues:
             rpc: adventurer_rpc
-        reply_exchange: rpc_reply
+        reply_exchange: rpc
         database:
             host: localhost
             bucket: adventurers
@@ -52,7 +52,7 @@ services:
     Trips/trips:
         queues:
             rpc: trips_rpc
-        reply_exchange: rpc_reply
+        reply_exchange: rpc
         database:
             host: localhost
             bucket: trips

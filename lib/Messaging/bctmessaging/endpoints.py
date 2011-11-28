@@ -47,9 +47,15 @@ class MessagingEndPointController(object):
             return
 
         logging.debug('Publish response to %s to routing key %s' % (header.correlation_id, header.reply_to))
+
+        reply = {
+                'jsonrpc': '2.0',
+                'result': response,
+                'id': properties.correlation_id
+                }
         self.channel.basic_publish(
                 exchange = self.config['reply_exchange'],
                 routing_key = header.reply_to,
                 properties = properties,
-                body = json.dumps(response)
+                body = json.dumps(reply)
                 )

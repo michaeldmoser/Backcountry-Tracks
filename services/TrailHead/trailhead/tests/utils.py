@@ -1,5 +1,6 @@
 from tptesting import faketornado, environment, fakepika
 from trailhead.mq import PikaClient
+from bctmessaging.remoting import RemotingClient
 
 import Cookie
 
@@ -7,7 +8,7 @@ def create_fake_application():
     pika_connection_class = fakepika.SelectConnectionFake()
     application = faketornado.WebApplicationFake()
     application()
-    application.mq = PikaClient(pika_connection_class, dict())
+    application.mq = PikaClient(pika_connection_class, dict(), RemotingClient)
     application.mq.connect()
     pika_connection_class.ioloop.start()
 

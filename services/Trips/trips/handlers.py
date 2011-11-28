@@ -10,6 +10,11 @@ from trailhead.handlers import BaseHandler
 
 class TripsBaseHandler(BaseHandler):
 
+    def __init__(self, *args, **kwargs):
+        BaseHandler.__init__(self, *args, **kwargs)
+        self.service = self.application.mq.remoting.service('Trips')
+        self.remoting = self.application.mq.remoting
+
     def json_rpc_request(self, method, params):
         mq = self.application.mq
         correlation_id = str(uuid.uuid4())
@@ -35,11 +40,11 @@ class TripsBaseHandler(BaseHandler):
                 body = json.dumps(jsonrpc),
                 )
 
-    def respond_to_request(self, headers, body):
+    def respond_to_request(self, body):
         logging.debug('Received response:\n%s' % body)
         self.set_status(200)
         self.set_header('Content-Type', 'application/json')
-        self.write(body)
+        self.write(json.dumps(body))
         self.finish()
 
 class TripsHandler(TripsBaseHandler):
@@ -51,12 +56,15 @@ class TripsHandler(TripsBaseHandler):
     @web.asynchronous
     def post(self):
         trip_data = json.loads(self.request.body)
-        self.json_rpc_request('create', [self.current_user, trip_data])
+        command = self.service.create(self.current_user, trip_data)
+        command.persistant = True
+        self.remoting.call(command, self.respond_to_request)
 
     @web.authenticated
     @web.asynchronous
     def get(self):
-        self.json_rpc_request('list', [self.current_user])
+        command = self.service.list(self.current_user)
+        self.remoting.call(command, self.respond_to_request)
 
 
 class TripHandler(TripsBaseHandler):
@@ -68,11 +76,15 @@ class TripHandler(TripsBaseHandler):
     @web.asynchronous
     def put(self, trip_id):
         trip_data = json.loads(self.request.body)
-        self.json_rpc_request('update', [self.current_user, trip_id, trip_data])
+        command = self.service.update(self.current_user, trip_id, trip_data)
+        command.persistant = True
+        self.remoting.call(command, self.respond_to_request)
 
     @web.authenticated
     def delete(self, trip_id):
         logging.info("Received trip delete for %s:%s" % (self.current_user, trip_id))
-        self.json_rpc_request('delete', [self.current_user, trip_id])
+        command = self.service.delete(self.current_user, trip_id)
+        command.persistant = True
+        self.remoting.call(command)
         self.set_status(204)
 

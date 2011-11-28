@@ -74,7 +74,7 @@ class RemotingClient(object):
     def rpc_queue_declared(self, queue):
         self.queue = queue.method.queue
         self.channel.queue_bind(exchange=self.exchange, queue=self.queue,
-                routing_key='rpc_reply.%s' % self.queue)
+                routing_key='rpc.reply.%s' % self.queue)
         self.channel.basic_consume(self.receive_message, self.queue)
 
     def receive_message(self, channel, method, headers, body):

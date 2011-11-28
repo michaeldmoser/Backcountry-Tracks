@@ -12,14 +12,17 @@ class TestMessagingEndPointController(unittest.TestCase):
 
     def setUp(self):
         self.service_return = {
-                'some': 'data',
-                'that': 'should be',
-                'returned': 'ya!'
+                'jsonrpc': '2.0',
+                'result': {
+                    'some': 'data',
+                    'that': 'should be',
+                    'returned': 'ya!'
+                    },
                 }
         class MessageServiceSpy(object):
             def service_method(spy, one, two, three, four, five):
                 spy.args = [one, two, three, four, five]
-                return self.service_return
+                return self.service_return['result']
         self.spy_service = MessageServiceSpy()
 
         self.queue_name = 'an_rpc_queue'
@@ -30,6 +33,7 @@ class TestMessagingEndPointController(unittest.TestCase):
         mq, request, self.properties = create_endpoint_sut(self.spy_service,
                 method_name, queue_name=self.queue_name, rpc_args=self.rpc_args,
                 reply_exchange_name=self.reply_exchange)
+        self.service_return['id'] = self.properties.correlation_id
 
         self.reply = mq.published_messages[0]
 

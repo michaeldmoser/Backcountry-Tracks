@@ -2,6 +2,7 @@ import unittest
 
 from tptesting import environment, fakepika, faketornado, fakedaemonizer
 
+from bctmessaging.remoting import RemotingClient
 from trailhead.server import TrailHead, RootHandler
 from trailhead.mq import PikaClient
 
@@ -30,7 +31,7 @@ class TestTrailHeadTornado(unittest.TestCase):
         self.trailhead = TrailHead(
                 ioloop=self.ioloop,
                 webapp=self.webapp,
-                mqclient=PikaClient(self.pika_class, None),
+                mqclient=PikaClient(self.pika_class, None, RemotingClient),
                 config=self.config
                 )
         self.trailhead.run()
@@ -78,7 +79,7 @@ class TestTrailHeadConfiguration(unittest.TestCase):
         trailhead = TrailHead(
                 ioloop=self.ioloop,
                 webapp=self.webapp,
-                mqclient=PikaClient(self.pika_class, None),
+                mqclient=PikaClient(self.pika_class, None, RemotingClient),
                 config=config
                 )
         trailhead.run()
@@ -171,7 +172,7 @@ class TestHandlerLoading(unittest.TestCase):
         trailhead = TrailHead(
                 ioloop=self.ioloop,
                 webapp=self.webapp,
-                mqclient=PikaClient(self.pika_class, None),
+                mqclient=PikaClient(self.pika_class, None, RemotingClient),
                 config=config,
                 load_entry_point = load_entry_point
                 )

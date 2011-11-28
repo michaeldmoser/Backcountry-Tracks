@@ -65,21 +65,6 @@ class TestPublishesRegistration(unittest.TestCase):
                 }
         self.assertEquals(received_body, expected_body)
 
-    def test_correct_exchange(self):
-        '''Publishes to the correct exchange'''
-        actual_exchange = self.pika.published_messages[0].exchange
-        self.assertEquals(actual_exchange, 'adventurer')
-
-    def test_correct_routing_key(self):
-        '''Publishes with the correct routing key'''
-        actual_routing_key = self.pika.published_messages[0].routing_key
-        self.assertEquals(actual_routing_key, 'adventurer.rpc')
-
-    def test_correct_content_type(self):
-        '''Publishes message using json mime type'''
-        actual_mime_type = self.pika.published_messages[0].properties.content_type
-        self.assertEquals(actual_mime_type, 'application/json')
-
     def test_durablability(self):
         '''Message should be published as durable'''
         actual_durability = self.pika.published_messages[0].properties.delivery_mode
@@ -108,21 +93,6 @@ class TestActivateHandler(unittest.TestCase):
                 }
 
         self.assertEquals(command_message_body, expected_body)
-
-    def test_publishes_to_correct_exchange(self):
-        '''Publishes command message to the adventurer exchange'''
-        published_exchange = self.pika.published_messages[0].exchange
-        self.assertEquals(published_exchange, 'adventurer')
-
-    def test_publishes_with_routing_key(self):
-        '''Publishes command message with correct routing key'''
-        routing_key = self.pika.published_messages[0].routing_key
-        self.assertEquals(routing_key, 'adventurer.rpc')
-
-    def test_correct_content_type(self):
-        '''Publishes message using json mime type'''
-        actual_mime_type = self.pika.published_messages[0].properties.content_type
-        self.assertEquals(actual_mime_type, 'application/json')
 
     def test_durablability(self):
         '''Message should be published as durable'''

@@ -31,21 +31,6 @@ class TestUserHandlerGet(unittest.TestCase):
                 }
         self.assertEquals(expected_request, sent_request)
 
-    def test_gear_exchange_used(self):
-        '''Should send the message via the gear exchange'''
-        exchange = self.sent_message.exchange
-        self.assertEquals('adventurer', exchange)
-
-    def test_routing_key(self):
-        '''Should use the gear.user.rpc routing key'''
-        routing_key = self.sent_message.routing_key
-        self.assertEquals('adventurer.rpc', routing_key)
-
-    def test_content_type(self):
-        '''Should use application/json-rpc content-type'''
-        content_type = self.sent_message.properties.content_type
-        self.assertEquals('application/json-rpc', content_type)
-        
     def test_delivery_mode(self):
         '''Does not need to be a persisted message'''
         delivery_mode = self.sent_message.properties.delivery_mode
@@ -58,11 +43,6 @@ class TestUserHandlerGet(unittest.TestCase):
         correlation_id = self.sent_message.properties.correlation_id
 
         self.assertEquals(json_id, correlation_id)
-
-    def test_reply_to(self):
-        '''The reply_to should route back to the TrailHead service'''
-        reply_to = self.sent_message.properties.reply_to
-        self.assertEquals(self.application.mq.rpc_reply, reply_to)
 
 class TestUserHandlerReply(unittest.TestCase):
 
@@ -82,9 +62,16 @@ class TestUserHandlerReply(unittest.TestCase):
                 content_type = 'application/json'
                 )
 
-        reply_queue = self.application.mq.rpc_reply
+
+        self.response = {
+                'jsonrpc': '2.0',
+                'result': self.environ.douglas,
+                'id': self.sent_message.properties.correlation_id,
+                }
+
+        reply_queue = self.application.mq.remoting.queue
         pika_connection.inject(reply_queue, self.headers,
-                json.dumps(self.environ.douglas))
+                json.dumps(self.response))
         pika_connection.trigger_consume(reply_queue)
 
     def test_gear_list_response(self):

@@ -66,35 +66,10 @@ class TestSendsLoginRequest(unittest.TestCase):
 
         self.assertEquals(sent_message, expected_message)
 
-    def test_exchange_used(self):
-        '''Uses the adventurer exchange'''
-        message = self.pika.published_messages[0]
-        self.assertEquals(message.exchange, 'adventurer')
-
-    def test_routing_key(self):
-        '''Uses the correct routing key'''
-        message = self.pika.published_messages[0]
-        self.assertEquals(message.routing_key, 'adventurer.rpc')
-
-    def test_content_type(self):
-        '''Uses json content type'''
-        message = self.pika.published_messages[0]
-        self.assertEquals(message.properties.content_type, 'application/json')
-
     def test_delivery_mode(self):
         '''Does not need to be a persistented message'''
         message = self.pika.published_messages[0]
         self.assertEquals(message.properties.delivery_mode, None)
-
-    def test_correlation_id(self):
-        '''Test that a correlation_id is set'''
-        properties = self.pika.published_messages[0].properties
-        self.assertIsNotNone(properties.correlation_id)
-
-    def test_reply_to(self):
-        '''Test that the reply_to is set correctly'''
-        properties = self.pika.published_messages[0].properties
-        self.assertEquals(properties.reply_to, self.application.mq.rpc_reply)
 
 class TestLoginReply(unittest.TestCase):
 
@@ -114,27 +89,34 @@ class TestLoginReply(unittest.TestCase):
 
         self.handler.post()
 
+        self.reply_queue = self.application.mq.remoting.queue
+
         login_request = self.pika.published_messages[0]
         self.headers = pika.BasicProperties(
                 correlation_id = login_request.properties.correlation_id,
                 content_type = 'application/json'
                 )
 
+        self.body = json.dumps({
+            'jsonrpc': '2.0',
+            'result': {
+                'successful': True,
+                'email': 'test@example.org',
+                },
+            'id': self.pika.published_messages[0].properties.correlation_id
+        })
+
     def test_process_valid_login_reply(self):
         '''Uses 202 status code for valid login'''
-        body = json.dumps(dict(successful = True, email = 'test@example.org'))
-        reply_queue = self.application.mq.rpc_reply
-        self.pika.inject(reply_queue, self.headers, body)
-        self.pika.trigger_consume(reply_queue)
+        self.pika.inject(self.reply_queue, self.headers, self.body)
+        self.pika.trigger_consume(self.reply_queue)
 
         self.assertEquals(self.handler._status_code, 202)
 
     def test_process_valid_login_location(self):
         '''Sets location to /app/home when login successful'''
-        body = json.dumps(dict(successful = True, email = 'test@example.org'))
-        reply_queue = self.application.mq.rpc_reply
-        self.pika.inject(reply_queue, self.headers, body)
-        self.pika.trigger_consume(reply_queue)
+        self.pika.inject(self.reply_queue, self.headers, self.body)
+        self.pika.trigger_consume(self.reply_queue)
 
         headers, body = self.request._output.split('\r\n\r\n')
         actual_location = json.loads(body)
@@ -144,19 +126,25 @@ class TestLoginReply(unittest.TestCase):
 
     def test_process_invalid_login_status(self):
         '''Uses 403 forbidden status code on invalid login'''
-        body = json.dumps(dict(successful = False))
-        reply_queue = self.application.mq.rpc_reply
-        self.pika.inject(reply_queue, self.headers, body)
-        self.pika.trigger_consume(reply_queue)
+        body = json.dumps({
+                'jsonrpc': '2.0',
+                'result': {'successful': False},
+                'id': self.pika.published_messages[0].properties.correlation_id
+            })
+        self.pika.inject(self.reply_queue, self.headers, body)
+        self.pika.trigger_consume(self.reply_queue)
 
         self.assertEquals(self.handler._status_code, 403)
 
     def test_process_invalid_login_location(self):
         '''Sets location to /app/login when login invalid'''
-        body = json.dumps(dict(successful = False, email = 'test@example.org'))
-        reply_queue = self.application.mq.rpc_reply
-        self.pika.inject(reply_queue, self.headers, body)
-        self.pika.trigger_consume(reply_queue)
+        body = json.dumps({
+                'jsonrpc': '2.0',
+                'result': {'successful': False},
+                'id': self.pika.published_messages[0].properties.correlation_id
+            })
+        self.pika.inject(self.reply_queue, self.headers, body)
+        self.pika.trigger_consume(self.reply_queue)
 
         headers, body = self.request._output.split('\r\n\r\n')
         actual_location = json.loads(body)
@@ -166,10 +154,13 @@ class TestLoginReply(unittest.TestCase):
 
     def test_finishes_request(self):
         '''Report being finished to tornado'''
-        body = json.dumps(dict(successful = False))
-        reply_queue = self.application.mq.rpc_reply
-        self.pika.inject(reply_queue, self.headers, body)
-        self.pika.trigger_consume(reply_queue)
+        body = json.dumps({
+                'jsonrpc': '2.0',
+                'result': {'successful': False},
+                'id': self.pika.published_messages[0].properties.correlation_id
+            })
+        self.pika.inject(self.reply_queue, self.headers, body)
+        self.pika.trigger_consume(self.reply_queue)
 
         self.assertTrue(self.request.was_called(self.request.finish))
 

@@ -298,7 +298,7 @@ class TestRemotingClientReceiveResults(unittest.TestCase):
         search_for = {
                 'queue': self.pika._channel.queues.keys()[0],
                 'exchange': self.default_exchange,
-                'routing_key': 'rpc_reply.' + self.pika._channel.queues.keys()[0],
+                'routing_key': 'rpc.reply.' + self.pika._channel.queues.keys()[0],
                 }
         binding = self.pika.find_binding(search_for)
         self.assertDictContainsSubset(search_for, binding)

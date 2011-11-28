@@ -4,6 +4,8 @@ import tornado.ioloop
 import pika
 from pika.adapters.tornado_connection import TornadoConnection
 
+from bctmessaging.remoting import RemotingClient
+
 from trailhead.mq import PikaClient
 from trailhead.server import TrailHead
 
@@ -16,7 +18,7 @@ class EntryPoint(object):
 
     def start(self):
         mq_params = pika.ConnectionParameters(host = 'localhost')
-        mqclient = PikaClient(TornadoConnection, mq_params)
+        mqclient = PikaClient(TornadoConnection, mq_params, RemotingClient)
 
         self.trailhead = TrailHead(
                 ioloop = tornado.ioloop,

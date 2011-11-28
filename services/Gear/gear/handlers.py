@@ -10,60 +10,45 @@ from trailhead.handlers import BaseHandler
 
 class UserGearListHandler(BaseHandler):
 
-    def __json_rpc_request(self, method, params):
-        mq = self.application.mq
-        correlation_id = str(uuid.uuid4())
-
-        jsonrpc = {
-                'jsonrpc': '2.0',
-                'method': method,
-                'params': params,
-                'id': correlation_id
-                }
-        msg_properties = pika.BasicProperties(
-                content_type = 'application/json-rpc',
-                correlation_id = correlation_id,
-                reply_to = self.application.mq.rpc_reply
-                )
-        mq.register_rpc_reply(correlation_id, self.respond_to_get)
-        logging.debug('Publish request for gear:\n%s' % jsonrpc)
-        mq.channel.basic_publish(
-                exchange = 'gear',
-                routing_key = 'gear.user.rpc',
-                properties = msg_properties,
-                body = json.dumps(jsonrpc)
-                )
+    def __init__(self, *args, **kwargs):
+        BaseHandler.__init__(self, *args, **kwargs)
+        self.service = self.application.mq.remoting.service('Gear')
+        self.remoting = self.application.mq.remoting
 
     @web.authenticated
     @web.asynchronous
     def get(self, user):
         logging.info('Received request for %s\'s gear list' % user)
-        self.__json_rpc_request('list', [user])
+        command = self.service.list(user)
+        self.remoting.call(command, callback=self.respond_to_get)
 
     @web.authenticated
     @web.asynchronous
     def post(self, user):
         pieceofgear = json.loads(self.request.body)
-        self.__json_rpc_request('create', [user, pieceofgear])
+        command = self.service.create(user, pieceofgear)
+        self.remoting.call(command, callback=self.respond_to_get)
 
     @web.authenticated
     @web.asynchronous
     def put(self, owner, gear_id):
         pieceofgear = json.loads(self.request.body)
         logging.info("Received gear update for %s:%s" % (owner, gear_id))
-        self.__json_rpc_request('update', [owner, gear_id, pieceofgear])
+        command = self.service.update(owner, gear_id, pieceofgear)
+        self.remoting.call(command, callback=self.respond_to_get)
 
     @web.authenticated
     def delete(self, owner, gear_id):
         logging.info("Received gear delete for %s:%s" % (owner, gear_id))
-        self.__json_rpc_request('delete', [owner, gear_id])
+        command = self.service.delete(owner, gear_id)
+        self.remoting.call(command)
         self.set_status(204)
 
-    def respond_to_get(self, headers, body):
+    def respond_to_get(self, body):
         logging.debug('Received response:\n%s' % body)
         self.set_status(200)
         self.set_header('Content-Type', 'application/json')
-        self.write(body)
+        self.write(json.dumps(body))
         self.finish()
 
 
