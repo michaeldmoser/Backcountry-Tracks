@@ -54,7 +54,8 @@ class TestMessagingEndPointController(unittest.TestCase):
     def test_routing_key(self):
         '''Response sent to correct routing_key'''
         routing_key = self.reply.routing_key
-        self.assertEquals(self.properties.reply_to, routing_key)
+        expected_reply_to = "rpc.reply.%s" % self.properties.reply_to
+        self.assertEquals(expected_reply_to, routing_key)
 
     def test_content_type(self):
         '''Respone content type is json'''

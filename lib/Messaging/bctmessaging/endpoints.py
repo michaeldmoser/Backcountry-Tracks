@@ -55,7 +55,7 @@ class MessagingEndPointController(object):
                 }
         self.channel.basic_publish(
                 exchange = self.config['reply_exchange'],
-                routing_key = header.reply_to,
+                routing_key = 'rpc.reply.%s' % header.reply_to,
                 properties = properties,
                 body = json.dumps(reply)
                 )
