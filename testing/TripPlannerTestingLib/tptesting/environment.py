@@ -20,7 +20,7 @@ from .riakenv import RiakEnvironment
 from .utils import wait_for_start
 from .rabbitmq import RabbitMQEnvironment
 from .nginx import NginxEnvironment
-from .trailhead import TrailheadEnvironment
+from .trailheadenviron import TrailheadEnvironment
 from .gear import Gear
 from .groupleader import GroupLeaderEnvironment
 from .trips import TripsEnvironment

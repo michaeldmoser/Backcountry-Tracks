@@ -4,9 +4,9 @@ import json
 import pika
 import uuid
 
-from tptesting import faketornado, environment, fakepika
-
+from tptesting import faketornado, environment, fakepika, thandlers
 from trailhead.tests.utils import create_fake_application, setup_handler
+
 from gear.handlers import UserGearListHandler
 
 
@@ -46,52 +46,6 @@ class TestUserGearListSendRPC(unittest.TestCase):
         correlation_id = self.sent_message.properties.correlation_id
 
         self.assertEquals(json_id, correlation_id)
-
-class TestUserGearListReply(unittest.TestCase):
-
-    def setUp(self):
-        self.environ = environment.create()
-        url = '/app/users/' + self.environ.douglas.email + '/gear'
-        self.handler, self.application, self.pika = setup_handler(UserGearListHandler,
-                'GET', url, user=self.environ.douglas.email)
-        self.request = self.handler.request
-
-        self.handler.get(self.environ.douglas.email)
-        self.sent_message = self.pika.published_messages[0]
-
-        self.headers = pika.BasicProperties(
-                correlation_id = self.sent_message.properties.correlation_id,
-                content_type = 'application/json'
-                )
-
-        self.gear_list = {
-                'jsonrpc': '2.0',
-                'result': [
-                    {'name': 'Backpack', 'description': 'A backpack', 'weight': '48'},
-                    {'name': 'Stove', 'description': 'A stove', 'weight': '10'},
-                    {'name': 'Sleeping bag', 'description': 'A sleeping bag', 'weight': '38'},
-                    ],
-                'id': self.sent_message.properties.correlation_id,
-                }
-
-        reply_queue = self.application.mq.remoting.queue
-
-        self.pika.inject(reply_queue, self.headers, json.dumps(self.gear_list))
-        self.pika.trigger_consume(reply_queue)
-
-    def test_gear_list_response(self):
-        '''Should return a list of gear for the user'''
-        headers, body = self.request._output.split('\r\n\r\n')
-        actual_gear_list = json.loads(body)
-        self.assertEquals(self.gear_list['result'], actual_gear_list)
-
-    def test_response_status(self):
-        '''Should respond with a 200 HTTP status'''
-        self.assertEquals(self.handler._status_code, 200)
-
-    def test_finishes_request(self):
-        '''Reports being finished to tornado'''
-        self.assertTrue(self.request.was_called(self.request.finish))
 
 class TestUserGearCreate(unittest.TestCase):
     '''
@@ -309,6 +263,44 @@ class TestUserGearDelete(unittest.TestCase):
         '''Does not need to be a persisted message'''
         delivery_mode = self.sent_message.properties.delivery_mode
         self.assertIsNone(delivery_mode)
+
+class TestUserGearListReply(thandlers.TornadoHandlerTestCase):
+
+    GEAR_LIST = [
+                {'name': 'Backpack', 'description': 'A backpack', 'weight': '48'},
+                {'name': 'Stove', 'description': 'A stove', 'weight': '10'},
+                {'name': 'Sleeping bag', 'description': 'A sleeping bag', 'weight': '38'},
+                ]
+
+    def request_handler(self):
+        return UserGearListHandler
+
+    def url(self):
+        return '/app/users/' + self.environ.douglas.email + '/gear'
+
+    def active_user(self):
+        return self.environ.douglas.email
+
+    def method(self):
+        return 'GET'
+
+    def method_args(self):
+        return [self.environ.douglas.email], {}
+
+    def rpc_result(self):
+        return TestUserGearListReply.GEAR_LIST
+
+    def http_response(self):
+        return TestUserGearListReply.GEAR_LIST
+
+    def expected_rpc_request(self):
+        return 'list', [self.environ.douglas.email]
+
+    def expected_durability(self):
+        return False
+
+    def remote_service_name(self):
+        return 'Gear'
 
 if __name__ == '__main__':
     unittest.main()

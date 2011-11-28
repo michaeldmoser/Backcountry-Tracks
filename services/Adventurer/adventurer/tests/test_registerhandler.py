@@ -2,7 +2,7 @@ import unittest
 
 import json
 
-from tptesting import faketornado, fakepika, environment
+from tptesting import faketornado, fakepika, environment, thandlers
 
 from tornado.web import RequestHandler
 from trailhead.mq import PikaClient
@@ -10,29 +10,43 @@ from trailhead.tests.utils import setup_handler
 
 from adventurer.register import RegisterHandler, ActivateHandler
 
-class TestRegisterHandler(unittest.TestCase):
+class TestRegisterHandlerPost(thandlers.TornadoHandlerTestCase):
 
-    def test_implements_post_method(self):
-        """RegisterHandler should be able to respond to HTTP POSTs, in other words it must implement the post() method"""
-        self.assertNotEquals(RegisterHandler.post, RequestHandler.post)
+    def request_handler(self):
+        return RegisterHandler
 
-    def test_inherits_from_requesthandler(self):
-        """Tornado requires inheriting from RequestHandler"""
-        assert(issubclass(RegisterHandler, RequestHandler))
+    def url(self):
+        return '/app/register'
+
+    def active_user(self):
+        return None
+
+    def method(self):
+        return 'POST'
+
+    def method_args(self):
+        return list(), dict()
+
+    def rpc_result(self):
+        return {'successful': True}
+
+    def http_response(self):
+        return self.rpc_result()
+
+    def expected_rpc_request(self):
+        registration = dict(self.environ.albert)
+        return 'register', registration
+
+    def expected_durability(self):
+        return True
+
+    def remote_service_name(self):
+        return 'Adventurer'
+
+    def http_request_body(self):
+        return json.dumps(self.environ.albert)
 
 class TestRegisterHandlerHttp(unittest.TestCase):
-
-    def test_returned_status_code_200(self):
-        """On a good post should return a 200 Accepted status code"""
-        environ = environment.create()
-        body = json.dumps(environ.albert)
-        headers = {'Content-Type': 'application/json; charset=UTF-8'}
-        handler, application, pika = setup_handler(RegisterHandler, 'POST',
-                '/app/register', headers = headers, body=body)
-
-        handler.post()
-
-        self.assertEquals(handler._status_code, 200)
 
     def test_returned_status_code_400(self):
         """On a bad post should return a 400 bad data status code"""
@@ -43,62 +57,48 @@ class TestRegisterHandlerHttp(unittest.TestCase):
 
         self.assertEquals(handler._status_code, 400)
 
-class TestPublishesRegistration(unittest.TestCase):
+class TestActivateHandler(thandlers.TornadoHandlerTestCase):
 
     def setUp(self):
-        self.environ = environment.create()
-        body = json.dumps(self.environ.douglas)
-        headers = {'Content-Type': 'application/json; charset=UTF-8'}
-        self.handler, self.application, self.pika = setup_handler(RegisterHandler, 'POST',
-                '/app/register', headers = headers, body=body)
-
-        self.handler.post()
-
-    def test_publish_registration_data(self):
-        '''Pushlishes registration data to mq'''
-        received_body = json.loads(self.pika.published_messages[0].body)
-        expected_body = {
-                'jsonrpc': '2.0',
-                'method': 'register',
-                'params': self.environ.douglas,
-                'id': self.pika.published_messages[0].properties.correlation_id 
-                }
-        self.assertEquals(received_body, expected_body)
-
-    def test_durablability(self):
-        '''Message should be published as durable'''
-        actual_durability = self.pika.published_messages[0].properties.delivery_mode
-        self.assertEquals(actual_durability, 2)
-
-class TestActivateHandler(unittest.TestCase):
-    def setUp(self):
-        self.environ = environment.create()
-        body = json.dumps(self.environ.douglas)
         self.activate_code = '1234'
-        headers = {'Content-Type': 'application/json; charset=UTF-8'}
-        url = '/app/activate/%s/%s' % (self.environ.douglas.email, self.activate_code)
-        self.handler, self.application, self.pika = setup_handler(ActivateHandler, 'POST',
-                url, headers=headers, body=body)
+        thandlers.TornadoHandlerTestCase.setUp(self)
 
-        self.handler.get(self.environ.douglas.email, self.activate_code)
+    def request_handler(self):
+        return ActivateHandler
 
-    def test_publishes_activation_message(self):
-        '''Publishes command message to activate user'''
-        command_message_body = json.loads(self.pika.published_messages[0].body)
-        expected_body = {
-                'jsonrpc': '2.0',
-                'method': 'activate',
-                'params': [self.environ.douglas.email, self.activate_code],
-                'id': self.pika.published_messages[0].properties.correlation_id
-                }
+    def url(self):
+        return '/app/activate/%s/%s' % (self.environ.douglas.email, self.activate_code)
 
-        self.assertEquals(command_message_body, expected_body)
+    def active_user(self):
+        return None
 
-    def test_durablability(self):
-        '''Message should be published as durable'''
-        actual_durability = self.pika.published_messages[0].properties.delivery_mode
-        self.assertEquals(actual_durability, 2)
+    def method(self):
+        return 'GET'
 
+    def method_args(self):
+        return [self.environ.douglas.email, self.activate_code], dict()
+
+    def rpc_result(self):
+        return {'successful': True}
+
+    def http_response(self):
+        return ''
+
+    def expected_rpc_request(self):
+        registration = self.method_args()
+        return 'activate', registration[0]
+
+    def expected_durability(self):
+        return True
+
+    def remote_service_name(self):
+        return 'Adventurer'
+
+    def http_request_body(self):
+        return None
+
+    def http_status_code(self):
+        return 303
 
 
 if __name__ == '__main__':

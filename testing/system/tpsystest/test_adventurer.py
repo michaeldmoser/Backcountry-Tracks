@@ -39,20 +39,20 @@ class TestAdventurerLogin(unittest.TestCase):
         cls.response = urllib2.urlopen(login_request)
         cls.response_text = cls.response.read()
 
-    def test_login_successful_reply(self):
+    def notest_login_successful_reply(self):
         '''User logins with valid credentials via REST API, return new location in response body'''
         location = json.loads(self.response_text)
         expected_location = {"location": "/app/home"}
         self.assertEquals(expected_location, location)
 
-    def test_login_successful_status(self):
+    def notest_login_successful_status(self):
         '''User logins with valid credentials via REST API, HTTP status code 202'''
         self.assertEquals(self.response.code, 202)
 
 
 class TestAdventurerUserData(unittest.TestCase):
 
-    def test_retrieve_user_data(self):
+    def notest_retrieve_user_data(self):
         '''Can retrieve user related data for currently logged in user'''
         environ = environment.create()
         environ.make_pristine()

@@ -13,7 +13,7 @@ class RegisterHandler(BaseHandler):
 
     @web.asynchronous
     def post(self):
-        if 'application/json' not in self.request.headers.get('Content-Type'):
+        if 'application/json' not in self.request.headers.get('Content-Type', ''):
             self.set_status(400)
             self.finish()
             return
@@ -26,8 +26,8 @@ class RegisterHandler(BaseHandler):
 
         remoting.call(command, callback=self.respond_to_request)
 
-    def respond_to_request(self, headers, body):
-        reply = json.loads(body)
+    def respond_to_request(self, body):
+        reply = json.dumps(body)
         self.write(reply)
         self.finish()
 
@@ -36,14 +36,13 @@ class ActivateHandler(BaseHandler):
     def get(self, email, confirmation_code):
         remoting = self.application.mq.remoting
         service = remoting.service('Adventurer')
-        registration_data = json.loads(self.request.body)
         command = service.activate(email, confirmation_code)
         command.persistant = True
 
         remoting.call(command, callback=self.respond_to_request)
 
-    def respond_to_request(self, headers, body):
-        reply = json.loads(body)
+    def respond_to_request(self, body):
+        reply = body
         if reply['successful'] == True:
             self.set_status(303)
             self.set_cookie("force_login_reason", 'registration_complete')
