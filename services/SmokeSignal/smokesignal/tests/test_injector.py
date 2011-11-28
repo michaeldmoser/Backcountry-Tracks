@@ -16,7 +16,7 @@ class TestSmokeSignalFactory(unittest.TestCase):
                 pass
 
         class SmokeSignalAppSpy(object):
-            def __call__(spy, pika_connection=None):
+            def __call__(spy, pika_connection=None, config = {}):
                 spy.pika_connection = pika_connection
         application = SmokeSignalAppSpy()
 
@@ -45,7 +45,7 @@ class TestSmokeSignalFactory(unittest.TestCase):
         connectionspy = PikaBlockingConnectionSpy()
 
         class SmokeSignalAppStub(object):
-            def __init__(stub, pika_connection=None):
+            def __init__(stub, pika_connection=None, config = {}):
                 pass
 
         class SmokeSignalFactorySUT(SmokeSignalFactory):
@@ -71,7 +71,7 @@ class TestSmokeSignalFactory(unittest.TestCase):
                 pass
 
         class SmokeSignalAppStub(object):
-            def __init__(stub, pika_connection=None):
+            def __init__(stub, pika_connection=None, config = {}):
                 pass
 
         class SubprocessSpy(object):

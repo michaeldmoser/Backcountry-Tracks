@@ -1,7 +1,10 @@
 import pika
 import subprocess
+import yaml
 
 from smokesignal.application import SmokeSignalApp
+
+CONFIG_PATH = '/etc/tripplanner/tpapp.yaml'
 
 class SmokeSignalFactory():
     def __application(self):
@@ -13,6 +16,11 @@ class SmokeSignalFactory():
     def __subprocess(self):
         return subprocess.call
 
+    def __configuration(self):
+        config_file = open(CONFIG_PATH, 'r')
+        global_config = yaml.load(config_file)
+        return global_config['message_routing']
+
     def __call__(self):
         call = self.__subprocess()
         call(['/etc/init.d/rabbitmq-server', 'start'])
@@ -21,6 +29,8 @@ class SmokeSignalFactory():
         pika_connection = self.__pika_connection()
         conn_params = pika.ConnectionParameters()
 
-        return application(pika_connection = pika_connection(conn_params))
+        config = self.__configuration()
+
+        return application(pika_connection = pika_connection(conn_params), config = config)
 smokesignal = SmokeSignalFactory()
 
