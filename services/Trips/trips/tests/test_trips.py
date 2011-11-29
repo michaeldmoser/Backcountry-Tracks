@@ -4,83 +4,48 @@ import json
 import pika
 import uuid
 
-from tptesting import faketornado, environment, fakepika
+from tptesting import faketornado, environment, fakepika, thandlers
 
 from trailhead.tests.utils import create_fake_application, setup_handler
 
 from trips.handlers import TripsHandler, TripHandler
 
-class TestTripCreate(unittest.TestCase):
-    '''
-    Tests the process of receiving a POST on /trips
-    and sending a create json rpc request
-    '''
+class TestTripCreate(thandlers.TornadoHandlerTestCase):
 
-    def setUp(self):
-        self.environ = environment.create()
-        self.adventurer = self.environ.douglas
+    def request_handler(self):
+        return TripsHandler
 
-        self.trip_data = self.environ.data['trips'][0]
-        request_body = json.dumps(self.trip_data)
-        headers = {'Content-Type': 'application/json'}
+    def url(self):
+        return '/app/trips'
 
-        url = '/app/trips'
-        self.handler, self.application, self.pika = setup_handler(TripsHandler,
-                'POST', url, user=self.adventurer.email, body=request_body,
-                headers=headers)
-        self.request = self.handler.request
+    def active_user(self):
+        return self.environ.ramona.email
 
-        self.handler.post()
+    def method(self):
+        return 'POST'
 
-        self.sent_message = self.pika.published_messages[0]
+    def method_args(self):
+        return list(), dict()
 
-        self.headers = pika.BasicProperties(
-                correlation_id = self.sent_message.properties.correlation_id,
-                content_type = 'application/json'
-                )
+    def rpc_result(self):
+        trip_data = self.environ.data['trips'][0].copy()
+        trip_data.update({'id': '1234'})
+        return trip_data
 
-        self.rpc_response = {
-                'jsonrpc': '2.0',
-                'result': self.trip_data.copy(),
-                'id': self.sent_message.properties.correlation_id
-                }
-        self.rpc_response['result'].update({'id': '1234', 'owner': self.adventurer.email})
+    def http_response(self):
+        return self.rpc_result()
 
-        reply_queue = self.application.mq.remoting.queue
+    def expected_rpc_request(self):
+        return 'create', [self.environ.ramona.email, self.environ.data['trips'][0]]
 
-        self.pika.inject(reply_queue, self.headers, json.dumps(self.rpc_response))
-        self.pika.trigger_consume(reply_queue)
+    def expected_durability(self):
+        return True
 
-    def test_rpc_response(self):
-        '''Should return the trip that was just created'''
-        headers, body = self.request._output.split('\r\n\r\n')
-        actual_response = json.loads(body)
-        self.assertEquals(self.rpc_response['result'], actual_response)
+    def remote_service_name(self):
+        return 'Trips'
 
-    def test_response_status(self):
-        '''Should respond with a 200 HTTP status'''
-        self.assertEquals(self.handler._status_code, 200)
-
-    def test_finishes_request(self):
-        '''Reports being finished to tornado'''
-        self.assertTrue(self.request.was_called(self.request.finish))
-
-    def test_send_create_request_body(self):
-        '''Sends a JSON-RPC message request for creating a trip'''
-        sent_request = json.loads(self.sent_message.body)
-        del sent_request['id'] # we don't care about the id in this context
-
-        expected_request = {
-                'jsonrpc': '2.0',
-                'method': 'create',
-                'params': [self.adventurer.email, self.trip_data]
-                }
-        self.assertEquals(expected_request, sent_request)
-
-    def test_delivery_mode(self):
-        '''Does need to be a persisted message'''
-        delivery_mode = self.sent_message.properties.delivery_mode
-        self.assertEquals(2, delivery_mode)
+    def http_request_body(self):
+        return json.dumps(self.environ.data['trips'][0])
 
 class TestTripUpdate(unittest.TestCase):
     '''
@@ -155,6 +120,51 @@ class TestTripUpdate(unittest.TestCase):
         '''Does need to be a persisted message'''
         delivery_mode = self.sent_message.properties.delivery_mode
         self.assertEquals(delivery_mode, 2)
+
+class TestTripUpdate(thandlers.TornadoHandlerTestCase):
+    def setUp(self):
+        environ = environment.create()
+        self.adventurer = environ.douglas
+
+        self.trip_id = str(uuid.uuid4())
+        self.trip = environ.data['trips'][0].copy()
+        self.trip['owner'] = self.adventurer.email
+        thandlers.TornadoHandlerTestCase.setUp(self)
+
+    def request_handler(self):
+        return TripHandler
+
+    def url(self):
+        return '/app/trips/%s' % self.trip_id
+
+    def active_user(self):
+        return self.adventurer.email
+
+    def method(self):
+        return 'PUT'
+
+    def method_args(self):
+        return [self.trip_id], dict()
+
+    def rpc_result(self):
+        return self.trip
+
+    def http_response(self):
+        return self.rpc_result()
+
+    def expected_rpc_request(self):
+        return 'update', [self.adventurer.email, self.trip_id, self.trip]
+
+    def expected_durability(self):
+        return True
+
+    def remote_service_name(self):
+        return 'Trips'
+
+    def http_request_body(self):
+        return json.dumps(self.trip)
+
+
 
 class TestTripsDelete(unittest.TestCase):
     '''
