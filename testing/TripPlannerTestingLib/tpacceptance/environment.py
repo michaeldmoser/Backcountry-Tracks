@@ -23,6 +23,20 @@ class Environment(object):
         
         self.tpenviron.gear.add_item(current_user['email'], name, description, weight)
 
+    def create_basic_trip_list(self):
+        '''
+        Prepopulate the database with a list of trips
+        '''
+        builtin = robot.libraries.BuiltIn.BuiltIn()
+        variables = builtin.get_variables()
+        current_user = variables['${CURRENT_USER}']
+
+        trips = self.tpenviron.data['trips']
+
+        for trip in trips:
+            self.tpenviron.trips.add(owner=current_user.email, **trip)
+
+
 
 
 

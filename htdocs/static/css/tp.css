@@ -29,7 +29,7 @@ div {
 		rgb(89,76,60) 79%,
 		rgb(4,3,1) 100%
 	);
-	z-index: 9999;
+	z-index: 2999;
 }
 
 #topbar img {
@@ -47,7 +47,7 @@ div {
 	padding: 0;
 	margin: 0;
 	background-color: rgb(89,76,60);
-	z-index: 9998;
+	z-index: 2998;
 }
 
 #app_chooser_buttons {
@@ -62,7 +62,7 @@ div {
 	top: 80px;
 	padding: 0;
 	background-color: #f1f1f1;
-	z-index: 9997;
+	z-index: 2997;
 }
 
 #add_gear_splash {
@@ -96,72 +96,13 @@ div.gear_list_view_container {
 	width: 100%;
 }
 
-div.gear_listing {
-	border: 0;
-	padding: 0;
-	margin: 148px 0 0 0;
-	overflow: auto;
-	width: 100%;
-}
-
-div.gear_listing ul {
-	list-style-type: none;	
-	margin: 0;
-	padding: 0;
-}
-
-div.gear_listing ul li {
-	line-height: 30px;
-	vertical-align: middle;
-	overflow: auto;
-	position: relative;
-}
-div.gear_listing li div.gear_item_list_column {
-	padding: 5px 10px;
-	float: left;
-}
-
-div.gear_listing li div.gear_name {
-	width: 200px;
-}
-div.gear_listing li div.gear_weight {
-	width: 50px;
-}
-div.gear_listing li div.gear_description {
-	width: 300px;
-}
-div.gear_listing li.gear_list_header {
-	color: white;
-	background-color: #ab9d83;
-	font-size: 12px;
-	height: 32px;
-	border-bottom: 1px solid #807563;
-	position: fixed;
-	top: 196px;
-	right: 0px;
-	left: 100px;
-	z-index:9000;
-}
-div.gear_listing li.gear_list_header div.gear_item_list_column {
-	padding: 0 10px;
-	margin: 0;
-	height: 32px;
-	line-height: 32px;
-	vertical-align:middle;
-}
-div.gear_listing li.oddrow {
-	background-color: #f2edda;
-}
-div.gear_listing li.evenrow {
-	background-color: #ffffff;
-}
 
 div.gear_list_view_controls {
 	top: 80px;
 	left: 100px;
 	right: 0px;
 	position: fixed;
-	z-index: 9998;
+	z-index: 2998;
 	margin: 0 0 0 0;
 	background-color: #fff;
 	min-height: 116px;
@@ -202,7 +143,7 @@ div.application_container {
 div.application_container h1 {
 	position: fixed;
 	left: 120px;
-	z-index: 9999;
+	z-index: 2999;
 	top: 110px;
 	padding:0;
 	margin:0;
@@ -295,11 +236,73 @@ div.gear_listing li div.gear_list_add_form {
 	position: relative;
 	top: 0px;
 	left: 0px;
-	z-index: 8999;
+	z-index: 1999;
 }
 
 div.gear_listing li div.gear_item_row {
 	height: 40px;
-	z-index: 9999;
+	z-index: 2999;
 }
+
+div.gear_listing {
+	border: 0;
+	padding: 0;
+	margin: 148px 0 0 0;
+	overflow: auto;
+	width: 100%;
+}
+
+div.gear_listing ul {
+	list-style-type: none;	
+	margin: 0;
+	padding: 0;
+}
+
+div.gear_listing ul li {
+	line-height: 30px;
+	vertical-align: middle;
+	overflow: auto;
+	position: relative;
+}
+div.gear_listing li div.gear_item_list_column {
+	padding: 5px 10px;
+	float: left;
+}
+
+div.gear_listing li div.gear_name {
+	width: 200px;
+}
+div.gear_listing li div.gear_weight {
+	width: 50px;
+}
+div.gear_listing li div.gear_description {
+	width: 300px;
+}
+div.gear_listing li.gear_list_header {
+	color: white;
+	background-color: #ab9d83;
+	font-size: 12px;
+	height: 32px;
+	border-bottom: 1px solid #807563;
+	position: fixed;
+	top: 196px;
+	right: 0px;
+	left: 100px;
+	z-index:2000;
+}
+div.gear_listing li.gear_list_header div.gear_item_list_column {
+	padding: 0 10px;
+	margin: 0;
+	height: 32px;
+	line-height: 32px;
+	vertical-align:middle;
+}
+div.gear_listing li.oddrow {
+	background-color: #f2edda;
+}
+div.gear_listing li.evenrow {
+	background-color: #ffffff;
+}
+
+
 

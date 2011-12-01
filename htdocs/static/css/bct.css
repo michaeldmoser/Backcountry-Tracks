@@ -1,0 +1,69 @@
+div.list_view {
+	border: 0;
+	padding: 0;
+	margin: 148px 0 0 0;
+	overflow: auto;
+	width: 100%;
+}
+
+div.list_view ul {
+	list-style-type: none;	
+	margin: 0;
+	padding: 0;
+}
+
+div.list_view ul li {
+	line-height: 32px;
+	height: 42px;
+	vertical-align: middle;
+	overflow: auto;
+	position: relative;
+	display: block;
+}
+div.list_view li div.list_item_column {
+	padding: 5px 10px;
+	position: absolute;
+}
+
+div.list_view li.list_header {
+	color: white;
+	background-color: #ab9d83;
+	font-size: 12px;
+	height: 32px;
+	border-bottom: 1px solid #807563;
+	position: fixed;
+	top: 196px;
+	right: 16px;
+	left: 196px;
+	z-index:1000;
+}
+div.list_view li.oddrow {
+	background-color: #f2edda;
+}
+div.list_view li.evenrow {
+	background-color: #ffffff;
+}
+
+div.list_view li.list_header div.list_item_column {
+	padding: 0 10px;
+	margin: 0;
+	height: 32px;
+	line-height: 32px;
+	vertical-align:middle;
+}
+
+div.list_view li div.trip_name {
+	left: 0;
+}
+div.list_view li div.trip_dates {
+	left: 33%;
+}
+div.list_view li div.trip_destination {
+	left: 66%;
+}
+
+#trip_organizer > button[title="Add Trip"] {
+	position: fixed;
+	top: 110px;
+	right: 200px;
+}

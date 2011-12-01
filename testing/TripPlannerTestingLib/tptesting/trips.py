@@ -5,8 +5,20 @@ class TripsEnvironment(object):
         self.env = env
         self.tripsdb = self.env.riak.get_database('trips')
 
+    def add_trips_to_user(self, user, trips):
+        stored_trips = []
+        for trip in trips:
+            stored_trip = trip.copy()
+            trip_id = self.add(owner = user.email, **trip)
+            stored_trip.update({
+                'id': trip_id,
+                'owner': user.email
+                });
+            stored_trips.append(stored_trip)
 
-    def add(self, owner=None, name=None, description=None, start=None, end=None):
+        return stored_trips
+
+    def add(self, owner=None, name=None, description=None, start=None, end=None, destination=None):
         """
         Add a new trips to the user's trip list
         """
@@ -23,7 +35,8 @@ class TripsEnvironment(object):
                 'owner': owner,
                 'id': trip_id,
                 'start': start,
-                'end': end
+                'end': end,
+                'destination': destination,
                 }
         new_trip = self.tripsdb.new(trip_id, data=trip)
         new_trip.store()

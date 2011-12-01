@@ -155,17 +155,8 @@ class RetrieveTripList(unittest.TestCase):
         albert = cls.environ.albert
         cls.environ.create_user(albert)
 
-
-        cls.trips_data = []
-        for trip in cls.environ.data['trips']:
-            stored_trip = trip.copy()
-            trip_id = trips.add(albert.email, trip['name'], trip['description'],
-                    trip['start'], trip['end'])
-            stored_trip.update({
-                'id': trip_id,
-                'owner': albert.email
-                })
-            cls.trips_data.append(stored_trip)
+        cls.trips_data = cls.environ.trips.add_trips_to_user(albert,
+                cls.environ.data['trips'])
 
         login_session = albert.login() 
 

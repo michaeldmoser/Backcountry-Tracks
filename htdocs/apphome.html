@@ -2,22 +2,56 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
 	lang="en">
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<meta name="title" content="Backcountry Tracks"/>
 	<title>Backcountry Tracks&trade; Trip Planner</title>
-    <link rel="stylesheet" href="/static/js/lib/jquery-ui/1.8.13/themes/base/jquery-ui.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="/static/css/tp.css" type="text/css" media="screen" />
+
+	<link rel="icon" type="image/ico" href="favicon.ico"/>
+
+	<link rel="stylesheet" type="text/css" href="/static/c/normalize.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/c/default.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/c/Aristo/Aristo.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/css/bct.css"/>
+
 </head>
 <body id="" >
-	<div id="topbar"><img src="/static/img/backcountry_tracks_logo.jpg" height="54" width="127" /></div>
-	<div id="leftbar">
+	<div id="header">
+		<div id="header-content">
+			<h1><span>Backcountry Tracks</span></h1>
+		</div>
+	</div>
+	<div id="sidebar">
 		<div id="app_chooser_buttons"></div>
+		<div id="sidebar-nav">
+			<ul>
+				<li><img src="/static/i/icons/plus_8x8_off.png" height="8" width="8" alt="" />New</li>
+				<li><img src="/static/i/icons/cog_alt_8x8_off.png" height="8" width="8" alt="" />Options</li>
+			</ul>
+		</div>
 	</div>
-	<div id="appcontent">
+	<div id="main">
+
 	</div>
-    <script type="text/javascript" src="/static/js/lib/jquery-1.6.1.js"></script>
-    <script type="text/javascript" src="/static/js/lib/jquery-tools.js"></script>
-    <script type="text/javascript" src="/static/js/lib/jquery-ui/1.8.13/jquery-ui.js"></script>
+	<!-- /MAIN -->
+
+	<div id="header-logo">
+		<img src="/static/i/header_logo.png" width="180" height="57" alt="bct logo">
+	</div>
+
+
+    <script type="text/javascript" src="/static/js/lib/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="/static/js/lib/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript" src="/static/js/lib/underscore.js"></script>
     <script type="text/javascript" src="/static/js/lib/backbone.js"></script>
     <script type="text/javascript" src="/static/js/tripplannerapp.js"></script>
+    <script type="text/javascript" src="/static/js/gear_manager.js"></script>
+    <script type="text/javascript" src="/static/js/triporganizer.js"></script>
+
+	<script type="text/javascript">
+		$(function(){
+			$(".btn").button();
+		});
+	</script>
 </body>
 </html>
