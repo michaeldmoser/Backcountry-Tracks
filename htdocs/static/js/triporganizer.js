@@ -16,6 +16,10 @@ var TripCollection = Backbone.Collection.extend({
 	model: TripModel,
 	url: function () {
 		return "/app/trips";
+	},
+
+	comparator: function (trip) {
+		return trip.get('name');
 	}
 });
 
@@ -45,6 +49,8 @@ var TripListView = Backbone.View.extend({
 		_.bindAll(this, 'render');
 
 		this.models = this.options.models;
+		this.models.bind('add', this.render, this);
+		this.models.bind('remove', this.render, this);
 
 		var list_header_string = '';
 		list_header_string += '<li class="list_header">';
@@ -77,7 +83,7 @@ var TripAddForm = Backbone.View.extend({
 	'id': 'trip_add_form',
 
 	initialize: function () {
-		_.bindAll(this, 'render', 'open', 'cancel', 'start_trip');
+		_.bindAll(this, 'render', 'open', 'cancel', 'start_trip', 'handle_model_saved_success');
 
 		$('body').append(this.el);
 
@@ -150,7 +156,9 @@ var TripAddForm = Backbone.View.extend({
 		});
 	},
 
-	open: function () {
+	open: function (trip) {
+		this.model = trip;
+		this.render();
 		$(this.el).dialog('open');
 	},
 
@@ -160,7 +168,22 @@ var TripAddForm = Backbone.View.extend({
 	},
 
 	start_trip: function () {
+		var this_obj = this;
+		var attributes = {
+			'name': this.$('#trip_name').val(),
+			'start': this.$('#trip_date_start').val(),
+			'end': this.$('#trip_date_end').val(),
+			'destination': this.$('#trip_destination').val()
+		};
+
+		this.model.save(attributes, {
+			'success': this.handle_model_saved_success 
+		});
 		$(this.el).dialog('close');
+	},
+
+	handle_model_saved_success: function (model, response) {
+		this.trigger('save', model);
 	}
 });
 
@@ -173,7 +196,8 @@ var TripOrganizerApp = Backbone.View.extend({
 	},
 
 	initialize: function () {
-		_.bindAll(this, 'render', 'handle_activate', 'handle_add_trip_start');
+		_.bindAll(this, 'render', 'handle_activate', 'handle_add_trip_start',
+			'handle_trip_save');
 		$(this.el).hide();
 		var template_string = '<h1>Trip Organizer</h1>';
 		template_string += '<button title="Add Trip"> Add Trip </button>';
@@ -187,6 +211,7 @@ var TripOrganizerApp = Backbone.View.extend({
 		});
 
 		this.addform = new TripAddForm();
+		this.addform.bind('save', this.handle_trip_save)
 	},
 
 	refresh_trips: function () {
@@ -211,7 +236,12 @@ var TripOrganizerApp = Backbone.View.extend({
 	},
 
 	handle_add_trip_start: function () {
-		this.addform.open();
+		new_trip = new TripModel();
+		this.addform.open(new_trip);
+	},
+
+	handle_trip_save: function (trip) {
+		this.trips.add([trip]);
 	}
 });
 

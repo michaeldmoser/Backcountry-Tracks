@@ -112,6 +112,55 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Add a trip">Add a trip</a></td>
+<td>Given the application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and I open the trip organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I click to add a trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then a dialog should appear to enter trip details</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then I enter the details and save the trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The trip should appear in the trip list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table id="keywords" border="1">
 <tr>
@@ -256,6 +305,139 @@ td.name, th.name {
 <td class="name"></td>
 <td>Page Should Contain Element</td>
 <td>xpath=//*[@id='trip_organizer']//ul/li[contains(.,'${destination}')]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I click to add a trip">I click to add a trip</a></td>
+<td>Click button</td>
+<td>Add Trip</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_a dialog should appear to enter trip details">a dialog should appear to enter trip details</a></td>
+<td>Element Should Be Visible</td>
+<td>trip_add_form</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I enter the details and save the trip">I enter the details and save the trip</a></td>
+<td>Input text</td>
+<td>trip_name</td>
+<td>BWCA 2012</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>trip_start_date</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Select From List</td>
+<td>css=div.ui-datepicker-title select.ui-datepicker-month</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>xpath=//*[@id='ui-datepicker-div']/table//a[contains(.,'14')]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>trip_end_date</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Select From List</td>
+<td>css=div.ui-datepicker-title select.ui-datepicker-month</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>xpath=//*[@id='ui-datepicker-div']/table//a[contains(.,'28')]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>trip_destination</td>
+<td>Boundary Waters Canoe Area Wilderness</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click button</td>
+<td>Start</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The trip should appear in the trip list">The trip should appear in the trip list</a></td>
+<td>The application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Trip should appear in list</td>
+<td>BWCA 2012</td>
+<td>09/14/2011</td>
+<td>09/28/2011</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>Boundary Waters Canoe Area Wilderness</td>
 <td></td>
 <td></td>
 </tr>
