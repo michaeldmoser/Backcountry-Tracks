@@ -52,6 +52,8 @@ var TripListView = Backbone.View.extend({
 		this.models.bind('add', this.render, this);
 		this.models.bind('remove', this.render, this);
 
+		this.listitemviews = new Array;
+
 		var list_header_string = '';
 		list_header_string += '<li class="list_header">';
 		list_header_string += '<div class="list_item_column trip_name">Trip</div>';
@@ -66,6 +68,10 @@ var TripListView = Backbone.View.extend({
 	
 	render: function () {
 		var row_class = 'oddrow';
+		_.each(this.listitemviews, function (item) {
+			item.remove();
+			delete item;
+		});
 		this.models.each(function (trip_model) {
 			var list_entry = new TripListItemView({
 				'model': trip_model,
@@ -73,6 +79,7 @@ var TripListView = Backbone.View.extend({
 			});
 			list_entry.render();
 			$(this.list_el).append(list_entry.el);
+			this.listitemviews.push(list_entry);
 
 			row_class = row_class == 'oddrow' ? 'evenrow' : 'oddrow';
 		}, this);
