@@ -161,6 +161,62 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Delete a trip">Delete a trip</a></td>
+<td>Given the application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and I have a basic set of trips</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I open the trip organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and delete the BWCA 2011 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the Delete Trip dialog should appear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I confirm the delete</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then the ${TRIP_NAME} trip should not be in the list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table id="keywords" border="1">
 <tr>
@@ -438,6 +494,97 @@ td.name, th.name {
 <td class="name"></td>
 <td>...</td>
 <td>Boundary Waters Canoe Area Wilderness</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_delete the ${TRIP_NAME} trip">delete the ${TRIP_NAME} trip</a></td>
+<td>Click Element</td>
+<td>xpath=//div[@id="trip_list_view"]/ul/li[contains(.,'${TRIP_NAME}')]//img[@alt="Delete"]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${ACTIVE_TRIP}</td>
+<td>${TRIP_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the Delete Trip dialog should appear">the Delete Trip dialog should appear</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>.5</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>trip_confirm_delete</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I confirm the delete">I confirm the delete</a></td>
+<td>Click button</td>
+<td>Delete!</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the ${TRIP_NAME} trip should not be in the list">the ${TRIP_NAME} trip should not be in the list</a></td>
+<td>Page Should Not Contain Element</td>
+<td>xpath=//*[@id='trip_organizer']//ul/li[contains(.,'${TRIP_NAME}')]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>refresh the application</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Not Contain Element</td>
+<td>xpath=//*[@id='trip_organizer']//ul/li[contains(.,'${TRIP_NAME}')]</td>
 <td></td>
 <td></td>
 </tr>

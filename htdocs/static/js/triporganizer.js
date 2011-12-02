@@ -23,21 +23,81 @@ var TripCollection = Backbone.Collection.extend({
 	}
 });
 
+var TripConfirmDeleteDialog = Backbone.View.extend({
+	id: 'trip_confirm_delete',
+
+	initialize: function () {
+		_.bindAll(this, 'delete_trip', 'cancel', 'render', 'open', 'close');
+		this.template = _.template('Are you sure you want to delete the <%= name %> trip?');
+		$(this.el).hide();
+		$('body').append(this.el);
+		var view = this;
+		$(this.el).dialog({
+			autoOpen: false,
+			modal: true,
+			zIndex: 9000,
+			title: 'Delete Trip?',
+			resizable: false,
+			width: 500,
+			buttons: {
+				'Delete!': view.delete_trip,
+				'Cancel': view.cancel
+			}
+		});
+	},
+
+	delete_trip: function () {
+		this.model.destroy();
+		this.close();
+	},
+
+	close: function () {
+		this.model = null;
+		$(this.el).dialog('close');
+	},
+
+	cancel: function () {
+		this.close();
+	},
+
+	render: function () {
+		$(this.el).html(this.template(this.model.toJSON()));
+	},
+
+	open: function (model) {
+		this.model = model;
+		this.render();
+		$(this.el).dialog('open');
+	}
+});
+var deletetripdialog = new TripConfirmDeleteDialog();
+
 var TripListItemView = Backbone.View.extend({
 	tagName: 'li',
 
+	events: {
+		'click .list_item_controls img[alt="Delete"]': 'handle_delete_clicked',
+	},
+
 	initialize: function () {
-		_.bindAll(this, 'render');
+		_.bindAll(this, 'render', 'handle_delete_clicked');
 
 		var template_string = '';
 		template_string += '<div class="list_item_column trip_name"><%= name %></div>';
 		template_string += '<div class="list_item_column trip_dates"><%= start %> - <%= end %></div>';
 		template_string += '<div class="list_item_column trip_destination"><%= destination %></div>';
+		template_string += '<div class="list_item_controls"><img src="/static/img/icons/fugue/slash.png" alt="Delete" /></div>';
 		this.template = _.template(template_string);
 	},
 
 	render: function () {
 		$(this.el).html(this.template(this.model.toJSON()));
+		$(this.el).hover(function () { $(this).toggleClass('highlight'); });
+		this.$('.list_item_controls img[alt="Delete"]').button();
+	},
+
+	handle_delete_clicked: function () {
+		deletetripdialog.open(this.model);
 	}
 });
 

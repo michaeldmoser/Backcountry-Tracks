@@ -67,3 +67,13 @@ div.list_view li div.trip_destination {
 	top: 110px;
 	right: 200px;
 }
+
+div.list_view li div.list_item_controls {
+	display: none;
+}
+
+div.list_view li.highlight div.list_item_controls {
+	display: block;
+	position: absolute;
+	right: 20px;
+}
