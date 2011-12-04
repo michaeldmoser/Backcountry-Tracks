@@ -217,6 +217,69 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Add trip form should clear">Add trip form should clear</a></td>
+<td>Given the application is open</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and I open the trip organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I click to add a trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then a dialog should appear to enter trip details</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then I enter the details and save the trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>When I click to add a trip again</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Then a dialog should appear to enter trip details</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and the dialog should be empty</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table id="keywords" border="1">
 <tr>
@@ -585,6 +648,83 @@ td.name, th.name {
 <td class="name"></td>
 <td>Page Should Not Contain Element</td>
 <td>xpath=//*[@id='trip_organizer']//ul/li[contains(.,'${TRIP_NAME}')]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_I click to add a trip again">I click to add a trip again</a></td>
+<td>I click to add a trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_the dialog should be empty">the dialog should be empty</a></td>
+<td>${TRIP_NAME}</td>
+<td>Get value</td>
+<td>trip_name</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Be Empty</td>
+<td>${TRIP_NAME}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${TRIP_START}</td>
+<td>Get value</td>
+<td>trip_date_start</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Be Empty</td>
+<td>${TRIP_START}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${TRIP_END}</td>
+<td>Get value</td>
+<td>trip_date_end</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Be Empty</td>
+<td>${TRIP_END}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${TRIP_DESTINATION}</td>
+<td>Get value</td>
+<td>trip_destination</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Be Empty</td>
+<td>${TRIP_DESTINATION}</td>
 <td></td>
 <td></td>
 </tr>

@@ -1,4 +1,11 @@
 var TripModel = Backbone.Model.extend({
+	defaults: {
+		'name': '',
+		'start': '',
+		'end': '',
+		'destination': ''
+	},
+
 	initialize: function () {
 		_.bindAll(this, 'url');
 	},
@@ -153,22 +160,26 @@ var TripAddForm = Backbone.View.extend({
 		_.bindAll(this, 'render', 'open', 'cancel', 'start_trip', 'handle_model_saved_success');
 
 		$('body').append(this.el);
+	},
 
+	render: function () {
 		var form_html = '';
 		form_html += '<div class="form_row">';
 		form_html += '<label for="trip_name">Trip</label> ';
-		form_html += '<input type="text" id="trip_name" name="trip_name" />';
+		form_html += '<input type="text" id="trip_name" name="trip_name" value="<%= name %>"/>';
 		form_html += '</div>';
 		form_html += '<div class="form_row">';
 		form_html += '<label for="trip_date_start">Dates</label> ';
-		form_html += '<input type="text" id="trip_date_start" name="trip_start_date" class="date_start"/>';
-		form_html += ' - <input type="text" id="trip_date_end" name="trip_end_date" class="date_end" />';
+		form_html += '<input type="text" id="trip_date_start" name="trip_start_date" class="date_start" value="<%= start %>"/>';
+		form_html += ' - <input type="text" id="trip_date_end" name="trip_end_date" class="date_end"  value="<%= end %>" />';
 		form_html += '</div>';
 		form_html += '<div class="form_row">';
 		form_html += '<label for="trip_destination">Destination</label> ';
-		form_html += '<input type="text" id="trip_destination" name="trip_destination"/>';
+		form_html += '<input type="text" id="trip_destination" name="trip_destination" value="<%= destination %>"/>';
 		form_html += '</div>';
-		$(this.el).html(form_html);
+
+		var template = _.template(form_html);
+		$(this.el).html(template(this.model.toJSON()));
 
 		$("#trip_date_end").datepicker({
 			defaultDate: "+1w",
