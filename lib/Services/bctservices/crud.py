@@ -3,6 +3,9 @@ import uuid
 class BasicCRUDService(object):
     list_mapreduce = """
         function (value, keyData, arg) {
+            if (value.values[0].data.length < 1)
+                return [];
+
             var data = Riak.mapValuesJson(value)[0];
             if (data.owner == arg['owner'])
                 return [data];

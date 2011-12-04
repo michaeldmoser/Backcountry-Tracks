@@ -47,6 +47,7 @@ class MessagingEndPointController(object):
             return
 
         logging.debug('Publish response to %s to routing key %s' % (header.correlation_id, header.reply_to))
+        logging.debug('Response to %s is: %s' % (header.correlation_id, response))
 
         reply = {
                 'jsonrpc': '2.0',

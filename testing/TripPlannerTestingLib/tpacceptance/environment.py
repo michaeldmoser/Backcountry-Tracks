@@ -33,6 +33,7 @@ class Environment(object):
 
         trips = self.tpenviron.data['trips']
 
+        self.tpenviron.trips.remove_all()
         for trip in trips:
             self.tpenviron.trips.add(owner=current_user.email, **trip)
 

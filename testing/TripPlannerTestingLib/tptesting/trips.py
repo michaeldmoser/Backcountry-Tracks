@@ -1,4 +1,5 @@
 import uuid
+import time
 
 class TripsEnvironment(object):
     def __init__(self, env):
@@ -42,4 +43,13 @@ class TripsEnvironment(object):
         new_trip.store()
 
         return trip_id
+
+    def remove_all(self):
+        '''
+        Remove all trips that exist in the datbase
+        '''
+        keys = self.tripsdb.get_keys()
+        for key in keys:
+            trip = self.tripsdb.get(str(key))
+            trip.delete()
 
