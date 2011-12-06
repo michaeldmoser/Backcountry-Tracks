@@ -37,6 +37,17 @@ class Environment(object):
         for trip in trips:
             self.tpenviron.trips.add(owner=current_user.email, **trip)
 
+    def create_a_basic_trip_list_for_user(self, user):
+        '''
+        Populate the database with a list of trips for the specified user
+        '''
+        trips = self.tpenviron.data['trips']
+
+        self.tpenviron.trips.remove_all()
+        for trip in trips:
+            self.tpenviron.trips.add(owner=user, **trip)
+
+
 
 
 

@@ -1,0 +1,140 @@
+<h1></h1>
+<input type="text" value="" name="trip_name" class="trip_title"/>
+<div class="trip_dates">
+	<span class="trip_start_date"></span><input type="text" id="trip_start_date" name="trip_start_date" class="trip_start_date"  value="" readonly="readonly" style="display:none"/> - 
+	<span class="trip_end_date"></span><input type="text" id="trip_end_date" name="trip_end_date" class="trip_end_date" value="" readonly="readonly" style="display:none"/>
+</div>
+
+<div class="friends_section">
+	<button class="add_person"><img src="/static/img/icons/person_add32.png" height="24" width="24" class="add_person" /></button>
+	<h3><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h3>
+</div>
+
+<div class="route_overview_section">
+	<h3>Route/Destination</h3>
+	<h4></h4>
+	<input type="text" name="trip_destination" value="" />
+	<div id="route_map"></div>
+</div>
+
+<div id="trip_organizer_tabs">
+	<ul>
+		<li><a href="#summary_tab">Overview</a></li>
+		<li><a href="#gear_tab">Gear</a></li>
+		<li><a href="#trip_discussion">Discussion</a></li>
+	</ul>
+	<div id="summary_tab">
+		<div class="trip_description">
+			<p class="trip_description"></p>
+			<textarea name="trip_description" class="trip_description"></textarea>
+		</div>
+		<div class="trip_activities">
+			<h3>recent activity</h3>
+			<div class="trip_activities">
+				<div class="trip_activity odd">
+					Zach Conrad was invited to the trip. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+				</div>
+				<div class="trip_activity">
+					Michael posted a <a href="#">comment</a> - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+				</div>
+				<div class="trip_activity odd">
+					Walt added shared gear. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="trip_discussion" class="trip_discussion">
+		<h3>discussion</h3>
+		<div class="trip_comments">
+			<div class="trip_comment odd">
+				<h4 class="comment_who">Walt said on 02/10/2011 at 8:34pm</h4>
+				<p>Vestibulum ut nulla ac justo vulputate pharetra ac ut magna. Nunc lacinia risus sit amet sapien ullamcorper ultricies. Vestibulum sed tellus ipsum, eu mattis enim. Mauris eleifend ligula id purus mattis eget lobortis odio scelerisque. Donec ac massa ipsum, quis hendrerit tortor.</p>
+			</div>
+			<div class="trip_comment">
+				<h4 class="comment_who">Zach said on 02/11/2011 at 5:12pm</h4>
+				<p>Sed consequat ornare nulla, ac laoreet velit pretium nec. Donec fermentum, libero ut dapibus rutrum, orci lorem luctus arcu, a euismod orci dui nec quam.</p>
+			</div>
+			<div class="trip_comment odd">
+				<h4 class="comment_who">Michael said on 02/11/2011 at 5:26pm</h4>
+				<p>Sed consequat ornare nulla, ac laoreet velit pretium nec. Donec fermentum, libero ut dapibus rutrum, orci lorem luctus arcu, a euismod orci dui nec quam.</p>
+				<p>Vestibulum ut nulla ac justo vulputate pharetra ac ut magna. Nunc lacinia risus sit amet sapien ullamcorper ultricies. Vestibulum sed tellus ipsum, eu mattis enim. Mauris eleifend ligula id purus mattis eget lobortis odio scelerisque. Donec ac massa ipsum, quis hendrerit tortor.</p>
+			</div>
+		</div>
+		<div class="discussion_controls">
+			<textarea></textarea>
+			<button>Add comment</button>
+		</div>
+	</div>
+	<div id="gear_tab">
+		<div id="trip_personal_gear">
+			<h3>Personal Gear</h3>
+			<img src="/static/img/icons/gear_add32.png" height="16" width="16" />
+			<ul>
+				<li class="odd">
+					<div class="gear_description">
+						Backpack - 28oz
+					</div>
+					<div class="gear_controls">
+						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
+						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
+					</div>
+				</li>
+				<li>
+					<div class="gear_description">
+						Alcohol Stove - 3oz
+					</div>
+					<div class="gear_controls">
+						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
+						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
+					</div>
+				</li>
+				<li class="odd">
+					<div class="gear_description">
+						Down sleeping bag - 13oz
+					</div>
+					<div class="gear_controls">
+						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
+						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
+					</div>
+				</li>
+				<li>
+					<div class="gear_description">
+						Sleeping pad / ridgerest solar (cut) - 8oz
+					</div>
+					<div class="gear_controls">
+						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
+						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="trip_group_gear">
+			<h3>Group/Shared Gear</h3>
+			<ul>
+				<li class="odd">Stove - Whisperlite international - 16oz - Michael</li>
+				<li>Fuel bottle / whisperlite - 6oz - Zach</li>
+				<li class="odd">Fuel / whitegas - 11oz - Mike</li>
+				<li>Tarp - 10x10 Silnylon - 18oz - Walt</li>
+			</ul>
+		</div>
+		<div id="add_personal_gear">
+			<h3>Your Inventory</h3>
+			<div class="inventory_controls">
+				<img src="/static/img/icons/gear_add32.png" height="16" width="16" />
+			</div>
+			<p>Drag gear from this list into your Personal Gear for the trip.</p>
+			<ul>
+				<li>Backpack - 28oz</li>
+				<li>Alcohol Stove - 3oz</li>
+				<li>Down Sleeping bag - 13oz</li>
+				<li>Sleeping pad / ridgerest solar (cut) - 8oz</li>
+				<li>Stove - Whisperlite international - 16oz</li>
+				<li>Fuel bottle / whisperlite - 6oz</li>
+				<li>Fuel / whitegas - 11oz</li>
+				<li>Tarp - 10x10 Silnylon - 18oz</li>
+			</ul>
+			<button>Done</button>
+		</div>
+	</div>
+</div>
+

@@ -3,7 +3,8 @@ var TripModel = Backbone.Model.extend({
 		'name': '',
 		'start': '',
 		'end': '',
-		'destination': ''
+		'destination': '',
+		'description': ''
 	},
 
 	initialize: function () {
@@ -26,7 +27,7 @@ var TripCollection = Backbone.Collection.extend({
 	},
 
 	comparator: function (trip) {
-		return trip.get('name');
+		return trip.get('name').toLowerCase();
 	}
 });
 
@@ -84,10 +85,11 @@ var TripListItemView = Backbone.View.extend({
 
 	events: {
 		'click .list_item_controls img[alt="Delete"]': 'handle_delete_clicked',
+		'click': 'handle_click'
 	},
 
 	initialize: function () {
-		_.bindAll(this, 'render', 'handle_delete_clicked');
+		_.bindAll(this, 'render', 'handle_delete_clicked', 'handle_click');
 
 		var template_string = '';
 		template_string += '<div class="list_item_column trip_name"><%= name %></div>';
@@ -103,8 +105,13 @@ var TripListItemView = Backbone.View.extend({
 		this.$('.list_item_controls img[alt="Delete"]').button();
 	},
 
-	handle_delete_clicked: function () {
+	handle_delete_clicked: function (ev) {
+		ev.stopPropagation();
 		deletetripdialog.open(this.model);
+	},
+
+	handle_click: function () {
+		this.trigger('view_trip', this.model);
 	}
 });
 
@@ -113,7 +120,7 @@ var TripListView = Backbone.View.extend({
 	className: 'list_view', 
 
 	initialize: function () {
-		_.bindAll(this, 'render');
+		_.bindAll(this, 'render', 'handle_list_item_events');
 
 		this.models = this.options.models;
 		this.models.bind('add', this.render, this);
@@ -145,11 +152,16 @@ var TripListView = Backbone.View.extend({
 				'className': row_class
 			});
 			list_entry.render();
+			list_entry.bind('all', this.handle_list_item_events);
 			$(this.list_el).append(list_entry.el);
 			this.listitemviews.push(list_entry);
 
 			row_class = row_class == 'oddrow' ? 'evenrow' : 'oddrow';
 		}, this);
+	},
+
+	handle_list_item_events: function (eventname, trip) {
+		this.trigger(eventname, trip);
 	}
 });
 
@@ -265,6 +277,245 @@ var TripAddForm = Backbone.View.extend({
 	}
 });
 
+var FieldEditor = Backbone.View.extend({
+	
+	initialize: function () {
+		_.bindAll(this, 'render', 'highlight_on_hover', 'edit_on_click', 'save_on_blur');
+		this.input = this.$(this.options.input_selector);
+		this.label = this.$(this.options.label_selector);
+		this.field = this.options.field;
+
+		this.input.hide();
+		this.label.hover(this.highlight_on_hover);
+		this.label.click(this.edit_on_click);
+		this.input.blur(this.save_on_blur);
+	},
+
+	highlight_on_hover: function () {
+		this.label.toggleClass('highlight');
+	},
+
+	edit_on_click: function () {
+		this.label.hide();
+		this.input.val(this.label.html());
+		this.input.show();
+		this.input.focus();
+		this.input.select();
+	},
+
+	save_on_blur: function () {
+		this.input.hide()
+		this.label.html(this.input.val());
+		this.label.show();
+	},
+
+	render: function () {
+		this.label.html(this.model.get(this.field));
+	}
+});
+
+var DateRangeEditor = Backbone.View.extend({
+	initialize: function () {
+		_.bindAll(this, 'render', 'start_hover', 'end_hover',
+			'set_min_date', 'set_max_date', 'open_start_picker', 'open_end_picker',
+			'on_select_date_start', 'on_select_date_end');
+		this.start_label = this.$(this.options.start_date_label);
+		this.start = this.$(this.options.start_input);
+		this.end_label = this.$(this.options.end_date_label);
+		this.end = this.$(this.options.end_input);
+		
+		var on_select_start_date = this.on_select_date_start;
+		this.start.datepicker({
+			defaultDate: "+1w",
+			dateFormat: 'yy-mm-dd',
+			changeMonth: true,
+			changeYear: true,
+			yearRange: 'c-2:+3',
+			showButtonPanel: true,
+			buttonImageOnly: true,
+			buttonImage: '/static/img/icons/fugue/calendar.png',
+			showOn: 'both',
+			onSelect: on_select_start_date
+		});
+		this.start_label.hover(this.start_hover);
+		this.start_label.click(this.open_start_picker);
+
+		var on_select_end_date = this.on_select_date_end;
+		this.end.datepicker({
+			defaultDate: "+1w",
+			dateFormat: 'yy-mm-dd',
+			changeMonth: true,
+			changeYear: true,
+			yearRange: 'c-2:+3',
+			showButtonPanel: true,
+			buttonImageOnly: true,
+			buttonImage: '/static/img/icons/fugue/calendar.png',
+			showOn: 'both',
+			onSelect: on_select_end_date
+		});
+		this.end_label.hover(this.end_hover);
+		this.end_label.click(this.open_end_picker);
+
+	},
+
+	set_min_date: function (selected_date) {
+		var instance = this.start.data( "datepicker" );
+		var date = $.datepicker.parseDate(
+					instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
+					selected_date,
+					instance.settings 
+			);
+		this.end.datepicker( "option", 'minDate', date );
+	},
+
+	set_max_date: function (selected_date) {
+		var instance = this.end.data( "datepicker" );
+		var date = $.datepicker.parseDate(
+					instance.settings.dateFormat || $.datepicker._defaults.dateFormat,
+					selected_date,
+					instance.settings 
+			);
+		this.start.datepicker( "option", 'maxDate', date );
+	},
+
+	start_hover: function () {
+		this.start_label.toggleClass('highlight');
+	},
+
+	end_hover: function () {
+		this.end_label.toggleClass('highlight');
+	},
+
+	open_start_picker: function () {
+		this.start.datepicker('show');
+	},
+
+	open_end_picker: function () {
+		this.end.datepicker('show');
+	},
+
+	on_select_date_start: function (selected_date) {
+		this.set_min_date(selected_date);
+		this.model.set({'start': this.start.val()});
+	},
+
+	on_select_date_end: function (selected_date) {
+		this.set_max_date(selected_date);
+		this.model.set({'end': this.end.val()});
+	},
+
+	render: function () {
+		this.start_label.html(this.model.get('start'));
+		this.start.datepicker('setDate', this.model.get('start'));
+		this.set_min_date(this.model.get('start'));
+
+		this.end_label.html(this.model.get('end'));
+		this.end.datepicker('setDate', this.model.get('end'));
+		this.set_max_date(this.model.get('end'));
+	},
+
+	set_model: function (model) {
+		if (this.model)
+			this.model.unbind('change', this.render);
+
+		this.model = model;
+		this.model.bind('change', this.render);
+	},
+
+});
+
+var TripDetailView = Backbone.View.extend({
+	className: 'application_container',
+
+	initialize: function () {
+		_.bindAll(this, 'receive_template', 'set_model', 'render', 'show');
+
+		var receive_template = this.receive_template;
+		$.ajax({
+			url: '/static/trip_detail_view_template.html',
+			success: receive_template
+		});
+
+	},
+
+	finish_init: function() {
+		var this_element = this.el;
+		var this_model = this.model;
+		$(this.el).html(this.template());
+
+		this.views = new Object;
+		var views = {
+			'name': {
+				input_selector: 'input.trip_title',
+				label_selector: 'h1',
+				field: 'name'
+			},
+			'description': {
+				input_selector: 'textarea.trip_description',
+				label_selector: 'p.trip_description',
+				field: 'description'
+			},
+			'destination': {
+				input_selector: 'input[name="trip_destination"]',
+				label_selector: 'div.route_overview_section h4',
+				field: 'destination',
+			},
+		};
+		_.each(views, function(view) {
+			view.el = this.el;
+			view.model = this.model;
+			this.views[view.field] = new FieldEditor(view);
+		}, this);
+
+		date_range_options = {
+			start_date_label: 'div.trip_dates span.trip_start_date',
+			start_input: 'div.trip_dates input[name="trip_start_date"]',
+			end_date_label: 'div.trip_dates span.trip_end_date',
+			end_input: 'div.trip_dates input[name="trip_end_date"]',
+			el: this.el,
+			model: this.model
+		}
+		this.views.date_range = new DateRangeEditor(date_range_options);
+
+		$('#trip_organizer_tabs').tabs({
+			fx: {
+				opacity: 'toggle',
+				duration: 'fast'
+			}
+		});
+	},
+
+	render: function () {
+		_.each(this.views, function (view) {
+			view.render();
+		});
+	},
+
+	receive_template: function (data) {
+		this.template = _.template(data);
+		this.finish_init();
+	},
+
+	set_model: function (model) {
+		this.model = model;
+		_.each(this.views, function (view) {
+			if (view.set_model)
+				view.set_model(model);
+			else
+				view.model = model;
+		});
+		this.render();
+	},
+
+	show: function () {
+		$(this.el).fadeIn();
+	},
+
+	hide: function () {
+		$(this.el).hide();
+	}
+});
+
 var TripOrganizerApp = Backbone.View.extend({
 	className: 'application_container',
 	'id': 'trip_organizer',
@@ -275,7 +526,7 @@ var TripOrganizerApp = Backbone.View.extend({
 
 	initialize: function () {
 		_.bindAll(this, 'render', 'handle_activate', 'handle_add_trip_start',
-			'handle_trip_save');
+			'handle_trip_save', 'view_trip');
 		$(this.el).hide();
 		var template_string = '<h1>Trip Organizer</h1>';
 		template_string += '<button title="Add Trip"> Add Trip </button>';
@@ -284,12 +535,18 @@ var TripOrganizerApp = Backbone.View.extend({
 
 		this.trips = new TripCollection();
 
+		this.detailview = new TripDetailView;
+		$('#main').append(this.detailview.el);
+		this.detailview.hide();
+
 		this.listview = new TripListView({
 			'models': this.trips
 		});
+		this.listview.bind('view_trip', this.view_trip);
 
 		this.addform = new TripAddForm();
 		this.addform.bind('save', this.handle_trip_save)
+
 	},
 
 	refresh_trips: function () {
@@ -305,6 +562,7 @@ var TripOrganizerApp = Backbone.View.extend({
 		$(this.el).append(this.listview.el);
 		this.$("button").button();
 		this.listview.render();	
+
 		return this;
 	},
 
@@ -320,6 +578,12 @@ var TripOrganizerApp = Backbone.View.extend({
 
 	handle_trip_save: function (trip) {
 		this.trips.add([trip]);
+	},
+
+	view_trip: function (trip) {
+		this.detailview.set_model(trip);	
+		var detailview = this.detailview;
+		$(this.el).fadeOut({complete: detailview.show});
 	}
 });
 

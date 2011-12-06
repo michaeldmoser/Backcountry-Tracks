@@ -77,3 +77,279 @@ div.list_view li.highlight div.list_item_controls {
 	position: absolute;
 	right: 20px;
 }
+
+/*
+ * Trip Detail View
+ */
+
+h3 {
+	color: #4f4f4f;
+	font-weight: normal;
+	border-bottom: 1px dashed #4f4f4f;
+	padding: 0 0 5px 0;
+}
+
+.application_container input.trip_title {
+	position: fixed;
+	left: 120px;
+	z-index: 9999;
+	top: 90px;
+	padding:0;
+	margin:0;
+	font-weight: normal;
+	background: transparent;
+	font-size: 1.8em;
+}
+
+.highlight {
+	background-color: #F2EDDA !important;
+}
+
+div.trip_dates {
+	position: absolute;
+	top: 50px;
+	left: 25px;
+	font-size: 1.1em;
+}
+
+.trip_dates input {
+	border: none;
+	background-color: transparent;
+	font-size: 1.1em;
+}
+
+.trip_description {
+	width: 100%;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+	min-height: 100px;
+	background-color: transparent;
+	font-family: Arial,sans-serif;
+}
+.trip_description p {
+	padding: 2px;
+}
+
+div.friends_section {
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	padding: 5px;
+	height: 232px;
+	width: 350px;
+}
+div.friends_section h3 {
+	color: #4f4f4f;
+	font-weight: normal;
+	border-bottom: 1px dashed #4f4f4f;
+	padding: 0 0 5px 0;
+	height: 49px;
+	margin: 0;
+}
+div.trip_friend {
+	height: 32px;
+	padding: 5px 0;
+	line-height: 32px;
+}
+
+div.trip_discussion h4 {
+	font-size: .8em;
+	font-style: italic;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
+	text-align:right;
+}
+div.trip_discussion h3 {
+	font-size: 1.3em;
+}
+div.trip_discussion  {
+	font-size: .9em;
+}
+
+div.trip_comment,
+div.trip_activity {
+	padding: 4px;
+	border-radius: 4px;
+	background-color: #e6e6e6;
+	margin: 10px 0;
+}
+
+div.trip_activity span.happened_on {
+	font-style: italic;
+	font-size: .85em;
+}
+
+div.trip_discussion div.odd,
+div.trip_activities div.odd {
+	background-color: #f9f9f9;
+}
+
+
+div.discussion_controls textarea {
+	display:block;
+	width: 98%;
+	height: 75px;
+	background-color: #f9f9f9;
+	border-radius: 4px;
+}
+
+div.friends_section > button.add_person {
+	position: absolute;
+	right: 10px;
+	top: 24px;
+	margin: 0;
+	padding: 0;
+}
+
+div.add_person_dialog  {
+	width: 500px;
+}
+
+div.form_row input[name="name"] {
+	width: 215px;
+	margin: 2px 2px 2px 0;
+}
+div.form_row input[name="email"] {
+	width: 220px;
+	margin: 2px 2px 2px 0;
+}
+
+div.form_row span.name {
+	display: table-cell;
+	width: 225px;	
+}
+div.form_row span.email {
+	display: table-cell;
+	width: 220px;	
+}
+
+#trip_organizer_tabs {
+	position: absolute;
+	top: 100px;
+	left: 20px;
+	right: 365px;
+	background-color: transparent;
+	background-image: none;
+	border: none;
+}
+#trip_organizer_tabs > ul {
+	border: none;
+	background-color: transparent;
+	background-image: none;
+}
+#trip_organizer_tabs > ul li {
+	background-color: transparent;
+	border-radius: 4px;
+}
+
+#gear_tab {
+	position: relative;
+}
+
+#trip_personal_gear {
+	position: absolute;
+	left: 0px;
+	right: 51%;
+}
+
+#trip_group_gear,
+#add_personal_gear {
+	position: absolute;
+	left: 51%;
+	right: 0px;
+}
+#add_personal_gear { display: none; }
+
+#gear_tab > div > ul {
+	list-style-type: none;
+	margin:0;
+	padding:0;
+}
+#gear_tab > div > ul li {
+	display: block;
+	position: relative;
+	line-height: 32px;
+	height: 32px;
+	padding: 1px;
+}
+#gear_tab > div > ul li.highlight {
+	padding: 0;
+	border: 1px solid #212121;
+	border-radius: 4px;
+}
+
+#gear_tab > div > ul li div.gear_controls {
+	position: absolute;
+	right: 0px;
+	top: 5px;
+	display: none;
+}
+#gear_tab > div > ul li.highlight div.gear_controls {
+	position: absolute;
+	right: 0px;
+	top: 5px;
+	display:block;
+}
+
+#add_personal_gear > ul {
+	list-style-type: none;
+	margin:0;
+	padding:0;
+}
+#add_personal_gear > ul li {
+	display: block;
+	position: relative;
+	line-height: 32px;
+	height: 32px;
+	padding: 1px;
+}
+#add_personal_gear > ul li.highlight {
+	padding: 0;
+	border: 1px solid #212121;
+	border-radius: 4px;
+}
+#add_personal_gear p {
+	font-style: italic;
+}
+
+#trip_personal_gear > img {
+	position: absolute;
+	top: 15px;
+	right: 5px;
+}
+
+li.odd {
+	background-color: #e4e4e4;
+}
+li.dragging {
+	padding: 0;
+	border: 1px solid #212121;
+	border-radius: 4px;
+	background-color: #F2EDDA !important;
+}
+
+#add_personal_gear .inventory_controls {
+	position: absolute;
+	top: 15px;
+	right: 5px;
+}
+
+div.route_overview_section {
+	position: fixed;
+	top: 120px;
+	right: 5px;
+	width: 350px;
+}
+
+#route_map {
+	width: 100%;
+	height: 350px;
+}
+
+span.invite_status {
+	font-size: .7em;
+	color: #717171;
+}
+
