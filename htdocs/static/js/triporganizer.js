@@ -307,6 +307,10 @@ var FieldEditor = Backbone.View.extend({
 		this.input.hide()
 		this.label.html(this.input.val());
 		this.label.show();
+
+		var update = new Object;
+		update[this.field] = this.input.val();
+		this.model.save(update);
 	},
 
 	render: function () {
@@ -396,12 +400,12 @@ var DateRangeEditor = Backbone.View.extend({
 
 	on_select_date_start: function (selected_date) {
 		this.set_min_date(selected_date);
-		this.model.set({'start': this.start.val()});
+		this.model.save({'start': this.start.val()});
 	},
 
 	on_select_date_end: function (selected_date) {
 		this.set_max_date(selected_date);
-		this.model.set({'end': this.end.val()});
+		this.model.save({'end': this.end.val()});
 	},
 
 	render: function () {
