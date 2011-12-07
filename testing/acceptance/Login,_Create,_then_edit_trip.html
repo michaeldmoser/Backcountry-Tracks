@@ -1,0 +1,355 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="RIDE" /> 
+<meta name="rf-template" content="False" /> 
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>Login, Create, then edit trip</title>
+</head>
+<body>
+<h1>Login, Create, then edit trip</h1>
+<table id="settings" border="1">
+<tr>
+<th class="name">Setting</th>
+<th colspan="4">Value</th>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>__init__.html</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table id="variables" border="1"></table>
+<table id="testcases" border="1">
+<tr>
+<th class="name">Test Case</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="test_Login create view and edit">Login create view and edit</a></td>
+<td>Initialize the environment with typical defaults</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Create a basic trip list for user</td>
+<td>douglas.mcdowell@example.com</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Login as Douglas</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add a new trip to The Bob</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click on the The Bob in Winter trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The trip detail page should contain all the details entered</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Change the trip description</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Refresh the application</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click on the The Bob in Winter trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The trip detail page should contain all the details entered</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>and should contain the new description</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table id="keywords" border="1">
+<tr>
+<th class="name">Keyword</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Add a new trip to The Bob">Add a new trip to The Bob</a></td>
+<td>Click button</td>
+<td>Add Trip</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>trip_name</td>
+<td>The Bob in Winter</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>trip_date_start</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Select From List</td>
+<td>xpath=//select[@class='ui-datepicker-month']</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>xpath=//*[@id='ui-datepicker-div']/table//a[contains(.,'26')]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>trip_date_end</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Select From List</td>
+<td>xpath=//select[@class='ui-datepicker-month']</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>xpath=//*[@id='ui-datepicker-div']/table//a[contains(.,'31')]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>trip_destination</td>
+<td>The Bob Marshall Wilderness</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click button</td>
+<td>Start</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Page Contains Element</td>
+<td>xpath=//.[@id='trip_list_view']//li[contains(.,'The Bob in Winter')]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The trip detail page should contain all the details entered">The trip detail page should contain all the details entered</a></td>
+<td>Page should contain</td>
+<td>The Bob in Winter</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain</td>
+<td>The Bob Marshall Wilderness</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain</td>
+<td>12-26</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain</td>
+<td>12-31</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Change the trip description">Change the trip description</a></td>
+<td>Click element</td>
+<td>xpath=//div[@class='application_container']//div[@class='trip_description']/*[contains(.,'Enter a description...')]</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element Should Be Visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>xpath=//div[@class='application_container']//textarea[@name='trip_description']</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>trip_description</td>
+<td>Trip description changed</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Simulate</td>
+<td>xpath=//div[@class='application_container']//textarea[@name='trip_description']</td>
+<td>blur</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_should contain the new description">should contain the new description</a></td>
+<td>Wait Until Page Contains</td>
+<td>Trip description changed</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>

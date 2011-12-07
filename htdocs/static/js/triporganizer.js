@@ -196,6 +196,9 @@ var TripAddForm = Backbone.View.extend({
 		$("#trip_date_end").datepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
+			dateFormat: 'yy-mm-dd',
+			changeYear: true,
+			yearRange: 'c-2:+3',
 			showButtonPanel: true,
 			buttonImageOnly: true,
 			buttonImage: '/static/img/icons/fugue/calendar.png',
@@ -215,6 +218,9 @@ var TripAddForm = Backbone.View.extend({
 		$("#trip_date_start").datepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
+			changeYear: true,
+			yearRange: 'c-2:+3',
+			dateFormat: 'yy-mm-dd',
 			showButtonPanel: true,
 			buttonImageOnly: true,
 			buttonImage: '/static/img/icons/fugue/calendar.png',
@@ -314,7 +320,10 @@ var FieldEditor = Backbone.View.extend({
 	},
 
 	render: function () {
-		this.label.html(this.model.get(this.field));
+		var field_value = this.model.get(this.field);
+		if (field_value == '' && this.options.default_value)
+			field_value = this.options.default_value
+		this.label.html(field_value);
 	}
 });
 
@@ -457,7 +466,8 @@ var TripDetailView = Backbone.View.extend({
 			'description': {
 				input_selector: 'textarea.trip_description',
 				label_selector: 'p.trip_description',
-				field: 'description'
+				field: 'description',
+				default_value: 'Enter a description...'
 			},
 			'destination': {
 				input_selector: 'input[name="trip_destination"]',
