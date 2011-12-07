@@ -542,15 +542,14 @@ var TripOrganizerApp = Backbone.View.extend({
 		_.bindAll(this, 'render', 'handle_activate', 'handle_add_trip_start',
 			'handle_trip_save', 'view_trip');
 		$(this.el).hide();
-		var template_string = '<h1>Trip Organizer</h1>';
-		template_string += '<button title="Add Trip"> Add Trip </button>';
+		var template_string = '<div class="trip_list_container"><h1>Trip Organizer</h1>';
+		template_string += '<button title="Add Trip"> Add Trip </button></div>';
 		this.template = _.template(template_string);
 		this.model.bind('activating', this.handle_activate);
 
 		this.trips = new TripCollection();
 
 		this.detailview = new TripDetailView;
-		$('#main').append(this.detailview.el);
 		this.detailview.hide();
 
 		this.listview = new TripListView({
@@ -573,7 +572,8 @@ var TripOrganizerApp = Backbone.View.extend({
 
 	render: function () {
 		$(this.el).html(this.template({}));
-		$(this.el).append(this.listview.el);
+		this.$('div.trip_list_container').append(this.listview.el);
+		$(this.el).append(this.detailview.el);
 		this.$("button").button();
 		this.listview.render();	
 
@@ -582,6 +582,8 @@ var TripOrganizerApp = Backbone.View.extend({
 
 	handle_activate: function () {
 		this.refresh_trips();
+		this.detailview.hide();
+		this.$('div.trip_list_container').show();
 		this.trigger('activated', this);
 	},
 
@@ -597,7 +599,7 @@ var TripOrganizerApp = Backbone.View.extend({
 	view_trip: function (trip) {
 		this.detailview.set_model(trip);	
 		var detailview = this.detailview;
-		$(this.el).fadeOut({complete: detailview.show});
+		this.$('div.trip_list_container').fadeOut({complete: detailview.show});
 	}
 });
 
