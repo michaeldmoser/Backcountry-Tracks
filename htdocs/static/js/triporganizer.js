@@ -441,7 +441,7 @@ var TripDetailView = Backbone.View.extend({
 	className: 'application_container',
 
 	initialize: function () {
-		_.bindAll(this, 'receive_template', 'set_model', 'render', 'show');
+		_.bindAll(this, 'receive_template', 'set_model', 'render', 'show', 'reset_map');
 
 		var receive_template = this.receive_template;
 		$.ajax({
@@ -494,9 +494,25 @@ var TripDetailView = Backbone.View.extend({
 		$('#trip_organizer_tabs').tabs({
 			fx: {
 				opacity: 'toggle',
-				duration: 'fast'
+				duration: 125
 			}
 		});
+
+		this.create_maps();
+	},
+
+	create_maps: function () {
+		var latlng = new google.maps.LatLng(33.224795, -108.25165);
+		var myOptions = {
+		  zoom: 12,
+		  center: latlng,
+		  mapTypeId: google.maps.MapTypeId.SATELLITE
+		};
+		this.map = new google.maps.Map($("#route_map")[0], myOptions);
+	},
+
+	reset_map: function () {
+		google.maps.event.trigger(this.map, 'resize');
 	},
 
 	render: function () {
@@ -522,7 +538,7 @@ var TripDetailView = Backbone.View.extend({
 	},
 
 	show: function () {
-		$(this.el).fadeIn();
+		$(this.el).fadeIn(125, this.reset_map);
 	},
 
 	hide: function () {
@@ -560,7 +576,9 @@ var TripOrganizerApp = Backbone.View.extend({
 		this.addform = new TripAddForm();
 		this.addform.bind('save', this.handle_trip_save)
 
+
 	},
+
 
 	refresh_trips: function () {
 		var listview = this.listview;
@@ -599,7 +617,7 @@ var TripOrganizerApp = Backbone.View.extend({
 	view_trip: function (trip) {
 		this.detailview.set_model(trip);	
 		var detailview = this.detailview;
-		this.$('div.trip_list_container').fadeOut({complete: detailview.show});
+		this.$('div.trip_list_container').fadeOut(125, detailview.show);
 	}
 });
 

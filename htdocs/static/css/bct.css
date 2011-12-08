@@ -1,9 +1,11 @@
 div.list_view {
 	border: 0;
 	padding: 0;
-	margin: 148px 0 0 0;
+	margin: 0;
 	overflow: auto;
 	width: 100%;
+	position: absolute;
+	top: 110px;
 }
 
 div.list_view ul {
@@ -32,7 +34,7 @@ div.list_view li.list_header {
 	height: 32px;
 	border-bottom: 1px solid #807563;
 	position: fixed;
-	top: 196px;
+	top: 126px;
 	right: 16px;
 	left: 196px;
 	z-index:1000;
@@ -57,15 +59,30 @@ div.list_view li div.trip_name {
 }
 div.list_view li div.trip_dates {
 	left: 33%;
+	top: 0;
 }
 div.list_view li div.trip_destination {
 	left: 66%;
 }
 
-#trip_organizer > button[title="Add Trip"] {
+#trip_organizer button[title="Add Trip"] {
 	position: fixed;
-	top: 110px;
+	top: 72px;
 	right: 200px;
+	z-index: 2001;
+}
+
+#trip_organizer div.trip_list_container > h1 {
+	position: fixed;
+	top: 50px;
+	left: 196px;
+	right: 16px;
+	margin: 0px;
+	padding: 0px;
+	height: 75px;
+	line-height: 75px;
+	background-color: #ffffff;
+	z-index: 2000;
 }
 
 div.list_view li div.list_item_controls {
@@ -81,6 +98,18 @@ div.list_view li.highlight div.list_item_controls {
 /*
  * Trip Detail View
  */
+#trip_organizer div.application_container > h1 {
+	position: fixed;
+	top: 50px;
+	left: 196px;
+	right: 16px;
+	margin: 0px;
+	padding: 0px;
+	height: 50px;
+	line-height: 50px;
+	background-color: #ffffff;
+	z-index: 2000;
+}
 
 h3 {
 	color: #4f4f4f;
@@ -91,9 +120,9 @@ h3 {
 
 .application_container input.trip_title {
 	position: fixed;
-	left: 120px;
+	left: 196px;
 	z-index: 9999;
-	top: 90px;
+	top: 50px;
 	padding:0;
 	margin:0;
 	font-weight: normal;
@@ -133,7 +162,7 @@ div.trip_dates {
 
 div.friends_section {
 	position: fixed;
-	bottom: 0px;
+	top: 590px;
 	right: 0px;
 	padding: 5px;
 	height: 232px;
@@ -344,7 +373,7 @@ div.route_overview_section {
 }
 
 #route_map {
-	width: 100%;
+	width: 350px;
 	height: 350px;
 }
 
