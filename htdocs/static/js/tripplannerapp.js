@@ -155,6 +155,8 @@ var Portal = function (deps, containers) {
 };
 
 (function () {
+	_.templateSettings['interpolate'] = /\{\{(.+?)\}\}/g;
+
 	current_user = new UserModel();
 	current_user.fetch({
 		'success': function () {

@@ -36,7 +36,7 @@ var TripConfirmDeleteDialog = Backbone.View.extend({
 
 	initialize: function () {
 		_.bindAll(this, 'delete_trip', 'cancel', 'render', 'open', 'close');
-		this.template = _.template('Are you sure you want to delete the <%= name %> trip?');
+		this.template = _.template('Are you sure you want to delete the {{ name }} trip?');
 		$(this.el).hide();
 		$('body').append(this.el);
 		var view = this;
@@ -92,9 +92,9 @@ var TripListItemView = Backbone.View.extend({
 		_.bindAll(this, 'render', 'handle_delete_clicked', 'handle_click');
 
 		var template_string = '';
-		template_string += '<div class="list_item_column trip_name"><%= name %></div>';
-		template_string += '<div class="list_item_column trip_dates"><%= start %> - <%= end %></div>';
-		template_string += '<div class="list_item_column trip_destination"><%= destination %></div>';
+		template_string += '<div class="list_item_column trip_name">{{ name }}</div>';
+		template_string += '<div class="list_item_column trip_dates">{{ start }} - {{ end }}</div>';
+		template_string += '<div class="list_item_column trip_destination">{{ destination }}</div>';
 		template_string += '<div class="list_item_controls"><img src="/static/img/icons/fugue/slash.png" alt="Delete" /></div>';
 		this.template = _.template(template_string);
 	},
@@ -178,16 +178,16 @@ var TripAddForm = Backbone.View.extend({
 		var form_html = '';
 		form_html += '<div class="form_row">';
 		form_html += '<label for="trip_name">Trip</label> ';
-		form_html += '<input type="text" id="trip_name" name="trip_name" value="<%= name %>"/>';
+		form_html += '<input type="text" id="trip_name" name="trip_name" value="{{ name }}"/>';
 		form_html += '</div>';
 		form_html += '<div class="form_row">';
 		form_html += '<label for="trip_date_start">Dates</label> ';
-		form_html += '<input type="text" id="trip_date_start" name="trip_start_date" class="date_start" value="<%= start %>"/>';
-		form_html += ' - <input type="text" id="trip_date_end" name="trip_end_date" class="date_end"  value="<%= end %>" />';
+		form_html += '<input type="text" id="trip_date_start" name="trip_start_date" class="date_start" value="{{ start }}"/>';
+		form_html += ' - <input type="text" id="trip_date_end" name="trip_end_date" class="date_end"  value="{{ end }}" />';
 		form_html += '</div>';
 		form_html += '<div class="form_row">';
 		form_html += '<label for="trip_destination">Destination</label> ';
-		form_html += '<input type="text" id="trip_destination" name="trip_destination" value="<%= destination %>"/>';
+		form_html += '<input type="text" id="trip_destination" name="trip_destination" value="{{ destination }}"/>';
 		form_html += '</div>';
 
 		var template = _.template(form_html);
@@ -559,7 +559,7 @@ var TripOrganizerApp = Backbone.View.extend({
 			'handle_trip_save', 'view_trip');
 		$(this.el).hide();
 		var template_string = '<div class="trip_list_container"><h1>Trip Organizer</h1>';
-		template_string += '<button title="Add Trip"> Add Trip </button></div>';
+		template_string += '<button title="Add Trip" class="model_add_button"> Add Trip </button></div>';
 		this.template = _.template(template_string);
 		this.model.bind('activating', this.handle_activate);
 
@@ -578,7 +578,6 @@ var TripOrganizerApp = Backbone.View.extend({
 
 
 	},
-
 
 	refresh_trips: function () {
 		var listview = this.listview;

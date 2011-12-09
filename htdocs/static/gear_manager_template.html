@@ -1,0 +1,33 @@
+<div title="gear manager template">
+	<h1>Gear Manager</h1>
+	<button title="Add Gear" class="model_add_button"> Add Gear </button>
+	<div id="gear_list_view" class="list_view">
+		<ul>
+			<li class="list_header">
+				<div class="gear_name list_item_column">Gear</div>
+				<div class="gear_weight list_item_column">Weight</div>
+				<div class="gear_description list_item_column">Description</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<div title="add form template">
+	<div class="form_row">
+		<label for="gear_form_name">Name</label>
+		<input name="gear_name" id="gear_form_name" value="{{ name }}" />
+	</div>
+	<div class="form_row">
+		<label for="gear_form_weight">Weight</label>
+		<input name="gear_weight" id="gear_form_weight" value="{{ weight }}" />
+	</div>
+	<div class="add_gear_description">
+		<label for="gear_form_description">Description</label>
+		<textarea name="gear_description" id="gear_form_description">{{ description }}</textarea>
+	</div>
+</div>
+<div title="list item template">
+		<div class="gear_name list_item_column">{{ name }}</div>
+		<div class="gear_weight list_item_column">{{ weight }}</div>
+		<div class="gear_description list_item_column">{{ description }}</div>
+		<div class="list_item_controls"><img alt="Delete" src="/static/img/icons/fugue/slash.png"/></div>
+</div>

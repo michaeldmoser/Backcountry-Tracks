@@ -1,3 +1,10 @@
+.application_container button.model_add_button {
+	position: fixed;
+	top: 72px;
+	right: 200px;
+	z-index: 2001;
+}
+
 div.list_view {
 	border: 0;
 	padding: 0;
@@ -65,12 +72,6 @@ div.list_view li div.trip_destination {
 	left: 66%;
 }
 
-#trip_organizer button[title="Add Trip"] {
-	position: fixed;
-	top: 72px;
-	right: 200px;
-	z-index: 2001;
-}
 
 #trip_organizer div.trip_list_container > h1 {
 	position: fixed;
@@ -382,3 +383,17 @@ span.invite_status {
 	color: #717171;
 }
 
+div.templates {
+	display: none;
+}
+
+div.list_view li div.gear_name {
+	left: 0;
+}
+div.list_view li div.gear_weight {
+	left: 33%;
+	top: 0;
+}
+div.list_view li div.gear_description {
+	left: 66%;
+}
