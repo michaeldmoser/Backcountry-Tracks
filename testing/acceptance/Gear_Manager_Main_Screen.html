@@ -801,21 +801,21 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., '${gear_name}')]</td>
+<td>${GEAR_IN_LIST % '${gear_name}'}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., '${gear_weight}')]</td>
+<td>${GEAR_IN_LIST % '${gear_weight}'}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Page Should Contain Element</td>
-<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., '${gear_description}')]</td>
+<td>${GEAR_IN_LIST % '${gear_description}'}</td>
 <td></td>
 <td></td>
 </tr>
@@ -855,16 +855,16 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="keyword_click to edit the ${EDIT_GEAR} gear item">click to edit the ${EDIT_GEAR} gear item</a></td>
+<td class="name"><a name="keyword_click to edit the ${GEAR_NAME} gear item">click to edit the ${GEAR_NAME} gear item</a></td>
 <td>Wait Until Page Contains Element</td>
-<td>xpath=//div[@id="gear_list_view"]/ul/li/div[contains(., "${EDIT_GEAR}")]</td>
+<td>${GEAR_IN_LIST % ('${GEAR_NAME}',)}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Click Element</td>
-<td>xpath=//div[@id="gear_list_view"]/ul/li/div[contains(., "${EDIT_GEAR}")]</td>
+<td>${GEAR_IN_LIST % ('${GEAR_NAME}',)}</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
@@ -872,7 +872,7 @@ td.name, th.name {
 <td class="name"></td>
 <td>Set Test Variable</td>
 <td>${ACTIVE_GEAR}</td>
-<td>${EDIT_GEAR}</td>
+<td>${GEAR_NAME}</td>
 <td></td>
 </tr>
 <tr>
