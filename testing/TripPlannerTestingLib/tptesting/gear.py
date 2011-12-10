@@ -28,3 +28,11 @@ class Gear(object):
 
         return gear_id
 
+    def remove_all(self):
+        '''Removes all gear found in the database'''
+        keys = self.geardb.get_keys()
+        for key in keys:
+            gear = self.geardb.get(str(key))
+            gear.delete()
+
+

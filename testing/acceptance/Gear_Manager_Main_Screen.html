@@ -56,13 +56,6 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name">Suite Teardown</td>
-<td>Close the browser</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td class="name">Resource</td>
 <td>testing/acceptance/__init__.html</td>
 <td></td>
@@ -101,34 +94,6 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Then the "Gear Manager" screen should appear</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="test_No Gear In List">No Gear In List</a></td>
-<td>Given my gear list is empty</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>When I go to the "Gear Manager"</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Then I see a screen asking to add gear</td>
 <td></td>
 <td></td>
 <td></td>
@@ -296,7 +261,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>and click the gear's save button</td>
+<td>and click the save button</td>
 <td></td>
 <td></td>
 <td></td>
@@ -367,6 +332,13 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>and click to delete the Quilt gear item</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>then confirm the deletion</td>
 <td></td>
 <td></td>
 <td></td>
@@ -471,29 +443,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the &quot;Gear Manager&quot; screen should appear">the "Gear Manager" screen should appear</a></td>
-<td>Page Should Contain Element</td>
-<td>css=div.gear_list_view_container</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Wait Until Keyword Succeeds</td>
-<td>1</td>
+<td>2</td>
 <td>.2</td>
 <td>Element Should Be Visible</td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>...</td>
-<td>css=div.gear_list_view_container</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Page Should Contain</td>
-<td>Gear Manager</td>
+<td>xpath=//div[@class="application_container"]/h1[contains(.,'Gear Manager')]</td>
 <td></td>
 <td></td>
 </tr>
@@ -569,6 +527,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_I have some basic gear in my gear list">I have some basic gear in my gear list</a></td>
+<td>Clear the gear list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Add gear item</td>
 <td>Backpack</td>
 <td>A really lightweight frameless backpack</td>
@@ -619,35 +584,35 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>...</td>
-<td>css=div.gear_listing</td>
+<td>css=#gear_list_view</td>
 <td>Backpack</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Element should contain</td>
-<td>css=div.gear_listing</td>
+<td>css=#gear_list_view</td>
 <td>Alcohol stove</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Element should contain</td>
-<td>css=div.gear_listing</td>
+<td>css=#gear_list_view</td>
 <td>8x5 Tarp</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Element should contain</td>
-<td>css=div.gear_listing</td>
+<td>css=#gear_list_view</td>
 <td>Quilt</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Element should contain</td>
-<td>css=div.gear_listing</td>
+<td>css=#gear_list_view</td>
 <td>Sleeping pad</td>
 <td></td>
 </tr>
@@ -709,15 +674,22 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_Click the &quot;Add Gear&quot; button">Click the "Add Gear" button</a></td>
-<td>Click Element</td>
-<td>css=.gear_list_view_controls .gear_list_add_button img</td>
+<td>Click button</td>
+<td>Add Gear</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Wait Until Page Contains Element</td>
-<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']</td>
+<td>Wait until keyword succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>xpath=//div[@id="gear_add_form"]</td>
 <td></td>
 <td></td>
 </tr>
@@ -731,7 +703,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Enter ${NAME} for the name">Enter ${NAME} for the name</a></td>
 <td>Input Text</td>
-<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']//input[@name="gear_name"]</td>
+<td>//div[contains(@class, 'gear_add_form')]//input[@name='gear_name']</td>
 <td>${NAME}</td>
 <td></td>
 </tr>
@@ -752,7 +724,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Enter ${description} for the description">Enter ${description} for the description</a></td>
 <td>Input Text</td>
-<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']//textarea[@name="gear_description"]</td>
+<td>//div[contains(@class, 'gear_add_form')]//textarea[@name='gear_description']</td>
 <td>${description}</td>
 <td></td>
 </tr>
@@ -773,7 +745,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Enter ${weight} for the weight">Enter ${weight} for the weight</a></td>
 <td>Input Text</td>
-<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']//input[@name="gear_weight"]</td>
+<td>//div[contains(@class, 'gear_add_form')]//input[@name='gear_weight']</td>
 <td>${weight}</td>
 <td></td>
 </tr>
@@ -794,7 +766,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Click the Save button">Click the Save button</a></td>
 <td>Click element</td>
-<td>xpath=//div[@class='gear_list_view_controls']/div[@class='gear_list_add_form']/div[contains(@class, "save")]/img</td>
+<td>xpath=//div[contains(@class, 'gear_add_form')]//button[contains(.,'Save')]</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
@@ -821,23 +793,30 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_The new piece of gear should be in the list">The new piece of gear should be in the list</a></td>
-<td>Element Should Contain</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li[2]//div[contains(@class, "gear_name")]</td>
+<td>Wait until page contains</td>
 <td>${gear_name}</td>
 <td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Element Should Contain</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li[2]//div[contains(@class, "gear_weight")]</td>
-<td>${gear_weight}</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
-<td>Element Should Contain</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li[2]//div[contains(@class, "gear_description")]</td>
-<td>${gear_description}</td>
+<td>Page Should Contain Element</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., '${gear_name}')]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain Element</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., '${gear_weight}')]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain Element</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., '${gear_description}')]</td>
+<td></td>
 <td></td>
 </tr>
 <tr>
@@ -877,8 +856,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_click to edit the ${EDIT_GEAR} gear item">click to edit the ${EDIT_GEAR} gear item</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li/div[contains(., "${EDIT_GEAR}")]</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click Element</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${EDIT_GEAR}")]/../../div[@class="gear_list_management_buttons"]/img</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li/div[contains(., "${EDIT_GEAR}")]</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
@@ -899,7 +885,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_change the name to ${NEW_GEAR_NAME}">change the name to ${NEW_GEAR_NAME}</a></td>
 <td>Input text</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${ACTIVE_GEAR}")]/../../div[@class="gear_list_add_form"]//input[@name="gear_name"]</td>
+<td>//div[contains(@class, 'gear_add_form')]//input[@name='gear_name']</td>
 <td>${NEW_GEAR_NAME}</td>
 <td></td>
 </tr>
@@ -913,7 +899,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_change the weight to ${NEW_GEAR_WEIGHT}">change the weight to ${NEW_GEAR_WEIGHT}</a></td>
 <td>Input text</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${ACTIVE_GEAR}")]/../../div[@class="gear_list_add_form"]//input[@name="gear_weight"]</td>
+<td>//div[contains(@class, 'gear_add_form')]//input[@name='gear_weight']</td>
 <td>${NEW_GEAR_WEIGHT}</td>
 <td></td>
 </tr>
@@ -925,24 +911,10 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
-<td class="name"><a name="keyword_click the gear's save button">click the gear's save button</a></td>
-<td>Click element</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${ACTIVE_GEAR}")]/../../div[@class="gear_list_add_form"]/div[contains(@class, "save")]/img</td>
-<td>dont_wait=1</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
 <td class="name"><a name="keyword_the gear list should have a ${FIND_GEAR} in it">the gear list should have a ${FIND_GEAR} in it</a></td>
-<td>Page Should Contain Element</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li//div[contains(text(), "${FIND_GEAR}")]</td>
-<td>message="Could not find ${FIND_GEAR} in the gear list"</td>
+<td>Wait Until Page Contains Element</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li//div[contains(., "${FIND_GEAR}")]</td>
+<td>error="Could not find ${FIND_GEAR} in the gear list"</td>
 <td></td>
 </tr>
 <tr>
@@ -954,9 +926,9 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the ${FIND_GEAR} gear item's weight should be ${EXPECTED_WEIGHT}">the ${FIND_GEAR} gear item's weight should be ${EXPECTED_WEIGHT}</a></td>
-<td>Element Should Contain</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li//div[contains(text(), "${FIND_GEAR}")]/../div[contains(@class, "gear_weight")]</td>
-<td>${EXPECTED_WEIGHT}</td>
+<td>Page Should Contain Element</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li/div[contains(., "${FIND_GEAR}")]/../*[contains(.,'${EXPECTED_WEIGHT}')]</td>
+<td></td>
 <td></td>
 </tr>
 <tr>
@@ -968,8 +940,15 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_click to delete the ${GEAR_NAME} gear item">click to delete the ${GEAR_NAME} gear item</a></td>
+<td>Wait until page contains</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click Element</td>
-<td>xpath=//div[@class="gear_listing"]/ul/li/div[@class="gear_item_row"]/div[contains(text(), "${GEAR_NAME}")]/../../div[@class="gear_list_management_buttons"]/img[@alt="Delete"]</td>
+<td>xpath=//div[@id="gear_list_view"]/ul/li/div[contains(text(), "${GEAR_NAME}")]/..//img[@alt="Delete"]</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
@@ -999,6 +978,34 @@ td.name, th.name {
 <td>...</td>
 <td>${GEAR_NAME}</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_confirm the deletion">confirm the deletion</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>1</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>gear_confirm_delete</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click button</td>
+<td>xpath=//*[@id='gear_confirm_delete']/..//button[contains(.,'Delete!')]</td>
+<td>dont_wait=1</td>
 <td></td>
 </tr>
 <tr>

@@ -23,6 +23,10 @@ class Environment(object):
         
         self.tpenviron.gear.add_item(current_user['email'], name, description, weight)
 
+    def clear_the_gear_list(self):
+        '''Removes all gear in the database'''
+        self.tpenviron.gear.remove_all()
+
     def create_basic_trip_list(self):
         '''
         Prepopulate the database with a list of trips

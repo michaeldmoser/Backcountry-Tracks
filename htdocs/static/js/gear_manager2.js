@@ -96,8 +96,9 @@ var GearAddForm = Backbone.View.extend({
 			title: 'Add Gear',
 			resizable: false,
 			width: 500,
+			dialogClass: 'gear_add_form',
 			buttons: {
-				'Start': view.save_gear,
+				'Save': view.save_gear,
 				'Cancel': view.cancel
 			}
 		});
