@@ -12,7 +12,10 @@ class TripsDb(BasicCRUDService):
         trip = bucket.get(str(trip_id))
         trip_data = trip.get_data()
 
-        trip_data['friends'] = [result]
+        if not trip_data.has_key('friends'):
+            trip_data['friends'] = []
+
+        trip_data['friends'].append(result)
         trip.set_data(trip_data)
         trip.store()
 

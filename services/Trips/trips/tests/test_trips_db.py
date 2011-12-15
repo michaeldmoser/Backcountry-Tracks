@@ -44,7 +44,27 @@ class TestTripsDbInvite(unittest.TestCase):
 
         invite = trip['friends'][0]
 
-        self.assertDictContainsSubset(self.result, invite)
+        self.assertEquals(self.result, invite)
+
+    def test_saves_multiple_invites(self):
+        '''Should save additional invites while retaining old ones'''
+        additional_invite = {
+                'email': self.environ.albert.email,
+                'first': self.environ.albert.first_name,
+                'last': self.environ.albert.last_name,
+                'invite_status': 'invited'
+                }
+        invite_result = self.app.invite(self.trip_id, self.environ.ramona.email,
+                additional_invite)
+
+        trip_obj = self.bucket.get(str(self.trip_id))
+        trip = trip_obj.get_data()
+
+        invites = trip['friends']
+
+        expected_invites = [self.result, invite_result]
+        self.assertEquals(invites, expected_invites)
+
 
 if __name__ == '__main__':
     unittest.main()

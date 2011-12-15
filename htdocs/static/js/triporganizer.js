@@ -49,17 +49,21 @@ var TripFriends = Backbone.Collection.extend({
 	},
 
 	invite: function (invitees) {
-		var email_addy = /[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?/i;
-		var address = invitees.match(email_addy);
-		var name = invitees.replace(email_addy, '');
-		name = $.trim(name);
-		name = name.split(/ +/);
-		this.create({
-			trip_id: this.trip_id,
-			email: address[0],
-			first: name[0],
-			last: name[1] || ''
-		});
+		var email_addy = /[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?/gi;
+		var people = $.trim(invitees).replace('\r\n', '\n').replace('\r', '\n').split('\n');
+		_.each(people, function (person) {
+			var email = person.match(email_addy);
+			var name = person.replace(email_addy, '');
+			name = $.trim(name);
+			name = name.split(/ +/, 2);
+
+			this.create({
+				trip_id: this.trip_id,
+				email: email[0],
+				first: name[0],
+				last: name[1] || ''
+			});
+		}, this);
 	}
 });
 
@@ -499,6 +503,7 @@ var TripFriendsInviteView = Backbone.View.extend({
 	},
 
 	open: function () {
+		this.$('textarea[name="invitees"]').val('');
 		$(this.el).dialog('open');
 	},
 

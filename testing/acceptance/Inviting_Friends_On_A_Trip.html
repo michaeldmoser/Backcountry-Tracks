@@ -56,6 +56,13 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
+<td class="name">Test Setup</td>
+<td>Give Douglas a basic trip list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name">Resource</td>
 <td>__init__.html</td>
 <td></td>
@@ -133,6 +140,186 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="test_Invite multiple friends on a trip">Invite multiple friends on a trip</a></td>
+<td>Open the Trip Organizer app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Gila Wilderness March 2011 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Invite Friends dialog</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Ramona's details for the invite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Douglas's details for the invite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Albert's details for the invite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click the invite button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Ramona should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Douglas should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Albert should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_Remember invited friends">Remember invited friends</a></td>
+<td>[Documentation]</td>
+<td colspan="3">Check to make sure that the system remembers who was invited on a trip.</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the GNP Nyack/Coal Creek 2010 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Invite Friends dialog</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Ramona's details for the invite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Douglas's details for the invite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Albert's details for the invite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click the invite button</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Refresh the application</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the GNP Nyack/Coal Creek 2010 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Ramona should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Douglas should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Albert should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 <table id="keywords" border="1">
 <tr>
@@ -151,13 +338,6 @@ td.name, th.name {
 <td class="name"></td>
 <td>Login as douglas</td>
 <td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Create A Basic Trip List For User</td>
-<td>${DOUGLAS.email}</td>
 <td></td>
 <td></td>
 </tr>
@@ -191,9 +371,16 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>${PREVIOUS_VALUE}</td>
+<td>Get Value</td>
+<td>${INVITE_TEXT_BOX}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Input text</td>
 <td>${INVITE_TEXT_BOX}</td>
-<td>${PERSON.email} ${PERSON.first_name}</td>
+<td>${PREVIOUS_VALUE}\n${PERSON.email} ${PERSON.first_name}</td>
 <td></td>
 </tr>
 <tr>
@@ -205,41 +392,6 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_${PERSON_INVITED} should appear in the friends list as ${INVITE_STATUS}">${PERSON_INVITED} should appear in the friends list as ${INVITE_STATUS}</a></td>
-<td>Wait Until Page Contains Element</td>
-<td>${INVITED_FRIEND_BY_NAME % '${PERSON_INVITED}'}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Page Should Contain Element</td>
-<td>${FRIEND_INVITE_STATUS % ('${PERSON_INVITED}', '${INVITE_STATUS}')}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Refresh the application</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Open the Trip Organizer app</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Open the ${ACTIVE_TRIP_NAME} trip</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
 <td>Wait Until Page Contains Element</td>
 <td>${INVITED_FRIEND_BY_NAME % '${PERSON_INVITED}'}</td>
 <td></td>
