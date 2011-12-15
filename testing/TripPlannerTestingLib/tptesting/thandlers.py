@@ -51,8 +51,13 @@ class TornadoHandlerTestCase(unittest.TestCase):
         '''The http status code to expect'''
         return 200
 
+    def handler_setup(self):
+        '''Called before all other methods. Allows you to do any setup work required for the tests to run'''
+        pass
+
     def setUp(self):
         self.environ = environment.create()
+        self.handler_setup()
         handler = self.request_handler()
         method_name = self.method()
         url = self.url()
