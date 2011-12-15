@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from tptesting import environment
 environ = environment.create()
 environ.make_pristine()
