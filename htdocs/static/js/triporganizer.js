@@ -4,7 +4,8 @@ var TripModel = Backbone.Model.extend({
 		'start': '',
 		'end': '',
 		'destination': '',
-		'description': ''
+		'description': '',
+		'friends': new Array
 	},
 
 	initialize: function () {
@@ -28,6 +29,37 @@ var TripCollection = Backbone.Collection.extend({
 
 	comparator: function (trip) {
 		return trip.get('name').toLowerCase();
+	}
+});
+
+var TripFriend = Backbone.Model.extend({
+	defaults: {
+		trip_id: null,
+		email: '',
+		first: '',
+		last: '',
+		invite_status: 'invited'
+	}
+});
+var TripFriends = Backbone.Collection.extend({
+	model: TripFriend,
+
+	url: function () {
+		return "/app/trips/" + this.trip_id + "/friends";
+	},
+
+	invite: function (invitees) {
+		var email_addy = /[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?/i;
+		var address = invitees.match(email_addy);
+		var name = invitees.replace(email_addy, '');
+		name = $.trim(name);
+		name = name.split(/ +/);
+		this.create({
+			trip_id: this.trip_id,
+			email: address[0],
+			first: name[0],
+			last: name[1] || ''
+		});
 	}
 });
 
@@ -437,6 +469,114 @@ var DateRangeEditor = Backbone.View.extend({
 
 });
 
+var TripFriendsInviteView = Backbone.View.extend({
+
+	initialize: function () {
+		_.bindAll(this, 'receive_template', 'invite_people');
+
+		var receive_template = this.receive_template;
+		$.ajax({
+			url: '/static/friends_invite_on_trip.html',
+			success: receive_template
+		});
+	},
+
+	receive_template: function (data) {
+		$(this.el).html(data);
+
+		$(this.el).dialog({
+			autoOpen: false,
+			modal: true,
+			zIndex: 9010,
+			title: 'Invite friends',
+			resizable: false,
+			width: 500,
+			buttons: {
+				'Invite': this.invite_people,
+				'Cancel': function () { $(this).dialog('close'); },	
+			}
+		});
+	},
+
+	open: function () {
+		$(this.el).dialog('open');
+	},
+
+	invite_people: function () {
+		var invitee_text = this.$('textarea[name="invitees"]').val();
+		this.trigger('invited', invitee_text);
+		$(this.el).dialog('close');
+	}
+});
+
+var FriendsListItem = Backbone.View.extend({
+	initialize: function () {
+		_.bindAll(this, 'render');
+
+		this.template = _.template('<div class="trip_friend">{{ first }} {{ last }} - {{ invite_status }}</div>');
+	},
+
+	render: function () {
+		$(this.el).html(this.template(this.model.toJSON()));	
+	}
+});
+
+var FriendsListView = Backbone.View.extend({
+	
+	initialize: function () {
+		_.bindAll(this, 'render');
+
+		this.collection.bind('all', this.render);
+	},
+
+	render: function () {
+		$(this.el).html('');
+		this.collection.each(function (trip_friend) {
+			var list_item = new FriendsListItem({model: trip_friend});
+			$(this.el).append(list_item.el);
+			list_item.render();
+		}, this);
+	}
+});
+
+var TripDetailFriendsView = Backbone.View.extend({
+	className: 'friends_section',
+
+	initialize: function () {
+		_.bindAll(this, 'invite_friends_to_trip', 'render', 'invite_people', 'set_model');
+		this.$('button').button();
+
+		this.invitedialog = new TripFriendsInviteView({});
+		$('body').append(this.invitedialog);
+		this.$('button').click(this.invite_friends_to_trip);
+
+		this.invitedialog.bind('invited', this.invite_people);
+
+		this.friendlist = new FriendsListView({
+			collection: this.collection,
+			el: this.$('.friends_list')[0]
+		});
+	},
+
+	invite_friends_to_trip: function () {
+		this.invitedialog.open();
+	},
+
+	render: function () {
+		this.friendlist.render();
+	},
+
+	invite_people: function(invitees) {
+		this.collection.invite(invitees);
+	},
+
+	set_model: function (model) {
+		this.model = model
+		this.collection.trip_id = model.id;
+		this.collection.refresh(this.model.get('friends'));
+	}
+});
+
 var TripDetailView = Backbone.View.extend({
 	className: 'application_container',
 
@@ -488,7 +628,7 @@ var TripDetailView = Backbone.View.extend({
 			end_input: 'div.trip_dates input[name="trip_end_date"]',
 			el: this.el,
 			model: this.model
-		}
+		};
 		this.views.date_range = new DateRangeEditor(date_range_options);
 
 		$('#trip_organizer_tabs').tabs({
@@ -496,6 +636,11 @@ var TripDetailView = Backbone.View.extend({
 				opacity: 'toggle',
 				duration: 125
 			}
+		});
+
+		this.views.friends = new TripDetailFriendsView({
+			el: this.$('div.friends_section')[0],
+			collection: new TripFriends()
 		});
 
 		this.create_maps();

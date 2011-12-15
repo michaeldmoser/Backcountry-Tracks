@@ -1,8 +1,5 @@
 from bctplugins import entrypoint
-from bctservices.crud import BasicCRUDService
-
-class TripsDb(BasicCRUDService):
-    pass
+from .service import TripsDb
 
 class EntryPoint(entrypoint.EntryPoint):
     service = TripsDb

@@ -51,6 +51,12 @@ class Environment(object):
         for trip in trips:
             self.tpenviron.trips.add(owner=user, **trip)
 
+    def get_person_by_name(self, first_name):
+        '''
+        Get the user object for the person identified by their first name
+        '''
+        person = getattr(self.tpenviron, first_name.lower())
+        return person
 
 
 

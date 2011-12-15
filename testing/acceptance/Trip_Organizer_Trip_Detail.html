@@ -422,7 +422,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>Open the ${APP_NAME}</td>
+<td>Open the ${APP_NAME} app</td>
 <td></td>
 <td></td>
 <td></td>
@@ -437,7 +437,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_Click on the ${TRIP_NAME} trip">Click on the ${TRIP_NAME} trip</a></td>
 <td>Click element</td>
-<td>xpath=//.[@id='trip_list_view']//li[contains(.,'${TRIP_NAME}')]</td>
+<td>${TRIP_BY_NAME ${TRIP_NAME}}</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>

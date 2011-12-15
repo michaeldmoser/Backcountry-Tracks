@@ -13,6 +13,7 @@ setup(
         'tripplanner.trailhead.handler': [
             'trips = trips.handlers:TripsHandler',
             'trip = trips.handlers:TripHandler',
+            'friends = trips.friends:FriendsHandler',
             ]
         }
     )
