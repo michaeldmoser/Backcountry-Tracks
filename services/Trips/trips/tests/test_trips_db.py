@@ -1,10 +1,14 @@
 import unittest
 
+from uuid import uuid4
+import json
+
 from tptesting import environment
 
 from trips.service import TripsDb
 from tptesting.fakeriak import RiakClientFake
-from uuid import uuid4
+from tptesting.fakepika import SelectConnectionFake
+from bctmessaging.remoting import RemotingClient
 
 class TestTripsDbInvite(unittest.TestCase):
 
@@ -14,13 +18,23 @@ class TestTripsDbInvite(unittest.TestCase):
         self.bucket_name = 'trips'
         self.bucket = self.riak.bucket(self.bucket_name)
 
+        pika_connection = SelectConnectionFake()
+        channel = pika_connection._channel
+        rpc_client = RemotingClient(channel)
+
         self.app = TripsDb(
+                rpc_client,
                 self.riak,
                 self.bucket_name
                 )
 
         self.trip_id = unicode(uuid4())
-        self.bucket.add_document(self.trip_id, {})
+        self.bucket.add_document(self.trip_id, {
+            'name': 'Glacier',
+            'start': '2012-07-19',
+            'end': '2012-07-24',
+            'destination': 'Glacier National Park'
+            })
         self.invite = {
                 'email': self.environ.douglas.email,
                 'first': self.environ.douglas.first_name,
@@ -64,6 +78,66 @@ class TestTripsDbInvite(unittest.TestCase):
 
         expected_invites = [self.result, invite_result]
         self.assertEquals(invites, expected_invites)
+
+class TestSendsInviteEmail(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.riak = RiakClientFake()
+        self.bucket_name = 'trips'
+        self.bucket = self.riak.bucket(self.bucket_name)
+
+        pika_connection = SelectConnectionFake()
+        self.channel = pika_connection._channel
+        rpc_client = RemotingClient(self.channel)
+
+        self.app = TripsDb(
+                rpc_client,
+                self.riak,
+                self.bucket_name
+                )
+
+        self.trip_id = unicode(uuid4())
+        self.bucket.add_document(self.trip_id, {
+            'name': 'Glacier',
+            'start': '2012-07-19',
+            'end': '2012-07-24',
+            'destination': 'Glacier National Park'
+            })
+        self.invite = {
+                'email': self.environ.douglas.email,
+                'first': self.environ.douglas.first_name,
+                'last': self.environ.douglas.last_name,
+                'invite_status': 'invited'
+                }
+        self.result = self.app.invite(self.trip_id, self.environ.ramona.email, self.invite)
+
+        self.message = self.channel.messages[0]
+        self.jsonrpc = json.loads(self.message.body)
+
+    def test_sends_invite(self):
+        '''A message should be sent'''
+        expected = {
+                'jsonrpc': '2.0',
+                'method': 'send'
+                }
+
+        self.assertDictContainsSubset(expected, self.jsonrpc)
+
+    def test_message_sent_to_person(self):
+        '''The message should be sent to Douglas'''
+        to = self.jsonrpc['params']['to']
+        self.assertEquals(self.environ.douglas.email, to)
+
+    def test_message_subject(self):
+        '''The subject should set'''
+        subject = self.jsonrpc['params'].get('subject', None)
+        self.assertIsNotNone(subject)
+
+    def test_message_body(self):
+        '''The message should not be empty'''
+        body = self.jsonrpc['params'].get('message')
+        self.assertIsNotNone(body)
 
 
 if __name__ == '__main__':

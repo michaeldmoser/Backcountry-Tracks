@@ -56,6 +56,7 @@ services:
         database:
             host: localhost
             bucket: trips
+        url: http://{{ hostname }}/app/home
     TrailHead/trailhead:
         cookie_secret: psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja
         login_url: "/"

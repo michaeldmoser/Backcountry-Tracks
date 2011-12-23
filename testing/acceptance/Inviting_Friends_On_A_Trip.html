@@ -57,7 +57,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name">Test Setup</td>
-<td>Give Douglas a basic trip list</td>
+<td>Setup the test case</td>
 <td></td>
 <td></td>
 <td></td>
@@ -135,6 +135,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Albert should receive an invitation email for BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td></td>
 <td></td>
 <td></td>
@@ -198,6 +205,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Ramona should receive an invitation email for Gila Wilderness March 2011 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Douglas should appear in the friends list as invited</td>
 <td></td>
 <td></td>
@@ -205,7 +219,21 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>Douglas should receive an invitation email for Gila Wilderness March 2011 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Albert should appear in the friends list as invited</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Albert should receive an invitation email for Gila Wilderness March 2011 trip</td>
 <td></td>
 <td></td>
 <td></td>
@@ -401,6 +429,90 @@ td.name, th.name {
 <td class="name"></td>
 <td>Page Should Contain Element</td>
 <td>${FRIEND_INVITE_STATUS % ('${PERSON_INVITED}', '${INVITE_STATUS}')}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_${PERSON} should receive an invitation email for ${TRIP_NAME} trip">${PERSON} should receive an invitation email for ${TRIP_NAME} trip</a></td>
+<td>${INVITED_PERSON}</td>
+<td>Get person by name</td>
+<td>${PERSON}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${RECEIVED_EMAIL}</td>
+<td>Get email for</td>
+<td>${INVITED_PERSON.email}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Contain</td>
+<td>${RECEIVED_EMAIL}</td>
+<td>${SITE_HOME_PAGE}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${TRIP}</td>
+<td>Get trip by name</td>
+<td>${TRIP_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Contain</td>
+<td>${RECEIVED_EMAIL}</td>
+<td>${TRIP['name']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Contain</td>
+<td>${RECEIVED_EMAIL}</td>
+<td>${TRIP['start']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Contain</td>
+<td>${RECEIVED_EMAIL}</td>
+<td>${TRIP['end']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should Contain</td>
+<td>${RECEIVED_EMAIL}</td>
+<td>${TRIP['destination']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Setup the test case">Setup the test case</a></td>
+<td>Give Douglas a basic trip list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear the mailbox</td>
+<td></td>
 <td></td>
 <td></td>
 </tr>

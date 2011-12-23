@@ -53,3 +53,13 @@ class TripsEnvironment(object):
             trip = self.tripsdb.get(str(key))
             trip.delete()
 
+        for x in range(50):
+            keys = self.tripsdb.get_keys()
+            if len(keys) == 0:
+                return
+
+            time.sleep(.1)
+
+        assert False, "Database did not clear out in the alloted time"
+        
+

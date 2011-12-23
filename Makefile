@@ -7,7 +7,7 @@ install-infrastructure: install-rabbitmq install-riak install-nginx
 
 install-libraries: install-messaging install-plugins install-servicelib
 
-install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips
+install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice
 
 install-dependencies: install-libyaml install-python-setproctitle
 
@@ -207,6 +207,14 @@ services/Trips/setup.py:
 	
 services/Trips/Trips.egg-info:
 	cd services/Trips && sudo python setup.py develop
+
+install-postoffice: services/PostOffice/setup.py services/PostOffice/PostOffice.egg-info
+
+services/PostOffice/setup.py:
+	cd services/PostOffice && sudo python setup.py develop
+	
+services/PostOffice/PostOffice.egg-info:
+	cd services/PostOffice && sudo python setup.py develop
 
 install-trailhead: services/TrailHead/setup.py services/TrailHead/TrailHead.egg-info
 

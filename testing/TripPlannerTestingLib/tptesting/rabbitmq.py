@@ -1,6 +1,8 @@
 import subprocess
 
 import pika
+import json
+import uuid
 
 def parse_bool_string(string):
     return True if string == 'true' else False
@@ -168,6 +170,30 @@ class RabbitMQEnvironment(object):
         self.__channel = self.__connection.channel()
 
         return self.__channel
+
+    def publish_message(self, exchange='rpc', routing_key=None, body=None,
+            content_type='application/json-rpc', reply_to = ''):
+        '''Publishes a message in rabbitmq'''
+
+        assert exchange, "An exchange must be provided"
+        assert routing_key, "A routing_key must be provided"
+        assert body, 'You must provide a body'
+
+        correlation_id = str(uuid.uuid4())
+        properties = pika.BasicProperties(
+                reply_to = reply_to,
+                content_type = content_type,
+                delivery_mode = 2,
+                correlation_id = correlation_id
+                )
+        self.channel().basic_publish(
+                exchange = exchange,
+                body = json.dumps(body),
+                routing_key = routing_key,
+                properties = properties
+                )
+
+        return correlation_id
 
 
 
