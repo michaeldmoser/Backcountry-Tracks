@@ -69,6 +69,12 @@ services:
             - ['/app/user', 'Adventurer/user']
             - ['/app/trips$', 'Trips/trips']
             - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
+            - ['/app/trips/([0-9a-f-]+)/friends$', 'Trips/friends']
+    PostOffice/postoffice:
+        from: noreply@backcountrytracks.com
+        from_line: 'Backcountry Tracks Email Service'
+        queues:
+            rpc: email_rpc
 
 message_routing:
     exchanges:
@@ -86,6 +92,9 @@ message_routing:
         - 
             queue: trips_rpc
             durable: True
+        - 
+            queue: email_rpc
+            durable: True
     bindings:
         - 
             exchange: rpc
@@ -99,6 +108,10 @@ message_routing:
             exchange: rpc
             queue: trips_rpc
             routing_key: rpc.trips
+        - 
+            exchange: rpc
+            queue: email_rpc
+            routing_key: rpc.email
 
 logging:
     version: 1
