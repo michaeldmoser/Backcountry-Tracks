@@ -25,7 +25,7 @@ class MessagingEndPointController(object):
         logging.debug("My Configuration: %s" % self.config)
         self.channel.basic_consume(self.process_request, queue=rpc_queue)
 
-    def process_request(self, channel, method, header, data):
+    def process_request(self, channel, mq_method, header, data):
         request = json.loads(data)
 
         properties = pika.BasicProperties(
@@ -37,10 +37,16 @@ class MessagingEndPointController(object):
         method = getattr(self.service, request['method'])
         params = request['params']
 
-        if isinstance(params, dict):
-            response = method(**request['params'])
-        elif isinstance(params, list):
-            response = method(*request['params'])
+        try:
+            if isinstance(params, dict):
+                response = method(**request['params'])
+            elif isinstance(params, list):
+                response = method(*request['params'])
+        except:
+            raise
+        finally:
+            self.channel.basic_ack(delivery_tag=mq_method.delivery_tag)
+
 
         if response is None:
             logging.debug('Completed request, no response... %s' % header.correlation_id)

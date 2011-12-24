@@ -109,6 +109,71 @@ class TestAlternateMethod(unittest.TestCase):
 
         create_endpoint_sut(stub_service, method_name, rpc_args=rpc_args)
 
+class TestAcknowlegesMessages(unittest.TestCase):
+
+    def test_acknowledge_on_none(self):
+        '''Verify that the message is acknowledged when service returns None'''
+        class MessageServiceSpy(object):
+            def service_method(spy):
+                return None
+        spy_service = MessageServiceSpy()
+
+        queue_name = 'an_rpc_queue'
+        reply_exchange = 'rpc_reply_exchange'
+        method_name = 'service_method'
+
+        mq, request, properties = create_endpoint_sut(spy_service,
+                method_name, queue_name=queue_name, rpc_args=[],
+                reply_exchange_name=reply_exchange)
+
+        usage = mq.verify_usage(mq._channel.basic_ack, '*',
+                {'delivery_tag': 1, 'multiple': False})
+        self.assertTrue(usage)
+
+    def test_acknowledge_on_return(self):
+        '''Verify that the message is acknowledged when service returns other than None'''
+        class MessageServiceSpy(object):
+            def service_method(spy):
+                return "Hi" 
+        spy_service = MessageServiceSpy()
+
+        queue_name = 'an_rpc_queue'
+        reply_exchange = 'rpc_reply_exchange'
+        method_name = 'service_method'
+
+        mq, request, properties = create_endpoint_sut(spy_service,
+                method_name, queue_name=queue_name, rpc_args=[],
+                reply_exchange_name=reply_exchange)
+
+        usage = mq.verify_usage(mq._channel.basic_ack, '*',
+                {'delivery_tag': 1, 'multiple': False})
+        self.assertTrue(usage)
+
+    def test_acknowledge_on_exception(self):
+        '''Verify that the message is acknowledged when service raises an exception'''
+        class MessageServiceSpy(object):
+            def service_method(spy):
+                raise ValueError
+        spy_service = MessageServiceSpy()
+
+        queue_name = 'an_rpc_queue'
+        reply_exchange = 'rpc_reply_exchange'
+        method_name = 'service_method'
+
+        mq, request, properties = create_endpoint_sut(spy_service,
+                method_name, queue_name=queue_name, rpc_args=[],
+                reply_exchange_name=reply_exchange, trigger=False)
+
+        try:
+            mq.trigger_consume(queue_name)
+        except ValueError:
+            pass
+
+        usage = mq.verify_usage(mq._channel.basic_ack, '*',
+                {'delivery_tag': 1, 'multiple': False})
+        self.assertTrue(usage)
+
+
 if __name__ == '__main__':
     unittest.main()
 

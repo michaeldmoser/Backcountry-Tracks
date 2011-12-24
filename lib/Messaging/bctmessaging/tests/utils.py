@@ -18,10 +18,10 @@ def create_messaging_channel():
     return channel, mq
 
 def create_endpoint_sut(service_double, method_name, queue_name="rpc_queue",
-       reply_exchange_name="rpc_rpley", rpc_args=[]):
+       reply_exchange_name="rpc_rpley", rpc_args=[], trigger=True):
     '''
     Builds a MessagingEndPointController for testing and then injects a message
-    for consumption.
+    for consumption. Will trigger consuming the message unless @trigger is False
     '''
     channel, mq = create_messaging_channel()
 
@@ -43,7 +43,8 @@ def create_endpoint_sut(service_double, method_name, queue_name="rpc_queue",
             }
 
     mq.inject(queue_name, properties, json.dumps(request))
-    mq.trigger_consume(queue_name)
+    if trigger:
+        mq.trigger_consume(queue_name)
 
     return mq, request, properties
 

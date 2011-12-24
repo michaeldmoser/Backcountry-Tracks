@@ -303,6 +303,44 @@ class TestRemotingClientReceiveResults(unittest.TestCase):
         binding = self.pika.find_binding(search_for)
         self.assertDictContainsSubset(search_for, binding)
 
+    def test_acknowleges_message(self):
+        '''Should acknowledge the message after processing is complete'''
+        class CallbackMethod(object):
+            def __init__(self):
+                self.result = None
+
+            def handle_result(self, result):
+                self.result = result
+        callback = CallbackMethod()
+
+        self.remoting.call(self.command, callback=callback)
+        self.pika.inject(self.remoting.queue, self.headers, self.body)
+        self.pika.trigger_consume(self.remoting.queue)
+
+        usage = self.pika.verify_usage(self.pika._channel.basic_ack, '*',
+                {'delivery_tag': 1, 'multiple': False})
+        self.assertTrue(usage)
+
+    def test_acknowleges_message_exception(self):
+        '''Should acknowledge the message even if exception occurs'''
+        class CallbackMethod(object):
+            def __init__(self):
+                self.result = None
+
+            def handle_result(self, result):
+                raise ValueError
+        callback = CallbackMethod()
+
+        self.remoting.call(self.command, callback=callback)
+        self.pika.inject(self.remoting.queue, self.headers, self.body)
+        try:
+            self.pika.trigger_consume(self.remoting.queue)
+        except ValueError:
+            pass
+
+        usage = self.pika.verify_usage(self.pika._channel.basic_ack, '*',
+                {'delivery_tag': 1, 'multiple': False})
+        self.assertTrue(usage)
 
 class TestRemotingClientReceiveError(unittest.TestCase):
 

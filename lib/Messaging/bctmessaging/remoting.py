@@ -95,7 +95,12 @@ class RemotingClient(object):
         elif not callable(callback_method):
             return
         
-        result_handler(callback_method, response)
+        try:
+            result_handler(callback_method, response)
+        except:
+            raise
+        finally:
+            self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
     def __handle_error(self, callback, response):
         error = response['error']

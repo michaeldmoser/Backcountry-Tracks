@@ -238,7 +238,7 @@ class ChannelFake(object):
         raise NotImplementedError
 
     def basic_ack(self, delivery_tag=0, multiple=False):
-        pass
+        self.connection.record_usage(self.basic_ack, delivery_tag=delivery_tag, multiple=multiple)
 
     def basic_reject(self, delivery_tag=None, requeue=True):
         raise NotImplementedError
