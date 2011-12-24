@@ -61,5 +61,46 @@ class TripsEnvironment(object):
             time.sleep(.1)
 
         assert False, "Database did not clear out in the alloted time"
+
+    def get_by_name(self, name):
+        '''
+        Get a trip by it's name
+        '''
+        trip = None 
+
+        keys = self.tripsdb.get_keys()
+        for key in keys:
+            trip_obj = self.tripsdb.get(str(key))
+            trip_data = trip_obj.get_data()
+
+            if trip_data['name'] == name:
+                trip = trip_data
+                trip['id'] = key
+                break
+
+        return trip
+
+    def add_invitee(self, trip_id, person, status):
+        '''
+        Add the person to the trip with id trip_id
+
+        person should be a user object
+        '''
+        trip = self.tripsdb.get(str(trip_id))
+
+        trip_data = trip.get_data()
+        if not trip_data.has_key('friends'):
+            trip_data['friends'] = list()
+
+        trip_data['friends'].append({
+            'first': person.first_name,
+            'last': person.last_name,
+            'email': person.email,
+            'invite_status': status
+            })
+
+        trip.set_data(trip_data)
+        trip.store()
+
         
 

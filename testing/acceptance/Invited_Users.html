@@ -39,18 +39,32 @@ td.name, th.name {
   width: 10em;
 }
 </style>
-<title>TripsHelperLibrary</title>
+<title>Invited Users</title>
 </head>
 <body>
-<h1>TripsHelperLibrary</h1>
+<h1>Invited Users</h1>
 <table id="settings" border="1">
 <tr>
 <th class="name">Setting</th>
 <th colspan="4">Value</th>
 </tr>
 <tr>
-<td class="name">Library</td>
-<td>tpacceptance.trips.Trips</td>
+<td class="name">Suite Setup</td>
+<td>Setup the invited users test suite</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>testing/acceptance/__init__.html</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>TripsHelperLibrary.html</td>
 <td></td>
 <td></td>
 <td></td>
@@ -64,7 +78,146 @@ td.name, th.name {
 </tr>
 </table>
 <table id="variables" border="1"></table>
-<table id="testcases" border="1"></table>
+<table id="testcases" border="1">
+<tr>
+<th class="name">Test Case</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="test_Invited user can see trip details">Invited user can see trip details</a></td>
+<td>Give Douglas a basic trip list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Ramona as an invitee on the BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Login as Ramona</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click on the BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The BWCA 2012 trip details should be on the page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="test_All invited users can see the trip they are invited on">All invited users can see the trip they are invited on</a></td>
+<td>Give Douglas a basic trip list</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Ramona as an invitee on the BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Add Albert as an invitee on the BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Login as Ramona</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click on the BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The BWCA 2012 trip details should be on the page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Login as Albert</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open the Trip Organizer app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click on the BWCA 2012 trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The BWCA 2012 trip details should be on the page</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 <table id="keywords" border="1">
 <tr>
 <th class="name">Keyword</th>
@@ -72,149 +225,16 @@ td.name, th.name {
 <th colspan="3">Arguments</th>
 </tr>
 <tr>
-<td class="name"><a name="keyword_Open the ${TRIP_NAME} trip">Open the ${TRIP_NAME} trip</a></td>
-<td>Click element</td>
-<td>${TRIP_BY_NAME % '${TRIP_NAME}'}</td>
-<td>dont_wait=1</td>
+<td class="name"><a name="keyword_Setup the Invited Users Test Suite">Setup the Invited Users Test Suite</a></td>
+<td>Initialize the environment with typical defaults</td>
 <td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Set Test Variable</td>
-<td>${ACTIVE_TRIP_NAME}</td>
-<td>${TRIP_NAME}</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="keyword_Open the invite friends dialog">Open the invite friends dialog</a></td>
-<td>Click Element</td>
-<td>${INVITE_FRIENDS_BUTTON}</td>
-<td>dont_wait=1</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>${INVITE_TEXT}</td>
-<td>Get value</td>
-<td>${INVITE_TEXT_BOX}</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Should be empty</td>
-<td>${INVITE_TEXT}</td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
+<td>Login as douglas</td>
 <td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="keyword_Give ${PERSON} a basic trip list">Give ${PERSON} a basic trip list</a></td>
-<td>${TRIP_OWNER}</td>
-<td>Get Person By Name</td>
-<td>${PERSON}</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Create a basic trip list for user</td>
-<td>${TRIP_OWNER.email}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="keyword_Add ${PERSON} as an invitee on the ${TRIP_NAME} trip">Add ${PERSON} as an invitee on the ${TRIP_NAME} trip</a></td>
-<td>Add a trip invitee</td>
-<td>${PERSON}</td>
-<td>${TRIP_NAME}</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="keyword_Click on the ${TRIP_NAME} trip">Click on the ${TRIP_NAME} trip</a></td>
-<td>Click element</td>
-<td>xpath=//.[@id='trip_list_view']//li[contains(.,'${TRIP_NAME}')]</td>
-<td>dont_wait=1</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"><a name="keyword_The ${TRIP_NAME} trip details should be on the page">The ${TRIP_NAME} trip details should be on the page</a></td>
-<td>${TRIP}</td>
-<td>Get trip by name</td>
-<td>${TRIP_NAME}</td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Wait Until Keyword Succeeds</td>
-<td>2</td>
-<td>.2</td>
-<td>Page should contain</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>...</td>
-<td>${TRIP['start']}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Page should contain</td>
-<td>${TRIP['end']}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Wait Until Keyword Succeeds</td>
-<td>2</td>
-<td>.2</td>
-<td>Page should contain</td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>...</td>
-<td>${TRIP['description']}</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td class="name"></td>
-<td>Page should contain</td>
-<td>${TRIP['destination']}</td>
 <td></td>
 <td></td>
 </tr>

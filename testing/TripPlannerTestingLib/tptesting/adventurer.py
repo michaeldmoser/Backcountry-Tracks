@@ -15,5 +15,13 @@ class AdventurerEnvironment(object):
         user = riak.new(user_to_create.email, user_to_create)
         user.store()
 
+    def get_by_name(self, name):
+        '''
+        Get an adventurer by their first name
+        '''
+        person = getattr(self.environment, name.lower())
+        return person
+
+
 
 

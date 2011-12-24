@@ -67,23 +67,6 @@ class Environment(object):
         person = getattr(self.tpenviron, first_name.lower())
         return person
 
-    def get_trip_by_name(self, trip_name):
-        '''
-        Get a trip from the database based on the name
-        '''
-        trip = False
-
-        tripsdb = self.tpenviron.riak.get_database('trips')
-        keys = tripsdb.get_keys()
-        for key in keys:
-            trip_obj = tripsdb.get(str(key))
-            trip_data = trip_obj.get_data()
-
-            if trip_data['name'] == trip_name:
-                trip = trip_data
-                break
-
-        return trip
 
     def get_email_for(self, email_address):
         '''

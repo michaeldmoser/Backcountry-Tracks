@@ -6,6 +6,24 @@ import uuid
 from bctservices.crud import BasicCRUDService
 
 class TripsDb(BasicCRUDService):
+    list_mapreduce = """
+        function (value, keyData, arg) {
+            if (value.values[0].data.length < 1)
+                return [];
+
+            var data = Riak.mapValuesJson(value)[0];
+            if (data.owner == arg['owner'])
+                return [data];
+
+            var friends = data.friends;
+            for (friend in friends) {
+                if (friends[friend].email == arg['owner'])
+                    return [data];
+            }
+            
+            return [];
+        }
+    """
 
     def __init__(self, remote_client, riak, bucket_name):
         self.remoting = remote_client
