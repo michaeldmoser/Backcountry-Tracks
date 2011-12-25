@@ -57,7 +57,7 @@ class TripsDb(BasicCRUDService):
 
     def invite(self, trip_id, invitor, invite):
         result = invite.copy()
-        result['id'] = str(uuid.uuid4())
+        result['id'] = str(result['email'])
 
         bucket = self.riak.bucket(self.bucket_name)
         logging.debug("Get trip by id: %s" % trip_id)
@@ -74,4 +74,19 @@ class TripsDb(BasicCRUDService):
         self.__send_invite_email(trip_id, trip_data, invite)
 
         return result
+
+    def accept(self, trip_id, invitee):
+        '''Updates the staus of an invite to accepted'''
+        bucket = self.riak.bucket(self.bucket_name)
+        trip = bucket.get(str(trip_id))
+        trip_data = trip.get_data()
+
+        # Not sure if I like this solution... it obfiscates the fact that the trip_data
+        # object is being updated
+        invite = filter(lambda i: i['email'] == invitee, trip_data['friends'])[0]
+        invite['invite_status'] = 'accepted'
+
+        trip.set_data(trip_data)
+        trip.store()
+        return invite
 

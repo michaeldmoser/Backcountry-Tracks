@@ -93,6 +93,7 @@ class TripsEnvironment(object):
             trip_data['friends'] = list()
 
         trip_data['friends'].append({
+            'id': person.email,
             'first': person.first_name,
             'last': person.last_name,
             'email': person.email,
@@ -101,6 +102,14 @@ class TripsEnvironment(object):
 
         trip.set_data(trip_data)
         trip.store()
+
+    def get(self, trip_id):
+        '''Get a trip by it's id'''
+        trip_obj = self.tripsdb.get(str(trip_id))
+        trip_data = trip_obj.get_data()
+
+        return trip_data
+        
 
         
 

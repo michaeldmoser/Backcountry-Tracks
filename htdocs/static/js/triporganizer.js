@@ -1,48 +1,22 @@
-var TripModel = Backbone.Model.extend({
-	defaults: {
-		'name': '',
-		'start': '',
-		'end': '',
-		'destination': '',
-		'description': '',
-		'friends': new Array
-	},
-
-	initialize: function () {
-		_.bindAll(this, 'url');
-	},
-
-	url: function () {
-		var url = "/app/trips";
-		if (this.id)
-			return url + "/" + this.id;
-		else
-			return url;
-	}
-});
-
-var TripCollection = Backbone.Collection.extend({
-	model: TripModel,
-	url: function () {
-		return "/app/trips";
-	},
-
-	comparator: function (trip) {
-		return trip.get('name').toLowerCase();
-	}
-});
-
 var TripFriend = Backbone.Model.extend({
 	defaults: {
-		trip_id: null,
 		email: '',
 		first: '',
 		last: '',
 		invite_status: 'invited'
-	}
+    },
+
+    accept: function () {
+        this.save({'invite_status': 'accepted'});
+    }
 });
+
 var TripFriends = Backbone.Collection.extend({
 	model: TripFriend,
+
+    initialize: function (models, options) {
+        this.trip_id = options.trip_id;
+    },
 
 	url: function () {
 		return "/app/trips/" + this.trip_id + "/friends";
@@ -58,14 +32,76 @@ var TripFriends = Backbone.Collection.extend({
 			name = name.split(/ +/, 2);
 
 			this.create({
-				trip_id: this.trip_id,
 				email: email[0],
 				first: name[0],
 				last: name[1] || ''
 			});
 		}, this);
+    },
+
+    accept_invite: function (email) {
+        var friend = this.get(email);
+        friend.accept();
+    }
+});
+
+var TripModel = Backbone.Model.extend({
+	defaults: {
+		'name': '',
+		'start': '',
+		'end': '',
+		'destination': '',
+		'description': '',
+		'friends': null
+	},
+
+	initialize: function () {
+		_.bindAll(this, 'url', 'update_friends_collection', 'update_friends_attribute');
+
+		if (this.get('friends') == null) {
+			this.attributes.friends = new Array;
+		}
+
+		this.friends = new TripFriends(this.attributes.friends, {trip_id: this.id});
+		this.bind('change', this.update_friends_collection);
+		this.friends.bind('change', this.update_friends_attribute);
+	},
+
+	url: function () {
+		var url = "/app/trips";
+		if (this.id) {
+			return url + "/" + this.id;
+		} else {
+			return url;
+		}
+	},
+
+	update_friends_collection: function () {
+		var friends = this.get('friends');
+		this.friends.refresh(friends);
+	},
+
+	update_friends_attribute: function () {
+		var friends = this.friends.toJSON();
+		this.set({'friends': friends});
+    },
+
+    accept_invite: function (email) {
+        this.friends.accept_invite(email);
+    }
+});
+
+var TripCollection = Backbone.Collection.extend({
+	model: TripModel,
+	url: function () {
+		return "/app/trips";
+	},
+
+	comparator: function (trip) {
+		return trip.get('name').toLowerCase();
 	}
 });
+
 
 var TripConfirmDeleteDialog = Backbone.View.extend({
 	id: 'trip_confirm_delete',
@@ -121,6 +157,8 @@ var TripListItemView = Backbone.View.extend({
 
 	events: {
 		'click .list_item_controls img[alt="Delete"]': 'handle_delete_clicked',
+		'click button[title="Accept"]': 'accept_invitation',
+		'click button[title="Ignore"]': 'ignore_invitation',
 		'click': 'handle_click'
 	},
 
@@ -131,7 +169,9 @@ var TripListItemView = Backbone.View.extend({
 		template_string += '<div class="list_item_column trip_name">{{ name }}</div>';
 		template_string += '<div class="list_item_column trip_dates">{{ start }} - {{ end }}</div>';
 		template_string += '<div class="list_item_column trip_destination">{{ destination }}</div>';
-		template_string += '<div class="list_item_controls"><img src="/static/img/icons/fugue/slash.png" alt="Delete" /></div>';
+		template_string += '<div class="list_item_controls"><img src="/static/img/icons/fugue/slash.png" alt="Delete" />';
+		template_string += '<button title="Accept"> accept </button> <button title="Ignore"> ignore </button>';
+		template_string += '</div>';
 		this.template = _.template(template_string);
 	},
 
@@ -139,6 +179,7 @@ var TripListItemView = Backbone.View.extend({
 		$(this.el).html(this.template(this.model.toJSON()));
 		$(this.el).hover(function () { $(this).toggleClass('highlight'); });
 		this.$('.list_item_controls img[alt="Delete"]').button();
+		this.$('.list_item_controls button').button();
 	},
 
 	handle_delete_clicked: function (ev) {
@@ -148,6 +189,16 @@ var TripListItemView = Backbone.View.extend({
 
 	handle_click: function () {
 		this.trigger('view_trip', this.model);
+	},
+
+	accept_invitation: function (ev) {
+		ev.stopPropagation();
+		this.model.accept_invite(current_user.get('email'));
+	},
+
+	ignore_invitation: function (ev) {
+		ev.stopPropagation();
+		this.model.ignore_invite(current_user);
 	}
 });
 

@@ -14,3 +14,5 @@ INVITED_FRIEND_BY_NAME = '''xpath=//div[@class='friends_section']/div[@class='fr
 
 FRIEND_INVITE_STATUS = '''xpath=//div[@class='friends_section']/div[@class='friends_list']//*[contains(.,'%s')]/..//*[contains(.,'%s')]'''
 
+ACCEPT_TRIP = '''xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]//button[contains(.,'accept')]'''
+

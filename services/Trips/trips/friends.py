@@ -23,6 +23,14 @@ class FriendsHandler(BaseHandler):
         command.persistant = True
         self.remoting.call(command, self.respond_to_request)
 
+    @web.authenticated
+    @web.asynchronous
+    def put(self, trip_id, person):
+        invite = json.loads(self.request.body)
+        command = self.service.accept(trip_id, person)
+        command.persistant = True
+        self.remoting.call(command, self.respond_to_request)
+
     def respond_to_request(self, body):
         logging.debug('Received response:\n%s' % body)
         self.set_status(200)

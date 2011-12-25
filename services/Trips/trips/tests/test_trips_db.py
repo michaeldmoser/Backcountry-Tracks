@@ -49,7 +49,7 @@ class TestTripsDbInvite(unittest.TestCase):
 
     def test_id_in_response(self):
         '''There should be an id in the response'''
-        self.assertIn('id', self.result)
+        self.assertEquals(self.result['id'], self.invite['email'])
 
     def test_saved_to_database(self):
         '''Invite should be saved in the database'''
@@ -138,6 +138,51 @@ class TestSendsInviteEmail(unittest.TestCase):
         '''The message should not be empty'''
         body = self.jsonrpc['params'].get('message')
         self.assertIsNotNone(body)
+
+class TestAccept(unittest.TestCase):
+    def setUp(self):
+        self.environ = environment.create()
+        self.riak = RiakClientFake()
+        self.bucket_name = 'trips'
+        self.bucket = self.riak.bucket(self.bucket_name)
+
+        pika_connection = SelectConnectionFake()
+        self.channel = pika_connection._channel
+        rpc_client = RemotingClient(self.channel)
+
+        self.app = TripsDb(
+                rpc_client,
+                self.riak,
+                self.bucket_name
+                )
+
+        self.trip_id = str(uuid4())
+        self.invite = {
+                'email': self.environ.douglas.email,
+                'first': self.environ.douglas.first_name,
+                'last': self.environ.douglas.last_name,
+                'invite_status': 'invited'
+                }
+        self.bucket.add_document(self.trip_id, {
+            'name': 'Glacier',
+            'start': '2012-07-19',
+            'end': '2012-07-24',
+            'destination': 'Glacier National Park',
+            'friends': [self.invite]
+            })
+        self.result = self.app.accept(self.trip_id, self.environ.douglas.email)
+
+    def test_invite_changed_to_accepted(self):
+        '''Accept should update the invite status to accepted'''
+        trip = self.bucket.get(self.trip_id).get_data()
+        invite_status = trip['friends'][0]['invite_status']
+        self.assertEquals(invite_status, 'accepted')
+
+    def test_invite_returns(self):
+        '''Accept should return the updated invite'''
+        invite = self.invite.copy()
+        invite['invite_status'] = 'accepted'
+        self.assertEquals(invite, self.result)
 
 
 if __name__ == '__main__':
