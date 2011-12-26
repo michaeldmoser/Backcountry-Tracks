@@ -1,6 +1,9 @@
+import re
 from robot.libraries.BuiltIn import BuiltIn
 
 from tptesting import environment
+
+URL_REGEX = r'''(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?]))'''
 
 class Trips(object):
     def __init__(self):
@@ -23,6 +26,17 @@ class Trips(object):
         Get a trip from the database based on the name
         '''
         return self.trips.get_by_name(trip_name)
+
+    def get_trip_link(self, message):
+        '''
+        Extracts and returns the first link in message that goes to the trip planner app
+        '''
+        matches = re.search(URL_REGEX, message)
+
+        assert matches, 'Could not find a link in message'
+
+        return matches.groups()[0]
+
 
 
         

@@ -29,6 +29,12 @@ users:
         email: douglas.mcdowell@example.com
         birthdate: "1952-04-20"
         password: "Test1234!"
+    sienna:
+        first_name: Sienna
+        last_name: Pugh
+        email: sienna.pugh@example.com
+        birthdate: "1978-08-03"
+        password: "Test1234!"
 
 adventurer:
     start: ['adventurer', 'start']
