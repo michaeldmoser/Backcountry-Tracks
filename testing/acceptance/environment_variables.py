@@ -15,3 +15,5 @@ APPLICATION_HOME_PAGE = SITE_HOME_PAGE + "app/home"
 
 DATA = environ.data
 
+CLOSE_BROWSER = True
+
