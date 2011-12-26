@@ -27,7 +27,12 @@ class FriendsHandler(BaseHandler):
     @web.asynchronous
     def put(self, trip_id, person):
         invite = json.loads(self.request.body)
-        command = self.service.accept(trip_id, person)
+
+        if invite['invite_status'] == 'accepted':
+            command = self.service.accept(trip_id, person)
+        elif invite['invite_status'] == 'not coming':
+            command = self.service.reject(trip_id, person)
+
         command.persistant = True
         self.remoting.call(command, self.respond_to_request)
 

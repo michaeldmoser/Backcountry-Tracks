@@ -72,6 +72,7 @@ class AcceptAnInvite(unittest.TestCase):
         trip_url = cls.environ.trailhead_url + "/trips/%s/friends/%s" % \
                 (cls.trip_id, cls.environ.douglas.email)
         cls.invite_data = {
+                'id': cls.environ.douglas.email,
                 'email': cls.environ.douglas.email,
                 'first': cls.environ.douglas.first_name,
                 'last': cls.environ.douglas.last_name,
@@ -100,6 +101,53 @@ class AcceptAnInvite(unittest.TestCase):
         utils.try_until(3, check_in_database)
             
 
+class IgnoreAnInvite(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.environ = environment.create()
+        cls.environ.make_pristine()
+        cls.environ.bringup_infrastructure()
+
+        cls.ramona = cls.environ.ramona
+        cls.environ.create_user(cls.ramona)
+        login_session = cls.ramona.login()
+
+        cls.trip_data = cls.environ.trips.add_trips_to_user(cls.ramona,
+                cls.environ.data['trips'])
+        cls.trip = cls.trip_data[0]
+        cls.environ.trips.add_invitee(cls.trip['id'], cls.environ.douglas, 'invited')
+
+        cls.trip_id = cls.trip_data[0]['id']
+        trip_url = cls.environ.trailhead_url + "/trips/%s/friends/%s" % \
+                (cls.trip_id, cls.environ.douglas.email)
+        cls.invite_data = {
+                'id': cls.environ.douglas.email,
+                'email': cls.environ.douglas.email,
+                'first': cls.environ.douglas.first_name,
+                'last': cls.environ.douglas.last_name,
+                'invite_status': 'not coming'
+                }
+        create_request = urllib2.Request(
+                trip_url,
+                data=json.dumps(cls.invite_data)
+                )
+        create_request.get_method = lambda: 'PUT'
+
+        cls.create_response = login_session.open(create_request)
+        #body = cls.create_response.read()
+        #cls.response_body = json.loads(body)
+
+    def test_invite_accepted(self):
+        '''Accepting the invite should save to the database'''
+        def check_in_database():
+            trip = self.environ.trips.get(self.trip_id)
+            douglas = self.environ.douglas
+            invitee = filter(lambda friend: friend['email'] == douglas.email,
+                    trip['friends'])[0]
+            
+            self.assertEquals('not coming', invitee['invite_status'])
+
+        utils.try_until(3, check_in_database)
 
         
 if __name__ == '__main__':

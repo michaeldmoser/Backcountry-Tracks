@@ -139,7 +139,7 @@ class TestSendsInviteEmail(unittest.TestCase):
         body = self.jsonrpc['params'].get('message')
         self.assertIsNotNone(body)
 
-class TestAccept(unittest.TestCase):
+class TestAcceptIgnore(unittest.TestCase):
     def setUp(self):
         self.environ = environment.create()
         self.riak = RiakClientFake()
@@ -170,19 +170,35 @@ class TestAccept(unittest.TestCase):
             'destination': 'Glacier National Park',
             'friends': [self.invite]
             })
-        self.result = self.app.accept(self.trip_id, self.environ.douglas.email)
 
     def test_invite_changed_to_accepted(self):
         '''Accept should update the invite status to accepted'''
+        self.app.accept(self.trip_id, self.environ.douglas.email)
         trip = self.bucket.get(self.trip_id).get_data()
         invite_status = trip['friends'][0]['invite_status']
         self.assertEquals(invite_status, 'accepted')
 
-    def test_invite_returns(self):
+    def test_invite_accepted_returns(self):
         '''Accept should return the updated invite'''
+        result = self.app.accept(self.trip_id, self.environ.douglas.email)
         invite = self.invite.copy()
         invite['invite_status'] = 'accepted'
-        self.assertEquals(invite, self.result)
+        self.assertEquals(invite, result)
+
+    def test_invite_changed_to_rejected(self):
+        '''Reject should update the invite status to not coming'''
+        self.app.reject(self.trip_id, self.environ.douglas.email)
+        trip = self.bucket.get(self.trip_id).get_data()
+        invite_status = trip['friends'][0]['invite_status']
+        self.assertEquals(invite_status, 'not coming')
+
+    def test_invite_rejected_returns(self):
+        '''Accept should return the updated invite'''
+        result = self.app.reject(self.trip_id, self.environ.douglas.email)
+        invite = self.invite.copy()
+        invite['invite_status'] = 'not coming'
+        self.assertEquals(invite, result)
+
 
 
 if __name__ == '__main__':

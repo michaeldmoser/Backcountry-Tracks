@@ -32,6 +32,38 @@ class TestTripListing(unittest.TestCase):
         self.assertDictContainsSubset(env.data['trips'][0], invited_on[0])
 
 
+class TestTripListingWithIgnored(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        cls.env = environment.create()
+        cls.env.make_pristine()
+        cls.env.bringup_infrastructure()
+
+        cls.env.create_user(cls.env.douglas)
+        cls.env.create_user(cls.env.ramona)
+        trips = cls.env.trips.add_trips_to_user(cls.env.douglas, cls.env.data['trips'])
+
+        cls.env.trips.add_invitee(trips[0]['id'], cls.env.ramona, 'invited')
+        cls.env.trips.add_invitee(trips[1]['id'], cls.env.ramona, 'not coming')
+
+        client = riak.RiakClient()
+        pika = fakepika.SelectConnectionFake()
+        remoting = RemotingClient(pika._channel)
+
+        tripsdb = TripsDb(remoting, client, 'trips')
+
+        cls.invited_on = tripsdb.list(cls.env.ramona.email)
+
+    def test_accepted_trip(self):
+        '''TripsDb.list() should return trips a user is invited on but has not ignored'''
+        self.assertDictContainsSubset(self.env.data['trips'][0], self.invited_on[0])
+
+    def test_list_does_not_contain_ignored(self):
+        '''TripsDb.list() should return only one trip'''
+        self.assertEquals(len(self.invited_on), 1)
+
+
 if __name__ == '__main__':
     unittest.main()
 

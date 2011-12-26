@@ -8,6 +8,10 @@ var TripFriend = Backbone.Model.extend({
 
     accept: function () {
         this.save({'invite_status': 'accepted'});
+    },
+
+    ignore: function () {
+        this.save({'invite_status': 'not coming'});
     }
 });
 
@@ -42,7 +46,12 @@ var TripFriends = Backbone.Collection.extend({
     accept_invite: function (email) {
         var friend = this.get(email);
         friend.accept();
-    }
+	},
+
+	ignore_invite: function (email) {
+        var friend = this.get(email);
+        friend.ignore();
+	}
 });
 
 var TripModel = Backbone.Model.extend({
@@ -88,7 +97,12 @@ var TripModel = Backbone.Model.extend({
 
     accept_invite: function (email) {
         this.friends.accept_invite(email);
-    }
+	},
+
+	ignore_invite: function (email) {
+        this.friends.ignore_invite(email);
+		this.collection.remove(this); // FIXME: err, should the model really be accessing the collection?
+	}
 });
 
 var TripCollection = Backbone.Collection.extend({
@@ -198,7 +212,7 @@ var TripListItemView = Backbone.View.extend({
 
 	ignore_invitation: function (ev) {
 		ev.stopPropagation();
-		this.model.ignore_invite(current_user);
+		this.model.ignore_invite(current_user.get('email'));
 	}
 });
 

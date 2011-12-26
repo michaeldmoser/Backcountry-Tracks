@@ -17,7 +17,8 @@ class TripsDb(BasicCRUDService):
 
             var friends = data.friends;
             for (friend in friends) {
-                if (friends[friend].email == arg['owner'])
+                if (friends[friend].email == arg['owner'] &&
+                        friends[friend].invite_status != 'not coming')
                     return [data];
             }
             
@@ -75,8 +76,7 @@ class TripsDb(BasicCRUDService):
 
         return result
 
-    def accept(self, trip_id, invitee):
-        '''Updates the staus of an invite to accepted'''
+    def __update_invite_status(self, trip_id, invitee, status):
         bucket = self.riak.bucket(self.bucket_name)
         trip = bucket.get(str(trip_id))
         trip_data = trip.get_data()
@@ -84,9 +84,20 @@ class TripsDb(BasicCRUDService):
         # Not sure if I like this solution... it obfiscates the fact that the trip_data
         # object is being updated
         invite = filter(lambda i: i['email'] == invitee, trip_data['friends'])[0]
-        invite['invite_status'] = 'accepted'
+        invite['invite_status'] = status
 
         trip.set_data(trip_data)
         trip.store()
+
         return invite
+
+    def accept(self, trip_id, invitee):
+        '''Updates the staus of an invite to accepted'''
+        return self.__update_invite_status(trip_id, invitee, 'accepted')
+
+    def reject(self, trip_id, invitee):
+        '''Updates the staus of an invite to not coming'''
+        return self.__update_invite_status(trip_id, invitee, 'not coming')
+
+
 
