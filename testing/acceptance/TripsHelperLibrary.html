@@ -80,7 +80,14 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_Open the ${TRIP_NAME} trip">Open the ${TRIP_NAME} trip</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
 <td>Click element</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
 <td>${TRIP_BY_NAME % '${TRIP_NAME}'}</td>
 <td>dont_wait=1</td>
 <td></td>
@@ -164,9 +171,9 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_Click on the ${TRIP_NAME} trip">Click on the ${TRIP_NAME} trip</a></td>
-<td>Click element</td>
-<td>xpath=//.[@id='trip_list_view']//li[contains(.,'${TRIP_NAME}')]</td>
-<td>dont_wait=1</td>
+<td>Open the ${TRIP_NAME} trip</td>
+<td></td>
+<td></td>
 <td></td>
 </tr>
 <tr>
@@ -248,6 +255,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_Accept the invitation for the ${TRIP_NAME} trip">Accept the invitation for the ${TRIP_NAME} trip</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${ACCEPT_TRIP % "${TRIP_NAME}"}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click element</td>
 <td>${ACCEPT_TRIP % "${TRIP_NAME}"}</td>
 <td>dont_wait=1</td>
@@ -283,6 +297,13 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_Ignore the ${TRIP_NAME} trip">Ignore the ${TRIP_NAME} trip</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${IGNORE_TRIP % "${TRIP_NAME}"}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td>Click element</td>
 <td>${IGNORE_TRIP % "${TRIP_NAME}"}</td>
 <td>dont_wait=1</td>

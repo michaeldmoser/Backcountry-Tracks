@@ -12,7 +12,10 @@
 	<link rel="stylesheet" type="text/css" href="/static/c/normalize.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/c/default.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/c/Aristo/Aristo.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/css/bct.css"/>
+
+    {% for stylesheet in stylesheets %}
+	<link rel="stylesheet" type="text/css" href="/static/css/{{ stylesheet }}" />
+    {% endfor %}
 
 </head>
 <body id="" >
@@ -39,20 +42,24 @@
 		<img src="/static/i/header_logo.png" width="180" height="57" alt="bct logo">
 	</div>
 
+    {% for template in templates %}
+    {{ template|safe }}
+    {% endfor %}
 
     <script type="text/javascript" src="/static/js/lib/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="/static/js/lib/jquery-ui-1.8.16.custom.min.js"></script>
     <script type="text/javascript" src="/static/js/lib/underscore.js"></script>
     <script type="text/javascript" src="/static/js/lib/backbone.js"></script>
+	<script type="text/javascript" src="/static/js/backcountrytracks.js"></script>
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAwFXMH2UyoLTdM7c5UzcbSTiLjr62KCic&sensor=false"></script>
-    <script type="text/javascript" src="/static/js/tripplannerapp.js"></script>
-    <script type="text/javascript" src="/static/js/gear_manager2.js"></script>
-    <script type="text/javascript" src="/static/js/triporganizer.js"></script>
 
-	<script type="text/javascript">
-		$(function(){
-			$(".btn").button();
-		});
-	</script>
+
+    {% for javascript_file in javascript_files %}
+    <script type="text/javascript" src="{{ javascript_file }}"></script>
+    {% endfor %}
+
+    <script type="text/javascript">
+        BackcountryTracks.initialize();
+    </script>
 </body>
 </html>

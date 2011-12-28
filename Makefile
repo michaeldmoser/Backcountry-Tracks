@@ -1,5 +1,5 @@
 
-dev-environ: install-dependencies install-infrastructure install-libraries install-services infrastructure-dev-config testing-framework
+dev-environ: install-dependencies install-infrastructure install-libraries install-services infrastructure-dev-config testing-framework webroot
 	
 infrastructure-dev-config: django nginx-config riak-config app-config
 
@@ -33,6 +33,9 @@ systest: testing/system
 
 inttest: unittest testing/integration
 	cd testing/integration && sudo python setup.py test
+
+webroot: /srv/www
+	sudo python tools/build-webroot.py
 
 install-rabbitmq: /usr/sbin/rabbitmq-server
 

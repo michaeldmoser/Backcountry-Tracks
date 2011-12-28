@@ -338,7 +338,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_I open the trip organizer">I open the trip organizer</a></td>
-<td>Open the Trip Organizer app</td>
+<td>Open the Trips app</td>
 <td></td>
 <td></td>
 <td></td>
@@ -555,7 +555,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>open the Trip Organizer app</td>
+<td>open the Trips app</td>
 <td></td>
 <td></td>
 <td></td>
@@ -564,8 +564,8 @@ td.name, th.name {
 <td class="name"></td>
 <td>Trip should appear in list</td>
 <td>BWCA 2012</td>
-<td>09/14/2011</td>
-<td>09/28/2011</td>
+<td>2012-09-14</td>
+<td>2012-09-28</td>
 </tr>
 <tr>
 <td class="name"></td>
@@ -619,7 +619,7 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>...</td>
-<td>trip_confirm_delete</td>
+<td>xpath=//*[contains(.,'Delete Gear')]</td>
 <td></td>
 <td></td>
 </tr>
@@ -633,7 +633,7 @@ td.name, th.name {
 <tr>
 <td class="name"><a name="keyword_I confirm the delete">I confirm the delete</a></td>
 <td>Click button</td>
-<td>Delete!</td>
+<td>xpath=//*[contains(@class, 'delete_gear')]//button[contains(.,'Delete!')]</td>
 <td>dont_wait=1</td>
 <td></td>
 </tr>
@@ -646,7 +646,14 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"><a name="keyword_the ${TRIP_NAME} trip should not be in the list">the ${TRIP_NAME} trip should not be in the list</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
 <td>Page Should Not Contain Element</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
 <td>xpath=//*[@id='trip_organizer']//ul/li[contains(.,'${TRIP_NAME}')]</td>
 <td></td>
 <td></td>
@@ -660,7 +667,7 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
-<td>open the Trip Organizer app</td>
+<td>open the Trips app</td>
 <td></td>
 <td></td>
 <td></td>

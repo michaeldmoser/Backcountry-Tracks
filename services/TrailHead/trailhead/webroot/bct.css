@@ -397,3 +397,27 @@ div.list_view li div.gear_weight {
 div.list_view li div.gear_description {
 	left: 66%;
 }
+
+#app_chooser_buttons .app_chooser_button,
+#app_chooser_buttons .app_chooser_button a {
+	margin: 5px 0;
+	padding: 0 0px 0 0px;
+	height: 64px;
+	line-height: 64px;
+	text-align: center;
+	display: block;
+	text-decoration: none;
+	color: black;
+}
+#app_chooser_buttons .app_chooser_button a:hover {
+	text-decoration: none;
+	color: black;
+}
+
+#app_chooser_buttons div.gear64 {
+	background: url('/static/img/icons/gear64.png') no-repeat left center;
+}
+
+#app_chooser_buttons div.trips64 {
+	background: url('/static/img/icons/trips64.png') no-repeat left center;
+}

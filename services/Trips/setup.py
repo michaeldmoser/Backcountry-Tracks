@@ -14,7 +14,11 @@ setup(
             'trips = trips.handlers:TripsHandler',
             'trip = trips.handlers:TripHandler',
             'friends = trips.friends:FriendsHandler',
-            ]
+            ],
+        'tripplanner.web.files': ['trips = trips:Webroot'],
+        },
+    package_data = {
+        '': ['webroot/*'],
         }
     )
 

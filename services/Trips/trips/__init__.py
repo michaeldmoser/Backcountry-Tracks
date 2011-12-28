@@ -1,3 +1,5 @@
+from pkg_resources import resource_filename
+
 from bctmessaging.endpoints import MessagingEndPointController
 from riak import RiakClient
 
@@ -34,4 +36,14 @@ class EntryPoint(object):
         service = self.assemble_service()
         controller = MessagingEndPointController(self.channel, self.config, service)
         controller.start()
+
+class Webroot(object):
+
+    @property
+    def javascript_files(self):
+        return [resource_filename('trips', 'webroot/trips.js')]
+
+    @property
+    def templates(self):
+        return open(resource_filename('trips', 'webroot/templates.html')).read()
 

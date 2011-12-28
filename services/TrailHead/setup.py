@@ -13,6 +13,10 @@ setup(
     ''',
     entry_points = {
         'tripplanner.service': ['trailhead = trailhead:EntryPoint'],
+        'tripplanner.web.files': ['trailhead = trailhead:Webroot'],
+        },
+    package_data = {
+        '': ['webroot/*'],
         }
     )
 

@@ -10,7 +10,11 @@ setup(
     ''',
     entry_points = {
         'tripplanner.service': ['gear = gear:GearEntryPoint'],
-        'tripplanner.trailhead.handler': ['gear = gear.handlers:UserGearListHandler']
+        'tripplanner.trailhead.handler': ['gear = gear.handlers:UserGearListHandler'],
+        'tripplanner.web.files': ['gear = gear:Webroot'],
+        },
+    package_data = {
+        '': ['webroot/*'],
         }
     )
 

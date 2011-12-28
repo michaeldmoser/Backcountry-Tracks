@@ -14,3 +14,7 @@ selenium-screenshot-*.png
 .pydevproject
 .project
 testing/etc/jsTestDriver.conf
+htdocs/apphome.html
+htdocs/static/css/*.css
+htdocs/static/js/*.js
+
