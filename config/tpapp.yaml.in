@@ -70,11 +70,17 @@ services:
             - ['/app/trips$', 'Trips/trips']
             - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
             - ['/app/trips/([0-9a-f-]+)/friends$', 'Trips/friends']
+            - ['/app/trips/([0-9a-f-]+)/friends/([^/]+)$', 'Trips/friends']
     PostOffice/postoffice:
         from: noreply@backcountrytracks.com
         from_line: 'Backcountry Tracks Email Service'
         queues:
             rpc: email_rpc
+
+webroot:
+    - Trailhead/trailhead
+    - Gear/gear
+    - Trips/trips
 
 message_routing:
     exchanges:
