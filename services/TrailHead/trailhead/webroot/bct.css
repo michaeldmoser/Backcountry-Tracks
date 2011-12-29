@@ -421,3 +421,23 @@ div.list_view li div.gear_description {
 #app_chooser_buttons div.trips64 {
 	background: url('/static/img/icons/trips64.png') no-repeat left center;
 }
+
+div.login_registration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9011;
+    background-color: transparent;
+}
+
+#splash_screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9010;
+    background-color: white;
+}

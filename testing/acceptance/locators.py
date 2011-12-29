@@ -17,3 +17,12 @@ FRIEND_INVITE_STATUS = '''xpath=//div[@class='friends_section']/div[@class='frie
 ACCEPT_TRIP = '''xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]//button[contains(.,'accept')]'''
 IGNORE_TRIP = '''xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]//button[contains(.,'ignore')]'''
 
+
+REGISTRATION_LAST_NAME = '''xpath=//form[@id='register-form']//input[contains(@title,'Last Name')]'''
+REGISTRATION_FIRST_NAME = '''xpath=//form[@id='register-form']//input[contains(@title,'First Name')]'''
+REGISTRATION_EMAIL = '''xpath=//form[@id='register-form']//input[contains(@title,'Email')]'''
+REGISTRATION_PASSWORD = '''xpath=//form[@id='register-form']//input[contains(@title,'New Password')]'''
+REGISTRATION_CONFIRM_PASSWORD = '''xpath=//form[@id='register-form']//input[contains(@title,'Confirm Password')]'''
+REGISTRATION_BIRTH_YEAR = '''xpath=//form[@id='register-form']//select[contains(@name,'year')]'''
+REGISTRATION_BIRTH_DAY = '''xpath=//form[@id='register-form']//select[contains(@name,'day')]'''
+REGISTRATION_BIRTH_MONTH = '''xpath=//form[@id='register-form']//select[contains(@name,'month')]'''

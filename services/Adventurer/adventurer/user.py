@@ -10,9 +10,11 @@ from tornado import web
 
 class UserHandler(BaseHandler):
 
-    @web.authenticated
     @web.asynchronous
     def get(self):
+        if not self.current_user:
+            raise web.HTTPError(403)
+
         logging.info('TrailHead(UserHandler): GET /user (%s)' % self.current_user)
         remoting = self.application.mq.remoting
         service = remoting.service('Adventurer')

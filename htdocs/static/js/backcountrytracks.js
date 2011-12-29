@@ -1,5 +1,5 @@
-var SidebarViewChooserButton = Backbone.View.extend({
-	className: 'app_chooser_button',
+
+var SidebarViewChooserButton = Backbone.View.extend({ className: 'app_chooser_button',
 
 	initialize: function () {
 		_.bindAll(this, 'render');
@@ -204,27 +204,39 @@ var ScreensView = Backbone.View.extend({
 	});
 	bct.current_user = new bct.UserModel();
 
-	bct.initialize = function () {
-		bct.current_user.fetch({success: function () {
-				new TripOrganizer.TripsModule;
-				new GearManager.GearModule;
+	var start_application = function () {
+		new TripOrganizer.TripsModule;
+		new GearManager.GearModule;
 
-				bct.sidebar = new SidebarView({
-					el: $('#app_chooser_buttons')[0],
-					model: BackcountryTracks.Sidebar
-				});
-				bct.sidebar.render();
-
-				bct.mainview = new ScreensView({
-					el: $('#main')[0],
-					collection: BackcountryTracks.screens	
-				});
-				bct.mainview.render();
-
-				Backbone.history.start();
-			}
+		bct.sidebar = new SidebarView({
+			el: $('#app_chooser_buttons')[0],
+			model: BackcountryTracks.Sidebar
 		});
+		bct.sidebar.render();
 
+		bct.mainview = new ScreensView({
+			el: $('#main')[0],
+			collection: BackcountryTracks.screens	
+		});
+		bct.mainview.render();
+
+		Backbone.history.start();
+
+		$('#splash_screen').fadeOut();
+	};
+	
+	var initialization_error = function (model, response) {
+        if (response.status == 403) {
+            window.location.href = '/';
+        }
+	};
+	
+	bct.initialize = function () {
+		Backbone.history = new Backbone.History;
+		bct.current_user.fetch({
+			error: initialization_error,
+			success: start_application 
+		});
 	};
 
 	root.BackcountryTracks = bct;

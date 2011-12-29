@@ -3,6 +3,7 @@ import unittest
 import json, pika
 from tptesting import faketornado, environment, fakepika
 from trailhead.tests.utils import setup_handler
+from tornado.web import HTTPError
 
 from adventurer.user import UserHandler
 
@@ -87,6 +88,22 @@ class TestUserHandlerReply(unittest.TestCase):
     def test_finishes_request(self):
         '''Reports being finished to tornado'''
         self.assertTrue(self.handler.request.was_called(self.handler.request.finish))
+
+class TestNotLoggedIn(unittest.TestCase):
+
+    def test_not_logged_in(self):
+        '''Should raise an HTTPError 403'''
+        self.environ = environment.create()
+
+        url = '/app/user'
+        handler, self.application, pika = setup_handler(UserHandler, 'GET', 
+                url)
+
+        with self.assertRaises(HTTPError) as exp:
+            handler.get()
+
+        self.assertEquals(exp.exception.status_code, 403)
+
 
 
 if __name__ == '__main__':

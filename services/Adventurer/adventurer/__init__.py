@@ -1,3 +1,4 @@
+from pkg_resources import resource_filename
 from bctplugins import entrypoint
 from riak import RiakClient
 
@@ -21,6 +22,25 @@ class EntryPoint(entrypoint.MessagingEntryPointFactory):
                 db = riak, trailhead_url = base_url, mailer=mailer)
 
         return service
+
+
+class Templates(object):
+
+    @property
+    def javascript_files(self):
+        return [resource_filename('adventurer', 'webroot/adventurer.js')]
+
+    @property
+    def templates(self):
+        return open(resource_filename('adventurer', 'webroot/template.html'), 'r').read()
+
+    @property
+    def stylesheets(self):
+        stylesheets = [
+                resource_filename('adventurer', 'webroot/front.css'),
+                ]
+        return stylesheets
+
 
 
 

@@ -1,11 +1,14 @@
 import time
 import sys
+import re
 
 from tptesting import environment
 import robot.libraries.BuiltIn
 import logging
 
 import mailbox
+
+URL_REGEX = r'''(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?]))'''
 
 class Environment(object):
     def __init__(self):
@@ -81,5 +84,15 @@ class Environment(object):
                     return message.get_payload(decode=True)
 
             time.sleep(.1)
+    
+    def extract_link(self, message):
+        '''
+        Extracts and returns the first link in message that goes to the trip planner app
+        '''
+        matches = re.search(URL_REGEX, message)
+
+        assert matches, 'Could not find a link in message'
+
+        return matches.groups()[0]
 
 
