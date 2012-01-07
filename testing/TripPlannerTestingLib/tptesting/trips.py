@@ -109,6 +109,22 @@ class TripsEnvironment(object):
         trip_data = trip_obj.get_data()
 
         return trip_data
+
+    def add_trip_gear(self, user, trip_id, gear_list):
+        '''
+        Add gear in gear_list to trip_id for user
+        '''
+        trip = self.tripsdb.get(str(trip_id))
+
+        trip_data = trip.get_data()
+        
+        if not trip_data.has_key('gear'):
+            trip_data['gear'] = dict()
+
+        trip_data['gear'].update({user.email: gear_list})
+
+        trip.set_data(trip_data)
+        trip.store()
         
 
         

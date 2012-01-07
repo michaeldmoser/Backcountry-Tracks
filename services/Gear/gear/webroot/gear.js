@@ -10,16 +10,7 @@
 
 		initialize: function () {
 			_.bindAll(this, 'url');
-		},
-
-		url: function () {
-			var url = '/app/users/' + BackcountryTracks.current_user.get('email') + '/gear';
-			if (this.id)
-				url = url + "/" + this.id;
-
-			return url;
 		}
-
 	});
 
 	g.GearList = Backbone.Collection.extend({
@@ -37,7 +28,7 @@
 		'id': 'gear_add_form',
 
 		initialize: function () {
-			_.bindAll(this, 'render', 'open', 'cancel', 'save_gear', 'handle_model_saved_success');
+			_.bindAll(this, 'render', 'open', 'cancel', 'save_gear');
 
 			this.template = _.template($('#gear_add_form_template').html());
 
@@ -85,14 +76,8 @@
 				'description': this.$('textarea[name="gear_description"]').val()
 			};
 
-			this.model.save(attributes, {
-				'success': this.handle_model_saved_success 
-			});
+			this.trigger('save', attributes);
 			$(this.el).dialog('close');
-		},
-
-		handle_model_saved_success: function (model, response) {
-			this.trigger('save', model);
 		}
 	});
 	
@@ -258,9 +243,14 @@
 			this.addform.open(gear);
 		},
 
-		save_gear: function (gear) {
-			if (!this.collection.get(gear.id))
-				this.collection.add([gear]);
+		save_gear: function (gear_data) {
+			var gear = this.collection.get(gear_data.id);
+			if (!gear) {
+				this.collection.create(gear_data);
+			} else {
+				gear.set(gear_data);
+				gear.save();
+			};
 		},
 		
 		edit_gear: function (gear) {

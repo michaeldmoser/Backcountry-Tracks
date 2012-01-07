@@ -35,4 +35,26 @@ class Gear(object):
             gear = self.geardb.get(str(key))
             gear.delete()
 
+    def add_gear_to_user(self, user, gear_list):
+        '''
+        Mass add a list of gear to user
+        '''
+        stored_gear = []
+
+        for gear in gear_list:
+            gear_item = gear.copy()
+            gear_id = self.add_item(owner=user.email, **gear_item)
+
+            gear_item.update({
+                'id': gear_id,
+                'owner': user.email
+                })
+
+            stored_gear.append(gear_item)
+
+        return stored_gear
+
+
+
+
 

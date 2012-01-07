@@ -115,7 +115,10 @@ class RemotingClient(object):
 
     def call(self, command, callback=None):
         '''Send an RPC message through the messaging system'''
-        self.__add_callback(command.message_id, callback)
+        if callback is None:
+            command.message_id = None
+        else:
+            self.__add_callback(command.message_id, callback)
         exchange = self.exchange if command.exchange is None else command.exchange
         properties = pika.BasicProperties(
                 reply_to = self.queue,

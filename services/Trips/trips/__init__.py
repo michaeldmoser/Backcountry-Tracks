@@ -41,7 +41,10 @@ class Webroot(object):
 
     @property
     def javascript_files(self):
-        return [resource_filename('trips', 'webroot/trips.js')]
+        return [
+                resource_filename('trips', 'webroot/trip_gear.js'),
+                resource_filename('trips', 'webroot/trips.js')
+                ]
 
     @property
     def templates(self):

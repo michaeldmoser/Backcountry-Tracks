@@ -71,7 +71,12 @@ class TornadoHandlerTestCase(unittest.TestCase):
         method = getattr(self.handler, method_name.lower())
         method(*args, **kwargs)
 
+        if self.handler._auto_finish:
+            self.handler.finish()
+
         self.sent_message = self.pika.published_messages[0]
+        if self.sent_message.properties.correlation_id is None:
+            return
 
         self.headers = pika.BasicProperties(
                 correlation_id = self.sent_message.properties.correlation_id,

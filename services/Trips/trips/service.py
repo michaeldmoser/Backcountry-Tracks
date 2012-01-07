@@ -99,5 +99,28 @@ class TripsDb(BasicCRUDService):
         '''Updates the staus of an invite to not coming'''
         return self.__update_invite_status(trip_id, invitee, 'not coming')
 
+    def get_personal_gear(self, trip, person):
+        '''Return person's gear for trip'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip))
+        data = tripobj.get_data()
 
+        return data.get('gear', {}).get(person, [])
+
+    def add_personal_gear(self, trip, person, gear):
+        '''Add a personal gear item to trip for person'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip))
+        data = tripobj.get_data()
+
+        if not data.has_key('gear'):
+            data['gear'] = dict()
+
+        if not data['gear'].has_key(person):
+            data['gear'][person] = list()
+
+        data['gear'][person].append(gear)
+
+        tripobj.set_data(data)
+        tripobj.store()
 

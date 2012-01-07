@@ -71,6 +71,8 @@ services:
             - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
             - ['/app/trips/([0-9a-f-]+)/friends$', 'Trips/friends']
             - ['/app/trips/([0-9a-f-]+)/friends/([^/]+)$', 'Trips/friends']
+            - ['/app/trips/([0-9a-f-]+)/gear/personal$', 'Trips/gear']
+            - ['/app/trips/([0-9a-f-]+)/gear/personal/([0-9a-f-]+)$', 'Trips/gear']
     PostOffice/postoffice:
         from: noreply@backcountrytracks.com
         from_line: 'Backcountry Tracks Email Service'

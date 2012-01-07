@@ -26,3 +26,11 @@ REGISTRATION_CONFIRM_PASSWORD = '''xpath=//form[@id='register-form']//input[cont
 REGISTRATION_BIRTH_YEAR = '''xpath=//form[@id='register-form']//select[contains(@name,'year')]'''
 REGISTRATION_BIRTH_DAY = '''xpath=//form[@id='register-form']//select[contains(@name,'day')]'''
 REGISTRATION_BIRTH_MONTH = '''xpath=//form[@id='register-form']//select[contains(@name,'month')]'''
+
+VIEW_GEAR_SECTION = '''xpath=//a[@href='#gear_tab']'''
+SELECT_GEAR = '''Select gear'''
+GEAR_INVENTORY_SCREEN = '''xpath=//*[@id='add_personal_gear']'''
+GEAR_INVENTORY_ITEM_BY_NAME = '''xpath=//*[@id='add_personal_gear']/ul/li[contains(.,'%s')]'''
+TRIP_PERSONAL_GEAR_LIST = '''xpath=//*[@id='trip_personal_gear']'''
+
+

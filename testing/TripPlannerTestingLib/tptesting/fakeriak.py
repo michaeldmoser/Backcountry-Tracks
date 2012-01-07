@@ -19,6 +19,7 @@ Checking the data
 """
 
 import uuid
+from copy import deepcopy
 
 
 class RiakClientFake(object):
@@ -132,7 +133,7 @@ class RiakBucketFake(object):
         '''
         Creates a document for retrieval by the SUT code
         '''
-        self.__documents[key] = data
+        self.__documents[key] = deepcopy(data)
 
     def __init__(self, client, name):
         self.name = name
@@ -180,7 +181,7 @@ class RiakBucketFake(object):
 
     def new(self, key, data=None, content_type='application/json'):
         obj = RiakObjectFake(self.client, self, key)
-        obj.set_data(data)
+        obj.set_data(deepcopy(data))
         obj.set_content_type(content_type)
         obj._encode_data = True
         return obj
@@ -190,7 +191,7 @@ class RiakBucketFake(object):
 
     def get(self, key, r=None):
         try:
-            document = self.__documents[key]
+            document = deepcopy(self.__documents[key])
         except KeyError:
             return RiakObjectFake(self.client, self)
 

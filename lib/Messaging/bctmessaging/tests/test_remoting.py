@@ -202,6 +202,13 @@ class TestRemotingClientMessageSending(unittest.TestCase):
         message = self.pika.published_messages[0]
         self.assertEquals(message.properties.correlation_id, None)
 
+    def test_message_id_empty(self):
+        '''Messages id should be None (no callback)'''
+        self.remoting.call(self.command)
+
+        message = self.pika.published_messages[0]
+        self.assertIsNone(self.command.message_id)
+
 
     def test_correlation_id_with_callback(self):
         '''Messages correlation id should be the same as the CommandMessages message_id'''

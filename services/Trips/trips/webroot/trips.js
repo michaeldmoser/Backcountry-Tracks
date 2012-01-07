@@ -154,6 +154,9 @@ var DateRangeEditor = Backbone.View.extend({
 
 (function() {
 	var t = {};
+
+	TripGearViews.call(t);
+
 	t.TripFriend = Backbone.Model.extend({
 		defaults: {
 			email: '',
@@ -230,6 +233,9 @@ var DateRangeEditor = Backbone.View.extend({
 
 			this.friends = new t.TripFriends(this.attributes.friends, {trip_id: this.id});
 			this.friends.bind('change', this.update_friends_attribute);
+
+			this.gear = new t.PersonalGear;
+			this.inventory = new t.InventoryGear;
 		},
 
 		url: function () {
@@ -470,6 +476,7 @@ var DateRangeEditor = Backbone.View.extend({
 				collection: this.collection,
 				el: this.$('.friends_list')[0]
 			});
+
 		},
 
 		invite_friends_to_trip: function () {
@@ -550,6 +557,13 @@ var DateRangeEditor = Backbone.View.extend({
 			});
 
 			this.create_maps();
+
+			this.views.gear = new t.TripGearView({
+				el: this.$('#gear_tab')[0],
+				personal: this.$('#trip_personal_gear')[0],
+				inventory: this.$('#add_personal_gear')[0],
+				group: this.$('#trip_group_gear')[0]
+			});
 		},
 
 		create_maps: function () {

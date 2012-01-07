@@ -69,74 +69,23 @@
 	</div>
 	<div id="gear_tab">
 		<div id="trip_personal_gear">
-			<h3>Personal Gear</h3>
-			<img src="/static/img/icons/gear_add32.png" height="16" width="16" />
-			<ul>
-				<li class="odd">
-					<div class="gear_description">
-						Backpack - 28oz
-					</div>
-					<div class="gear_controls">
-						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
-						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
-					</div>
-				</li>
-				<li>
-					<div class="gear_description">
-						Alcohol Stove - 3oz
-					</div>
-					<div class="gear_controls">
-						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
-						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
-					</div>
-				</li>
-				<li class="odd">
-					<div class="gear_description">
-						Down sleeping bag - 13oz
-					</div>
-					<div class="gear_controls">
-						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
-						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
-					</div>
-				</li>
-				<li>
-					<div class="gear_description">
-						Sleeping pad / ridgerest solar (cut) - 8oz
-					</div>
-					<div class="gear_controls">
-						<img class="trip_delete" src="/static/img/icons/fugue/slash.png" height="16" width="16" type="image/png" />
-						<img class="gear_view" src="/static/img/icons/fugue/blue-document--pencil.png" height="16" width="16" type="image/png" />
-					</div>
-				</li>
-			</ul>
-		</div>
+            <h3>Personal Gear</h3>
+            <button><img src="/static/img/icons/gear_add32.png" height="24" width="24" /> Select gear</button>
+            <ul></ul>
+        </div>
 		<div id="trip_group_gear">
 			<h3>Group/Shared Gear</h3>
-			<ul>
-				<li class="odd">Stove - Whisperlite international - 16oz - Michael</li>
-				<li>Fuel bottle / whisperlite - 6oz - Zach</li>
-				<li class="odd">Fuel / whitegas - 11oz - Mike</li>
-				<li>Tarp - 10x10 Silnylon - 18oz - Walt</li>
-			</ul>
+			<ul></ul>
 		</div>
 		<div id="add_personal_gear">
-			<h3>Your Inventory</h3>
-			<div class="inventory_controls">
-				<img src="/static/img/icons/gear_add32.png" height="16" width="16" />
-			</div>
-			<p>Drag gear from this list into your Personal Gear for the trip.</p>
-			<ul>
-				<li>Backpack - 28oz</li>
-				<li>Alcohol Stove - 3oz</li>
-				<li>Down Sleeping bag - 13oz</li>
-				<li>Sleeping pad / ridgerest solar (cut) - 8oz</li>
-				<li>Stove - Whisperlite international - 16oz</li>
-				<li>Fuel bottle / whisperlite - 6oz</li>
-				<li>Fuel / whitegas - 11oz</li>
-				<li>Tarp - 10x10 Silnylon - 18oz</li>
-			</ul>
-			<button>Done</button>
-		</div>
+            <h3>Your Inventory</h3>
+            <div class="inventory_controls">
+                <img src="/static/img/icons/gear_add32.png" height="16" width="16">
+            </div>
+            <p>Drag gear from this list into your Personal Gear for the trip.</p>
+			<ul></ul>
+            <button>Done</button>
+        </div>
 	</div>
 </div>
 </script>
@@ -159,4 +108,13 @@
 	<button title="Accept"> accept </button> 
 	<button title="Ignore"> ignore </button>
 </div>
+</script>
+
+<script id="trip_personal_gear_item_template" type="text/template+html">
+<div class="gear_description">{{ name }} - {{ weight }}</div>
+<div class="gear_controls"></div>
+</script>
+
+<script id="trip_gear_inventory_item_template" type="text/template+html">
+	<li>{{ name }} - {{ weight }}</li>
 </script>

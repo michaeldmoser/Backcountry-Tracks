@@ -260,6 +260,7 @@ div.form_row span.email {
 	top: 100px;
 	left: 20px;
 	right: 365px;
+	bottom: 0px;
 	background-color: transparent;
 	background-image: none;
 	border: none;
@@ -274,14 +275,12 @@ div.form_row span.email {
 	border-radius: 4px;
 }
 
-#gear_tab {
-	position: relative;
-}
-
 #trip_personal_gear {
 	position: absolute;
+	top: 47px;
 	left: 0px;
 	right: 51%;
+	bottom: 10px;
 }
 
 #trip_group_gear,
@@ -344,7 +343,7 @@ div.form_row span.email {
 	font-style: italic;
 }
 
-#trip_personal_gear > img {
+#trip_personal_gear > button {
 	position: absolute;
 	top: 15px;
 	right: 5px;
