@@ -1,19 +1,14 @@
 
 # Locates a piece of gear in the gear list. The xpath will return the <li> element representing the piece of gear
-GEAR_IN_LIST = """xpath=//div[@id="gear_list_view"]/ul/li/div[contains(., "%s")]/.."""
+GEAR_IN_LIST = """xpath=//div[@id="gear_list_view"]//li[contains(., "%s")]"""
 
 TRIP_BY_NAME = """xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]"""
 
 INVITE_FRIENDS_BUTTON = '''xpath=//div[@class='friends_section']//button[contains(.,'Invite Friend')]'''
-
 INVITE_TEXT_BOX = '''xpath=//textarea[@name='invitees']'''
-
 INVITE_BUTTON = '''Invite'''
-
 INVITED_FRIEND_BY_NAME = '''xpath=//div[@class='friends_section']/div[@class='friends_list']//*[contains(.,'%s')]'''
-
 FRIEND_INVITE_STATUS = '''xpath=//div[@class='friends_section']/div[@class='friends_list']//*[contains(.,'%s')]/..//*[contains(.,'%s')]'''
-
 ACCEPT_TRIP = '''xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]//button[contains(.,'accept')]'''
 IGNORE_TRIP = '''xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]//button[contains(.,'ignore')]'''
 
@@ -32,5 +27,13 @@ SELECT_GEAR = '''Select gear'''
 GEAR_INVENTORY_SCREEN = '''xpath=//*[@id='add_personal_gear']'''
 GEAR_INVENTORY_ITEM_BY_NAME = '''xpath=//*[@id='add_personal_gear']/ul/li[contains(.,'%s')]'''
 TRIP_PERSONAL_GEAR_LIST = '''xpath=//*[@id='trip_personal_gear']'''
+TRIP_INVENTORY_ADD_GEAR = '''xpath=//*[@id='add_personal_gear']//button[contains(.,"Add gear")]'''
+
+GEAR_ADD_FORM = '''xpath=//div[@id='gear_add_form']'''
+GEAR_EDIT_NAME_INPUT = '''xpath=//div[contains(@class, 'gear_add_form')]//input[@name='gear_name']'''
+GEAR_EDIT_WEIGHT_INPUT = '''xpath=//div[contains(@class, 'gear_add_form')]//input[@name='gear_weight']'''
+GEAR_EDIT_DESCRIPTION_INPUT = '''xpath=//div[contains(@class, 'gear_add_form')]//textarea[@name='gear_description']'''
+GEAR_EDIT_SAVE_BUTTON = '''xpath=//div[contains(@class, 'gear_add_form')]//button[contains(.,'Save')]'''
+
 
 

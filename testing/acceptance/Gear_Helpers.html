@@ -56,6 +56,13 @@ td.name, th.name {
 <td></td>
 </tr>
 <tr>
+<td class="name">Resource</td>
+<td>__init__.html</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td class="name"></td>
 <td></td>
 <td></td>
@@ -83,6 +90,20 @@ td.name, th.name {
 <td>Create a basic set of gear for</td>
 <td>${PERSON.email}</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The gear list should have a ${FIND_GEAR} in it">The gear list should have a ${FIND_GEAR} in it</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${GEAR_IN_LIST % '${FIND_GEAR}'}</td>
+<td>error="Could not find ${FIND_GEAR} in the gear list"</td>
 <td></td>
 </tr>
 <tr>

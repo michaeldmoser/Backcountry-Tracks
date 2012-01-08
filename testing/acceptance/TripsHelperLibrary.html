@@ -484,6 +484,62 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="keyword_Add a new ${GEAR_NAME} to the inventory">Add a new ${GEAR_NAME} to the inventory</a></td>
+<td>Click element</td>
+<td>${TRIP_INVENTORY_ADD_GEAR}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait until keyword succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${GEAR_ADD_FORM}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_EDIT_NAME_INPUT}</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_EDIT_WEIGHT_INPUT}</td>
+<td>20oz</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_EDIT_DESCRIPTION_INPUT}</td>
+<td>This is a new piece of gear</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>${GEAR_EDIT_SAVE_BUTTON}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 </body>
 </html>

@@ -52,7 +52,7 @@
 
 		render: function () {
 			if (!this.model)
-				this.model = new GearItem;
+				this.model = new g.GearItem;
 
 			$(this.el).html(this.template(this.model.toJSON()));
 		},

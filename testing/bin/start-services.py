@@ -16,7 +16,7 @@ albert = environ.albert
 albert.mark_registered()
 environ.create_user(albert)
 
-for trip in environ.data['trips']:
-    environ.trips.add(owner=douglas.email, **trip)
+environ.trips.add_trips_to_user(douglas, environ.data['trips'])
+environ.gear.add_gear_to_user(douglas, environ.data['gear'])
 
 

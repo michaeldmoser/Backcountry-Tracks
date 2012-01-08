@@ -781,9 +781,12 @@ var DateRangeEditor = Backbone.View.extend({
 		}, 
 
 		view: function(id) {
-			var trip = this.collection.get(id)
-			this.views.detail.set_model(trip);
-			BackcountryTracks.screens.activate(this.views.detail);
+			var view_trip = _.bind(function () {
+					var trip = this.collection.get(id)
+					this.views.detail.set_model(trip);
+					BackcountryTracks.screens.activate(this.views.detail);
+				}, this);
+			this.collection.fetch({success: view_trip});
 		},
 
 		list: function () {
