@@ -26,8 +26,9 @@ class TripsDb(BasicCRUDService):
         }
     """
 
-    def __init__(self, remote_client, riak, bucket_name):
+    def __init__(self, remote_client, riak, bucket_name, url):
         self.remoting = remote_client
+        self.url = url
         BasicCRUDService.__init__(self, riak, bucket_name)
 
     def __send_invite_email(self, trip_id, trip_data, invite):
@@ -36,7 +37,7 @@ class TripsDb(BasicCRUDService):
 # Need to get the user information for the invitor.
         template_vars = trip_data.copy()
         template_vars.update(invite)
-        template_vars['url'] = 'http://bctrax.dev/app/home'
+        template_vars['url'] = self.url
         template_vars['id'] = trip_id
 
         message = """
@@ -144,4 +145,29 @@ class TripsDb(BasicCRUDService):
 
         tripobj.set_data(data)
         tripobj.store()
+
+    def get_group_gear(self, trip):
+        '''Retrieve a list of the trips shared / group gear'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip))
+        data = tripobj.get_data()
+
+
+        return data.get('groupgear', [])
+
+    def share_gear(self, trip, gear):
+        '''Share a piece of gear with the trip'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip))
+        data = tripobj.get_data()
+
+        if not data.has_key('groupgear'):
+            data['groupgear'] = list()
+        data['groupgear'].append(gear)
+
+        tripobj.set_data(data)
+        tripobj.store()
+
+
+
 

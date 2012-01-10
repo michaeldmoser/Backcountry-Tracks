@@ -15,6 +15,7 @@ setup(
             'trip = trips.handlers:TripHandler',
             'friends = trips.friends:FriendsHandler',
             'gear = trips.gear_handler:GearHandler',
+            'groupgear = trips.group_gear_handler:GroupGearHandler',
             ],
         'tripplanner.web.files': ['trips = trips:Webroot'],
         },

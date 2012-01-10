@@ -125,6 +125,23 @@ class TripsEnvironment(object):
 
         trip.set_data(trip_data)
         trip.store()
+
+    def add_group_gear(self, trip_id, gear_list):
+        '''
+        Add shared/group gear to trip_id
+        '''
+        trip = self.tripsdb.get(str(trip_id))
+
+        trip_data = trip.get_data()
+        
+        if not trip_data.has_key('groupgear'):
+            trip_data['groupgear'] = list()
+
+        trip_data['groupgear'].extend(gear_list)
+
+        trip.set_data(trip_data)
+        trip.store()
+
         
 
         

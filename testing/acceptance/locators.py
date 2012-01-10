@@ -30,6 +30,7 @@ TRIP_PERSONAL_GEAR_LIST = '''xpath=//*[@id='trip_personal_gear']'''
 TRIP_INVENTORY_ADD_GEAR = '''xpath=//*[@id='add_personal_gear']//button[contains(.,"Add gear")]'''
 PERSONAL_TRIP_GEAR_ITEM_BY_NAME = '''xpath=//*[@id='trip_personal_gear']/ul/li[contains(.,'%s')]'''
 TRIP_GEAR_INVENTORY_LIST = '''xpath=//*[@id='add_personal_gear']'''
+TRIP_GROUP_GEAR_LIST = '''css=#trip_group_gear'''
 
 GEAR_ADD_FORM = '''xpath=//div[@id='gear_add_form']'''
 GEAR_EDIT_NAME_INPUT = '''xpath=//div[contains(@class, 'gear_add_form')]//input[@name='gear_name']'''

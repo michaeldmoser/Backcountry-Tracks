@@ -16,7 +16,7 @@ class EntryPoint(object):
 
         remoting_client = RemotingClient(self.service_channel)
 
-        return TripsDb(remoting_client, riak, bucket_name)
+        return TripsDb(remoting_client, riak, bucket_name, self.config['url'])
 
     def __init__(self, configuration, environ):
         self.environ = environ
