@@ -26,8 +26,9 @@ class TripsDb(BasicCRUDService):
         }
     """
 
-    def __init__(self, remote_client, riak, bucket_name):
+    def __init__(self, remote_client, riak, bucket_name, url):
         self.remoting = remote_client
+        self.url = url
         BasicCRUDService.__init__(self, riak, bucket_name)
 
     def __send_invite_email(self, trip_id, trip_data, invite):
@@ -36,7 +37,7 @@ class TripsDb(BasicCRUDService):
 # Need to get the user information for the invitor.
         template_vars = trip_data.copy()
         template_vars.update(invite)
-        template_vars['url'] = 'http://bctrax.dev/app/home'
+        template_vars['url'] = self.url
         template_vars['id'] = trip_id
 
         message = """

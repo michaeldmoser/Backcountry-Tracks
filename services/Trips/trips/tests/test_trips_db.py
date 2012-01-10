@@ -25,7 +25,8 @@ class TestTripsDbInvite(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         self.trip_id = unicode(uuid4())
@@ -94,7 +95,8 @@ class TestSendsInviteEmail(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         self.trip_id = unicode(uuid4())
@@ -139,6 +141,12 @@ class TestSendsInviteEmail(unittest.TestCase):
         body = self.jsonrpc['params'].get('message')
         self.assertIsNotNone(body)
 
+    def test_message_body_contains_link(self):
+        '''Message body should contain link'''
+        body = self.jsonrpc['params'].get('message')
+        self.assertIn('http://test.com', body)
+
+
 class TestAcceptIgnore(unittest.TestCase):
     def setUp(self):
         self.environ = environment.create()
@@ -153,7 +161,8 @@ class TestAcceptIgnore(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         self.trip_id = str(uuid4())

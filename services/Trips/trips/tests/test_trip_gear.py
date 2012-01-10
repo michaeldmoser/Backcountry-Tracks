@@ -27,7 +27,8 @@ class TestTripGearRetrieval(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         ramona = self.environ.ramona
@@ -83,7 +84,8 @@ class TestTripGearRetrievalNoGear(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         ramona = self.environ.ramona
@@ -120,7 +122,8 @@ class TestTripGearAddPersonalGear(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         ramona = self.environ.ramona
@@ -212,7 +215,8 @@ class TestTripGearRemove(unittest.TestCase):
         self.app = TripsDb(
                 rpc_client,
                 self.riak,
-                self.bucket_name
+                self.bucket_name,
+                'http://test.com'
                 )
 
         ramona = self.environ.ramona
