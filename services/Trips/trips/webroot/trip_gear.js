@@ -12,6 +12,14 @@ function TripGearViews() {
 		}
 	});
 
+	trips.GroupGear = Backbone.Collection.extend({
+		model: GearManager.GearItem,
+
+		url: function () {
+			return '/app/trips/' + this.trip_id + '/gear/group';
+		}
+	});
+
 	trips.InventoryGear = Backbone.Collection.extend({
 		model: GearManager.GearItem,
 
@@ -135,21 +143,36 @@ function TripGearViews() {
 
     trips.GroupGearView = Backbone.View.extend({
         initialize: function () {
-            _.bindAll(this, 'render', 'hide', 'show');
-            var template = $('#trip_gear_inventory_item_template').html();
+            _.bindAll(this, 'render', 'hide', 'show', 'gear_dropped', 'render_item');
+            var template = $('#trip_gear_group_item_template').html();
             this.item_template = _.template(template);
+
+			this.collection.bind('change', this.render);
+			this.collection.bind('reset', this.render);
+			this.collection.bind('remove', this.render);
+			this.collection.bind('add', this.render);
         },
 
         render: function() {
-            this.$('li').draggable({
-                zIndex: 9010,
-                revert: true
+            $(this.el).droppable({
+				accept: 'li.trip_gear',
+				tolerance: 'touch',
+				drop: this.gear_dropped
             });
+			this.$('ul').html('');
 
-            this.$('ul').droppable({
-                accept: 'li'
-            });
+			this.collection.each(this.render_item);
         },
+
+		render_item: function (item) {
+			var html = $(this.item_template(item.toJSON()));
+            var draggable = html.draggable({
+				zIndex: 9010,
+				revert: true
+            });
+			draggable.data('model', item);
+			this.$('ul').append(html);
+		},
 
         hide: function () {
             $(this.el).hide();
@@ -157,7 +180,13 @@ function TripGearViews() {
 
         show: function () {
             $(this.el).show();
-        }
+		},
+
+		gear_dropped: function (ev, ui) {
+			var model = ui.draggable.data('model');
+			this.collection.create(model.toJSON());
+			model.destroy();
+		}
     });
 
     trips.TripGearView = Backbone.View.extend({
@@ -167,6 +196,7 @@ function TripGearViews() {
 			this.collections = new Object;
 			this.collections.personal = new trips.PersonalGear;
 			this.collections.inventory = new GearManager.GearList;
+			this.collections.group = new trips.GroupGear;
 
             this.views = new Object;
 			this.views.personal = new trips.PersonalGearView({
@@ -182,7 +212,10 @@ function TripGearViews() {
             this.views.inventory.bind('close_inventory', this.close_inventory);
 			this.views.inventory.bind('add_gear', this.add_gear);
 
-            this.views.group = new trips.GroupGearView({el: this.options.group});
+			this.views.group = new trips.GroupGearView({
+				el: this.options.group,
+				collection: this.collections.group
+			});
 
 			this.addform = new GearManager.GearAddForm();
 			this.addform.bind('save', this.save_new_gear);

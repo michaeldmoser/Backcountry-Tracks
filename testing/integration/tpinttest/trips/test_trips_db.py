@@ -25,7 +25,7 @@ class TestTripListing(unittest.TestCase):
         pika = fakepika.SelectConnectionFake()
         remoting = RemotingClient(pika._channel)
 
-        tripsdb = TripsDb(remoting, client, 'trips')
+        tripsdb = TripsDb(remoting, client, 'trips', 'http://test.com')
 
         invited_on = tripsdb.list(env.ramona.email)
 
@@ -51,7 +51,7 @@ class TestTripListingWithIgnored(unittest.TestCase):
         pika = fakepika.SelectConnectionFake()
         remoting = RemotingClient(pika._channel)
 
-        tripsdb = TripsDb(remoting, client, 'trips')
+        tripsdb = TripsDb(remoting, client, 'trips', 'http://test.com')
 
         cls.invited_on = tripsdb.list(cls.env.ramona.email)
 

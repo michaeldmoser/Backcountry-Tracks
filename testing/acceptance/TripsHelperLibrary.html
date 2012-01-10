@@ -603,6 +603,69 @@ td.name, th.name {
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td class="name"><a name="keyword_Share the ${GEAR_NAME} with the group">Share the ${GEAR_NAME} with the group</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Drag And Drop</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td>target=${TRIP_GROUP_GEAR_LIST}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The ${GEAR_NAME} should not be in the personal trip gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The ${GEAR_NAME} should be listed in the group gear section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The ${GEAR_NAME} should be listed in the group gear section">The ${GEAR_NAME} should be listed in the group gear section</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element Should Contain</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${TRIP_GROUP_GEAR_LIST}</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
 </table>
 </body>
 </html>
