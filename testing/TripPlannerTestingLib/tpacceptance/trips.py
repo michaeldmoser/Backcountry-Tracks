@@ -37,7 +37,15 @@ class Trips(object):
 
         return matches.groups()[0]
 
+    def add_gear_to_trip_for(self, trip_name, first_name):
+        '''
+        Add's all of first_name's gear to the trip_name
+        '''
+        adventurer = self.env.adventurer.get_by_name(first_name)
+        trip = self.trips.get_by_name(trip_name)
 
+        gear = self.env.gear.get_users_gear(adventurer)
+        self.env.trips.add_trip_gear(adventurer, trip['id'], gear) 
 
         
 

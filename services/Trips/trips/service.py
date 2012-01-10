@@ -124,3 +124,24 @@ class TripsDb(BasicCRUDService):
         tripobj.set_data(data)
         tripobj.store()
 
+    def remove_personal_gear(self, trip_id, person, gear_id):
+        '''
+        Remove a piece of gear from a persons personal gear list for the trip
+        '''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip_id))
+        data = tripobj.get_data()
+
+        if not data.has_key('gear'):
+            return
+
+        if not data['gear'].has_key(person):
+            return
+
+        def remove_gear(gear):
+            return gear['id'] != gear_id
+        data['gear'][person] = filter(remove_gear, data['gear'][person])
+
+        tripobj.set_data(data)
+        tripobj.store()
+

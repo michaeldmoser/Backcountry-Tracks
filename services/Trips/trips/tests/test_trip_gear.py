@@ -196,6 +196,60 @@ class TestTripGearAddPersonalGear(unittest.TestCase):
         stored_gear = self.get_trip_gear()
 
         self.assertEquals(stored_gear, trip_gear)
+
+class TestTripGearRemove(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.riak = RiakClientFake()
+        self.bucket_name = 'trips'
+        self.bucket = self.riak.bucket(self.bucket_name)
+
+        pika_connection = SelectConnectionFake()
+        channel = pika_connection._channel
+        rpc_client = RemotingClient(channel)
+
+        self.app = TripsDb(
+                rpc_client,
+                self.riak,
+                self.bucket_name
+                )
+
+        ramona = self.environ.ramona
+        self.ramona = ramona
+
+        self.trip_id = unicode(uuid4())
+        def add_id(gear):
+            item = gear.copy()
+            item['id'] = str(uuid4())
+            return item
+        self.gear = map(add_id, self.environ.data['gear'])
+
+        self.trip = {
+            'name': 'Glacier',
+            'start': '2012-07-19',
+            'end': '2012-07-24',
+            'destination': 'Glacier National Park',
+            'friends': [
+                {'first': ramona.first_name,
+                    'last': ramona.last_name,
+                    'email': ramona.email,
+                    'invite_status': 'accepted'}
+                ],
+            'gear': {
+                ramona.email: self.gear 
+                }
+            }
+        self.bucket.add_document(self.trip_id, self.trip)
+    
+    def test_remove_personal_trip_gear(self):
+        '''Should return the user's list of gear for the the trip'''
+        gear = self.gear[0]
+        self.app.remove_personal_gear(self.trip_id, self.environ.ramona.email, gear['id'])
+
+        tripobj = self.bucket.get(str(self.trip_id))
+        trip = tripobj.get_data()
+        self.assertNotIn(gear, trip['gear'][self.ramona.email])
     
 if __name__ == '__main__':
     unittest.main()

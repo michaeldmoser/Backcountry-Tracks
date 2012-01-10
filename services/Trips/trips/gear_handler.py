@@ -26,6 +26,12 @@ class GearHandler(BaseHandler):
         self.remoting.call(command)
         self.write(self.request.body)
 
+    @web.authenticated
+    def delete(self, trip_id, gear_id):
+        command = self.service.remove_personal_gear(trip_id, self.current_user, gear_id)
+        command.persistant = True
+        self.remoting.call(command)
+
     def respond_to_request(self, body):
         logging.debug('Received response:\n%s' % body)
         self.set_status(200)

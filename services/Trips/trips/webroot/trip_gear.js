@@ -37,7 +37,7 @@ function TripGearViews() {
 
         render: function () {
             $(this.el).droppable({
-				accept: 'li',
+				accept: 'li.inventory_gear',
 				drop: this.gear_dropped,
 				tolerance: 'touch'
             });
@@ -54,7 +54,13 @@ function TripGearViews() {
 		},
 
 		render_item: function (item) {
-			this.$('ul').append(this.item_template(item.toJSON()));
+			var html = $(this.item_template(item.toJSON()));
+            var draggable = html.draggable({
+				zIndex: 9010,
+				revert: true
+            });
+			draggable.data('model', item);
+			this.$('ul').append(html);
 		},
 
 		gear_dropped: function (ev, ui) {
@@ -70,7 +76,7 @@ function TripGearViews() {
         },
 
         initialize: function () {
-            _.bindAll(this, 'render', 'show', 'hide', 'close_inventory', 'render_item', 'add_gear');
+            _.bindAll(this, 'render', 'show', 'hide', 'close_inventory', 'render_item', 'add_gear', 'gear_dropped');
 			var template = $('#trip_gear_inventory_item_template').html();
             this.item_template = _.template(template);
 
@@ -81,7 +87,14 @@ function TripGearViews() {
         },
 
         render: function () {
+            $(this.el).droppable({
+				accept: 'li.trip_gear',
+				drop: this.gear_dropped,
+				tolerance: 'touch'
+            });
+            this.$('button').button();
 			this.$('ul').html('');
+
 			this.collection.each(this.render_item);
 
             this.$('button').button();
@@ -112,6 +125,11 @@ function TripGearViews() {
 
 		add_gear: function () {
 			this.trigger('add_gear');
+		},
+
+		gear_dropped: function (ev, ui) {
+			var model = ui.draggable.data('model');
+			model.destroy();
 		}
     });
 

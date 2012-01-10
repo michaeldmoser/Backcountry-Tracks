@@ -54,6 +54,28 @@ class Gear(object):
 
         return stored_gear
 
+    def get_users_gear(self, user):
+        riak = self.geardb._client
+        list_mapreduce = """
+            function (value, keyData, arg) {
+            if (value.values[0].data.length < 1)
+            return [];
+
+            var data = Riak.mapValuesJson(value)[0];
+            if (data.owner == arg['owner'])
+            return [data];
+            else
+            return [];
+            }
+        """
+        mapreduce = riak.add('personal_gear')
+        mapreduce.map(list_mapreduce, options={'arg': {'owner': user.email}})
+        return mapreduce.run()
+
+
+
+
+
 
 
 
