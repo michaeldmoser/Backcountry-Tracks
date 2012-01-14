@@ -1,5 +1,6 @@
 import pika
 import json
+import traceback
 
 import logging
 
@@ -42,24 +43,32 @@ class MessagingEndPointController(object):
                 response = method(**request['params'])
             elif isinstance(params, list):
                 response = method(*request['params'])
-        except:
-            raise
+        except Exception as err:
+            reply = {
+                'jsonrpc': '2.0',
+                'id': header.correlation_id,
+                'error': {
+                    'code': -32000,
+                    'message': str(err)
+                    }
+                }
+            trace_back = traceback.format_exc()
+            logging.error('Exception raised in method %s while processing:\n %s', request['method'], request)
+            logging.error(trace_back)
+        else:
+            if response is None:
+                logging.debug('Completed request, no response... %s' % header.correlation_id)
+                return
+            reply = {
+                    'jsonrpc': '2.0',
+                    'result': response,
+                    'id': properties.correlation_id
+                    }
+            logging.debug('Response to %s is: %s' % (header.correlation_id, response))
         finally:
             self.channel.basic_ack(delivery_tag=mq_method.delivery_tag)
 
 
-        if response is None:
-            logging.debug('Completed request, no response... %s' % header.correlation_id)
-            return
-
-        logging.debug('Publish response to %s to routing key %s' % (header.correlation_id, header.reply_to))
-        logging.debug('Response to %s is: %s' % (header.correlation_id, response))
-
-        reply = {
-                'jsonrpc': '2.0',
-                'result': response,
-                'id': properties.correlation_id
-                }
         self.channel.basic_publish(
                 exchange = self.config['reply_exchange'],
                 routing_key = 'rpc.reply.%s' % header.reply_to,

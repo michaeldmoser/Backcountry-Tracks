@@ -55,9 +55,7 @@ class TornadoHandlerTestCase(unittest.TestCase):
         '''Called before all other methods. Allows you to do any setup work required for the tests to run'''
         pass
 
-    def setUp(self):
-        self.environ = environment.create()
-        self.handler_setup()
+    def setUp_prepare_sut(self):
         handler = self.request_handler()
         method_name = self.method()
         url = self.url()
@@ -67,32 +65,46 @@ class TornadoHandlerTestCase(unittest.TestCase):
                 url, user=user, body=body, headers={'Content-Type': 'application/json'})
         self.request = self.handler.request
 
+    def setUp_process_request(self):
         args, kwargs = self.method_args()
-        method = getattr(self.handler, method_name.lower())
+        method = getattr(self.handler, self.method().lower())
         method(*args, **kwargs)
 
         if self.handler._auto_finish:
             self.handler.finish()
 
         self.sent_message = self.pika.published_messages[0]
-        if self.sent_message.properties.correlation_id is None:
-            return
 
+    def setUp_process_response(self, response):
         self.headers = pika.BasicProperties(
                 correlation_id = self.sent_message.properties.correlation_id,
                 content_type = 'application/json'
                 )
 
+
+        reply_queue = self.application.mq.remoting.queue
+
+        self.pika.inject(reply_queue, self.headers, json.dumps(response))
+        self.pika.trigger_consume(reply_queue)
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.handler_setup()
+
+        self.setUp_prepare_sut()
+        self.setUp_process_request()
+
+        if self.sent_message.properties.correlation_id is None:
+            return
+        
         self.jsonrpc_response = {
                 'jsonrpc': '2.0',
                 'result': self.rpc_result(),
                 'id': self.sent_message.properties.correlation_id,
                 }
 
-        reply_queue = self.application.mq.remoting.queue
+        self.setUp_process_response(self.jsonrpc_response)
 
-        self.pika.inject(reply_queue, self.headers, json.dumps(self.jsonrpc_response))
-        self.pika.trigger_consume(reply_queue)
 
     def test_response(self):
         '''Should return a list of gear for the user'''
@@ -138,4 +150,52 @@ class TornadoHandlerTestCase(unittest.TestCase):
         expected_name = "rpc.%s" % self.remote_service_name().lower()
         actual_name = self.sent_message.routing_key
         self.assertEquals(actual_name, expected_name)
+
+    def test_service_error(self):
+        '''Remote service returns an error'''
+        self.setUp_prepare_sut()
+        self.setUp_process_request()
+        if self.sent_message.properties.correlation_id is None:
+            return
+
+        jsonrpc_error = {
+                'jsonrpc': '2.0',
+                'error': {
+                    'code': -32000,
+                    'message': 'Generic error message'
+                    },
+                'id': self.sent_message.properties.correlation_id,
+                }
+        self.setUp_process_response(jsonrpc_error)
+
+        headers_text, body = self.request._output.split('\r\n\r\n')
+        headers_lines = headers_text.split('\r\n')[1:]
+        headers = dict([(header.split(': ')[0], header.split(': ')[1]) \
+                for header in headers_lines])
+
+        self.assertEquals(self.handler._status_code, 500)
+    
+    def test_service_message(self):
+        '''Remote service returns an error message'''
+        self.setUp_prepare_sut()
+        self.setUp_process_request()
+        if self.sent_message.properties.correlation_id is None:
+            return
+
+        jsonrpc_error = {
+                'jsonrpc': '2.0',
+                'error': {
+                    'code': -32000,
+                    'message': 'Generic error message'
+                    },
+                'id': self.sent_message.properties.correlation_id,
+                }
+        self.setUp_process_response(jsonrpc_error)
+
+        headers_text, body = self.request._output.split('\r\n\r\n')
+        headers_lines = headers_text.split('\r\n')[1:]
+        headers = dict([(header.split(': ')[0], header.split(': ')[1]) \
+                for header in headers_lines])
+
+        self.assertEquals(self.handler._headers['X-Error-Message'], 'Generic error message')
 

@@ -17,7 +17,7 @@ class GroupGearHandler(BaseHandler):
     @web.asynchronous
     def get(self, trip_id):
         command = self.service.get_group_gear(trip_id)
-        self.remoting.call(command, self.respond_to_request)
+        self.remoting.call(command, self.handle_result)
 
     @web.authenticated
     def put(self, trip_id, gear_id):

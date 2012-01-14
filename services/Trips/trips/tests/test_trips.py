@@ -191,6 +191,43 @@ class TestTripsList(unittest.TestCase):
         response = json.loads(body)
         self.assertEquals(self.rpc_response['result'], response)
 
+class TestHandleErrors(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+
+        url = '/app/trips'
+        self.handler, self.application, self.pika = setup_handler(TripsHandler,
+                'GET', url, user=self.environ.douglas.email)
+        self.request = self.handler.request
+
+        self.handler.get()
+        self.sent_message = self.pika.published_messages[0]
+
+        self.headers = pika.BasicProperties(
+                correlation_id = self.sent_message.properties.correlation_id,
+                content_type = 'application/json'
+                )
+
+        self.rpc_response = {
+                'jsonrpc': '2.0',
+                'error': {
+                    'code': -32000,
+                    'message': 'Generic error message',
+                    },
+                'id': self.sent_message.properties.correlation_id
+                }
+
+        reply_queue = self.application.mq.remoting.queue
+
+        self.pika.inject(reply_queue, self.headers, json.dumps(self.rpc_response))
+        self.pika.trigger_consume(reply_queue)
+
+    def test_response_status(self):
+        '''JSON-RPC errors should produce an HTTP 500 status code'''
+        self.assertEquals(self.handler._status_code, 500)
+
+
 if __name__ == "__main__":
     unittest.main()
 

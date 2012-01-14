@@ -2,7 +2,7 @@ import pika
 import uuid
 import json
 
-from tptesting import fakepika
+from tptesting import fakepika, environment
 
 from bctmessaging.endpoints import MessagingEndPointController
 
@@ -23,6 +23,7 @@ def create_endpoint_sut(service_double, method_name, queue_name="rpc_queue",
     Builds a MessagingEndPointController for testing and then injects a message
     for consumption. Will trigger consuming the message unless @trigger is False
     '''
+    env = environment.create()
     channel, mq = create_messaging_channel()
 
     config = {'queues': {'rpc': queue_name}, 'reply_exchange': reply_exchange_name}

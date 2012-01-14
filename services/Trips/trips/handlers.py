@@ -47,6 +47,8 @@ class TripsBaseHandler(BaseHandler):
         self.write(json.dumps(body))
         self.finish()
 
+
+
 class TripsHandler(TripsBaseHandler):
     '''
     Manage a collection of trips: Add to, list, etc
@@ -58,13 +60,13 @@ class TripsHandler(TripsBaseHandler):
         trip_data = json.loads(self.request.body)
         command = self.service.create(self.current_user, trip_data)
         command.persistant = True
-        self.remoting.call(command, self.respond_to_request)
+        self.remoting.call(command, self.handle_result)
 
     @web.authenticated
     @web.asynchronous
     def get(self):
         command = self.service.list(self.current_user)
-        self.remoting.call(command, self.respond_to_request)
+        self.remoting.call(command, self.handle_result)
 
 
 class TripHandler(TripsBaseHandler):
@@ -78,7 +80,7 @@ class TripHandler(TripsBaseHandler):
         trip_data = json.loads(self.request.body)
         command = self.service.update(self.current_user, trip_id, trip_data)
         command.persistant = True
-        self.remoting.call(command, self.respond_to_request)
+        self.remoting.call(command, self.handle_result)
 
     @web.authenticated
     def delete(self, trip_id):
