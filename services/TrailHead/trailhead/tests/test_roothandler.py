@@ -18,7 +18,6 @@ class TestRootHandler(unittest.TestCase):
         """Tornado requires inheriting from RequestHandler"""
         assert(issubclass(RootHandler, RequestHandler))
 
-        
-
 if __name__ == '__main__':
     unittest.main()
+    

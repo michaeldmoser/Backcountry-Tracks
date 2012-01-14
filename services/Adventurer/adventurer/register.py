@@ -24,7 +24,7 @@ class RegisterHandler(BaseHandler):
         command = service.register(**registration_data)
         command.persistant = True
 
-        remoting.call(command, callback=self.respond_to_request)
+        remoting.call(command, callback=self.handle_result)
 
     def respond_to_request(self, body):
         reply = json.dumps(body)
@@ -39,7 +39,7 @@ class ActivateHandler(BaseHandler):
         command = service.activate(email, confirmation_code)
         command.persistant = True
 
-        remoting.call(command, callback=self.respond_to_request)
+        remoting.call(command, callback=self.handle_result)
 
     def respond_to_request(self, body):
         reply = body

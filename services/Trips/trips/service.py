@@ -148,10 +148,10 @@ class TripsDb(BasicCRUDService):
 
     def get_group_gear(self, trip):
         '''Retrieve a list of the trips shared / group gear'''
+        logging.debug('Get Group Gear for %s', trip)
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
         data = tripobj.get_data()
-
 
         return data.get('groupgear', [])
 

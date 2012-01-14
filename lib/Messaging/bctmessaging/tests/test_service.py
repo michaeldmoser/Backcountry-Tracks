@@ -4,7 +4,7 @@ import pika
 import uuid
 import json
 
-from tptesting import fakepika
+from tptesting import fakepika, environment
 from bctmessaging.tests.utils import create_messaging_channel, create_endpoint_sut
 from bctmessaging.endpoints import MessagingEndPointController
 
@@ -172,6 +172,47 @@ class TestAcknowlegesMessages(unittest.TestCase):
         usage = mq.verify_usage(mq._channel.basic_ack, '*',
                 {'delivery_tag': 1, 'multiple': False})
         self.assertTrue(usage)
+
+class TestMessagingEndPointControllerExceptions(unittest.TestCase):
+
+    def test_handles_general_exception(self):
+        env = environment.create()
+        self.service_return = {
+                'jsonrpc': '2.0',
+                'result': {
+                    'some': 'data',
+                    'that': 'should be',
+                    'returned': 'ya!'
+                    },
+                }
+        class MessageServiceSpy(object):
+            def service_method(spy):
+                raise Exception('Generic exeption raised in service_method')
+        self.spy_service = MessageServiceSpy()
+
+        self.queue_name = 'an_rpc_queue'
+        self.reply_exchange = 'rpc_reply_exchange'
+        self.rpc_args = []
+        method_name = 'service_method'
+
+        mq, request, self.properties = create_endpoint_sut(self.spy_service,
+                method_name, queue_name=self.queue_name, rpc_args=self.rpc_args,
+                reply_exchange_name=self.reply_exchange)
+        self.service_return['id'] = self.properties.correlation_id
+
+        self.reply = mq.published_messages[0]
+
+        jsonrpc_response = json.loads(self.reply.body)
+        response_should_be = {
+                'jsonrpc': '2.0',
+                'id': self.properties.correlation_id,
+                'error': {
+                    'code': -32000,
+                    'message': 'Generic exeption raised in service_method',
+                    }
+                }
+
+        self.assertEquals(response_should_be, jsonrpc_response)
 
 
 if __name__ == '__main__':
