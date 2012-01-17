@@ -34,6 +34,9 @@ systest: testing/system
 inttest: unittest testing/integration
 	cd testing/integration && sudo python setup.py test
 
+acceptance: testing/acceptance
+	sudo pybot testing/acceptance
+
 webroot: /srv/www
 	sudo python tools/build-webroot.py
 

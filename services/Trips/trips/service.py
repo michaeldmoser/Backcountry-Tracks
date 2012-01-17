@@ -167,7 +167,20 @@ class TripsDb(BasicCRUDService):
 
         tripobj.set_data(data)
         tripobj.store()
+    
+    def unshare_gear(self, trip, gear_id):
+        '''Remove a piece of gear from the group gear list'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip))
+        data = tripobj.get_data()
 
+        groupgear = filter(lambda gear: gear_id != gear['id'], data['groupgear'])
+
+        data['groupgear'] = groupgear
+        tripobj.set_data(data)
+        tripobj.store()
+
+        
 
 
 

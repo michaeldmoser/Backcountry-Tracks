@@ -286,8 +286,10 @@ div.form_row span.email {
 #trip_group_gear,
 #add_personal_gear {
 	position: absolute;
+	top: 47px;
 	left: 51%;
 	right: 0px;
+	bottom: 10px;
 }
 #add_personal_gear { display: none; }
 
