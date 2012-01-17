@@ -95,6 +95,47 @@ class TestGroupGearHandlerPUT(thandlers.TornadoHandlerTestCase):
     def remote_service_name(self):
         return 'Trips'
 
+class TestGroupGearHandlerDELETE(thandlers.TornadoHandlerTestCase):
+
+    def handler_setup(self):
+        self.trip_id = str(uuid.uuid4())
+        self.gear_id = str(uuid.uuid4())
+        self.gear = self.environ.data['gear'][0].copy()
+        self.gear['id'] = self.gear_id
+
+    def request_handler(self):
+        return GroupGearHandler
+
+    def url(self):
+        return '/app/trips/' + self.trip_id + '/gear/group/' + self.gear_id
+
+    def active_user(self):
+        return self.environ.ramona.email
+
+    def method(self):
+        return 'DELETE'
+
+    def method_args(self):
+        return list([self.trip_id, self.gear_id]), dict()
+
+    def http_request_body(self):
+        return ''
+
+    def rpc_result(self):
+        return ''
+
+    def http_response(self):
+        return ''
+
+    def expected_rpc_request(self):
+        return 'unshare_gear', [self.trip_id, self.gear_id]
+
+    def expected_durability(self):
+        return True
+
+    def remote_service_name(self):
+        return 'Trips'
+
 if __name__ == '__main__':
     unittest.main()
 

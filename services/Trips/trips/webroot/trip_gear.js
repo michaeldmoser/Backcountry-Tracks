@@ -45,7 +45,12 @@ function TripGearViews() {
 
         render: function () {
             $(this.el).droppable({
-				accept: 'li.inventory_gear',
+				accept: function (ui) {
+					if (ui.hasClass('group_gear') || ui.hasClass('inventory_gear'))
+						return true;
+
+					return false;
+				},
 				drop: this.gear_dropped,
 				tolerance: 'touch'
             });
@@ -73,6 +78,9 @@ function TripGearViews() {
 
 		gear_dropped: function (ev, ui) {
 			var model = ui.draggable.data('model');
+			if (ui.draggable.hasClass('group_gear')) {
+				model.destroy();
+			}
 			this.collection.create(model.toJSON());
 		}
  	});

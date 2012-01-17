@@ -104,6 +104,59 @@ class TestTripGearRetrieval(unittest.TestCase):
 
         self.assertEquals(self.gear[0:2], groupgear)
 
+class TestTripGearUnshare(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.riak = RiakClientFake()
+        self.bucket_name = 'trips'
+        self.bucket = self.riak.bucket(self.bucket_name)
+
+        pika_connection = SelectConnectionFake()
+        channel = pika_connection._channel
+        rpc_client = RemotingClient(channel)
+
+        self.app = TripsDb(
+                rpc_client,
+                self.riak,
+                self.bucket_name,
+                'http://test.com'
+                )
+
+
+        self.trip_id = unicode(uuid4())
+        def add_id(gear):
+            item = gear.copy()
+            item['id'] = str(uuid4())
+            return item
+        self.gear = map(add_id, self.environ.data['gear'])
+
+        ramona = self.environ.ramona
+        self.trip = {
+            'name': 'Glacier',
+            'start': '2012-07-19',
+            'end': '2012-07-24',
+            'destination': 'Glacier National Park',
+            'friends': [
+                {'first': ramona.first_name,
+                    'last': ramona.last_name,
+                    'email': ramona.email,
+                    'invite_status': 'accepted'}
+                ],
+            'gear': dict(),
+            'groupgear': self.gear,
+            }
+
+    def test_unshare_gear(self):
+        '''Unshare gear should remove from group gear list'''
+        self.bucket.add_document(self.trip_id, self.trip)
+        gear = self.app.unshare_gear(self.trip_id, self.gear[0]['id'])
+
+        tripobj = self.bucket.get(str(self.trip_id))
+        trip = tripobj.get_data()
+        groupgear = trip['groupgear']
+
+        self.assertNotIn(self.gear[0], groupgear)
 
 if __name__ == '__main__':
     unittest.main()
