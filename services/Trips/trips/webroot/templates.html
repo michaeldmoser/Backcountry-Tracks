@@ -6,25 +6,27 @@
 	<span class="trip_end_date"></span><input type="text" id="trip_end_date" name="trip_end_date" class="trip_end_date" value="" readonly="readonly" style="display:none"/>
 </div>
 
-<div class="friends_section">
-	<button class="add_person"><img src="/static/img/icons/person_add32.png" height="24" width="24" class="add_person" /> Invite Friend</button>
-	<h3><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h3>
-	<div class="friends_list"></div>
-</div>
 
-<div class="route_overview_section">
-	<h3>Route/Destination</h3>
-	<h4></h4>
-	<input type="text" name="trip_destination" value="" />
-	<div id="route_map"></div>
-</div>
 
 <div id="trip_organizer_tabs">
 	<ul>
 		<li><a href="#summary_tab">Overview</a></li>
 		<li><a href="#gear_tab">Gear</a></li>
 		<li><a href="#trip_discussion">Discussion</a></li>
+		<li><a href="#friends_tab">Friends</a></li>
+		<li><a href="#route_tab">Route</a></li>
 	</ul>
+	<div id="friends_tab" class="friends_section">
+		<button class="add_person"><img src="/static/img/icons/person_add32.png" height="24" width="24" class="add_person" /> Invite Friend</button>
+		<h3><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h3>
+		<div class="friends_list"></div>
+	</div>
+	<div id="route_tab" class="route_overview_section">
+		<h3>Route/Destination</h3>
+		<h4></h4>
+		<input type="text" name="trip_destination" value="" />
+		<div id="route_map"></div>
+	</div>
 	<div id="summary_tab">
 		<div class="trip_description">
 			<p class="trip_description"></p>
