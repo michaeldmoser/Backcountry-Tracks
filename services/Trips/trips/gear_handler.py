@@ -20,6 +20,7 @@ class GearHandler(BaseHandler):
 
     @web.authenticated
     def put(self, trip_id, gear_id):
+        self.set_header('Content-Type', 'application/json')
         gear = json.loads(self.request.body)
         command = self.service.add_personal_gear(trip_id, self.current_user, gear)
         command.persistant = True

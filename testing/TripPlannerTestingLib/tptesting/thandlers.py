@@ -56,6 +56,11 @@ class TornadoHandlerTestCase(unittest.TestCase):
         pass
 
     @property
+    def http_content_type(self):
+        '''The Content-Type of the response, defaults to application/json'''
+        return 'application/json'
+
+    @property
     def http_headers(self):
         return {'Content-Type': 'application/json'}
 
@@ -146,9 +151,9 @@ class TornadoHandlerTestCase(unittest.TestCase):
 
 
     def test_response(self):
-        '''Should return a list of gear for the user'''
+        '''Should return valid http response'''
         headers, body = self.request._output.split('\r\n\r\n')
-        actual_result = json.loads(body) if len(body) > 0 else body
+        actual_result = json.loads(body) if len(body) > 0 and self.handler._headers['Content-Type'] == 'application/json' else body
         expected_response = self.http_response()
         self.assertEquals(expected_response, actual_result)
 
@@ -237,4 +242,13 @@ class TornadoHandlerTestCase(unittest.TestCase):
                 for header in headers_lines])
 
         self.assertEquals(self.handler._headers['X-Error-Message'], 'Generic error message')
+
+    def test_response_content_type(self):
+        '''Content type of http response should be'''
+        headers_text, body = self.request._output.split('\r\n\r\n')
+        if len(body) < 1:
+            return
+
+        self.assertIn(self.http_content_type, self.handler._headers['Content-Type'])
+
 

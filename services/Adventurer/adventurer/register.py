@@ -13,6 +13,8 @@ class RegisterHandler(BaseHandler):
 
     @web.asynchronous
     def post(self):
+        self.set_header('Content-Type', 'application/json')
+
         if 'application/json' not in self.request.headers.get('Content-Type', ''):
             self.set_status(400)
             self.finish()

@@ -21,6 +21,7 @@ class GroupGearHandler(BaseHandler):
 
     @web.authenticated
     def put(self, trip_id, gear_id):
+        self.set_header('Content-Type', 'application/json')
         gear = json.loads(self.request.body)
         command = self.service.share_gear(trip_id, gear)
         command.persistant = True
