@@ -20,7 +20,7 @@ def make_user_authenticated(handler, user):
     handler._cookies = Cookie.BaseCookie()
     handler._cookies['user'] = cookie_value['user'].value
 
-def setup_handler(Handler, method, url, user=None, body=None, headers=None):
+def setup_handler(Handler, method, url, user=None, body=None, headers=None, files=None):
     '''
     Setup a RequestHandler so as to be able to simulate HTTP Requests on the object.
 
@@ -32,7 +32,7 @@ def setup_handler(Handler, method, url, user=None, body=None, headers=None):
     '''
     application, pika = create_fake_application()
 
-    request = faketornado.HTTPRequestFake(method, url, body=body, headers=headers)
+    request = faketornado.HTTPRequestFake(method, url, body=body, headers=headers, files=files)
     handler = Handler(application, request)
     handler._transforms = []
     if user is not None:

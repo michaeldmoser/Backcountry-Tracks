@@ -180,6 +180,27 @@ class TripsDb(BasicCRUDService):
         tripobj.set_data(data)
         tripobj.store()
 
+    def store_route(self, trip_id, document):
+        '''Store a GPS file as a route for a trip'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip_id))
+        data = tripobj.get_data()
+
+        data['route'] = document
+        tripobj.set_data(data)
+        tripobj.store()
+
+    def get_route(self, trip_id):
+        '''Retrieve a route for a trip'''
+        bucket = self.riak.bucket(self.bucket_name)
+        tripobj = bucket.get(str(trip_id))
+        data = tripobj.get_data()
+
+        return data.get('route', '')
+
+
+        
+
         
 
 

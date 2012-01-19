@@ -548,7 +548,9 @@ var DateRangeEditor = Backbone.View.extend({
 				fx: {
 					opacity: 'toggle',
 					duration: 125
-				}
+				},
+
+				show: this.reset_map
 			});
 
 			this.views.friends = new t.TripDetailFriendsView({
@@ -569,20 +571,36 @@ var DateRangeEditor = Backbone.View.extend({
 		create_maps: function () {
 			var latlng = new google.maps.LatLng(33.224795, -108.25165);
 			var myOptions = {
-			  zoom: 12,
 			  center: latlng,
-			  mapTypeId: google.maps.MapTypeId.SATELLITE
+			  mapTypeId: google.maps.MapTypeId.TERRAIN
 			};
 			this.map = new google.maps.Map(this.$("#route_map")[0], myOptions);
+
 		},
 
 		reset_map: function () {
-			google.maps.event.trigger(this.map, 'resize');
+			try {
+				google.maps.event.trigger(this.map, 'resize');
+				var kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/trips/' + this.model.id + '/map/route');
+				kml.setMap(this.map);
+			} catch (err) {
+				// yeah, do nothing, that's the way to handle it
+			};
 		},
 
 		render: function () {
 			_.each(this.views, function (view) {
 				view.render();
+			});
+			
+			var reset_map = this.reset_map;
+			$('#drophere').filedrop({
+				fallback_id: 'upload_button',
+				url: '/app/trips/' + this.model.id + '/map/route',
+				paramname: 'userfile',
+				afterAll: function () {
+					reset_map();	
+				}
 			});
 		},
 

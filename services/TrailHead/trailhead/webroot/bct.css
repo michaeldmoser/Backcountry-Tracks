@@ -365,8 +365,20 @@ div.route_overview_section {
 }
 
 #route_map {
-	width: 350px;
+	position: absolute;
+	right: 20px;
+	left: 40%;
 	height: 350px;
+	top: 60px;
+}
+
+#route_beta dl dt {
+	font-weight: bold;
+	margin: 5px auto;
+}
+
+#route_beta dl dt {
+	margin: 5px auto;
 }
 
 span.invite_status {
