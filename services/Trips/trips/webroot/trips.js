@@ -581,7 +581,7 @@ var DateRangeEditor = Backbone.View.extend({
 		reset_map: function () {
 			try {
 				google.maps.event.trigger(this.map, 'resize');
-				var kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/trips/' + this.model.id + '/map/route');
+				var kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
 				kml.setMap(this.map);
 			} catch (err) {
 				// yeah, do nothing, that's the way to handle it
