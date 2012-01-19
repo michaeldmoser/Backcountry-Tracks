@@ -97,6 +97,9 @@ mock_config = {
             }
         }
 
+environ_yaml = open('/etc/tptesting.yaml', 'r')
+environ_config = yaml.load(environ_yaml)
+
 
 class TpEnvironment(object):
 
@@ -199,8 +202,6 @@ class TpEnvironment(object):
 
 def create():
     # TODO: reading in the config file needs to be cached. Especially for unittesting
-    environ_yaml = open('/etc/tptesting.yaml', 'r')
-    environ_config = yaml.load(environ_yaml)
 
     environ = TpEnvironment(environ_config)
     return environ

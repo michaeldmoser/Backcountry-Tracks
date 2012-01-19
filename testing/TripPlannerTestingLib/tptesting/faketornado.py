@@ -133,6 +133,7 @@ class HTTPRequestFake(object):
         self.path = path
         self.query = query
         self.arguments = cgi.parse_qs(query)
+        self.files = files or {}
 
         self._output = ""
 

@@ -55,14 +55,53 @@ class TornadoHandlerTestCase(unittest.TestCase):
         '''Called before all other methods. Allows you to do any setup work required for the tests to run'''
         pass
 
+    @property
+    def http_headers(self):
+        return {'Content-Type': 'application/json'}
+
+    def build_files(self):
+
+        uploads = self.file_upload()
+        content_type = self._http_headers['Content-Type']
+        if 'boundary' in content_type:
+            content_type, boundary = content_type.split(';')
+            content_type = content_type.trim()
+
+        self._http_headers['Content-Type'] = content_type + '; boundary=formboundary'
+        upload_part_lines = list()
+        for name, upload in uploads.items():
+            for upload_file in upload:
+                upload_part_lines.append('--formboundary')
+                upload_part_lines.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (upload_file['filename'], name))
+                upload_part_lines.append('Content-Type: %s' % upload_file['content_type'])
+                upload_part_lines.append('')
+                upload_part_lines.append(upload_file['body'])
+                upload_part_lines.append('')
+
+        upload_part_lines.append('--formboundary--')
+
+        request_body = '\r\n'.join(upload_part_lines)
+        self._http_headers['Content-Length'] = len(request_body)
+        return request_body
+
+    def file_upload(self):
+        return None
+
+    @property
+    def is_upload(self):
+        return self.file_upload is not None and 'multipart/form-data' in self.http_headers.get('Content-Type', '')
+
     def setUp_prepare_sut(self):
+        self._http_headers = self.http_headers
         handler = self.request_handler()
         method_name = self.method()
         url = self.url()
         user = self.active_user()
-        body = self.http_request_body()
+        files = self.file_upload() if self.is_upload else None
+        body = self.build_files if self.is_upload else self.http_request_body()
+
         self.handler, self.application, self.pika = setup_handler(handler, method_name,
-                url, user=user, body=body, headers={'Content-Type': 'application/json'})
+                url, user=user, body=body, headers=self._http_headers, files=files)
         self.request = self.handler.request
 
     def setUp_process_request(self):
