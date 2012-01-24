@@ -5,11 +5,11 @@ infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-libraries: install-messaging install-plugins install-servicelib
+install-libraries: install-messaging install-plugins install-servicelib install-gpsutils
 
-install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice
+install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel
 
-install-dependencies: install-libyaml install-python-setproctitle
+install-dependencies: install-libyaml install-python-setproctitle 
 
 install-libyaml: /usr/lib/libyaml.so /usr/include/yaml.h /usr/include/python2.7/Python.h
 
@@ -39,6 +39,11 @@ acceptance: testing/acceptance
 
 webroot: /srv/www
 	sudo python tools/build-webroot.py
+
+install-gpsbabel: /usr/bin/gpsbabel
+
+/usr/bin/gpsbabel:
+	sudo apt-get -y install gpsbabel
 
 install-rabbitmq: /usr/sbin/rabbitmq-server
 
@@ -261,6 +266,15 @@ lib/Services/setup.py:
 	
 lib/Services/BackcountryTracks_Services.egg-info:
 	cd lib/Services && sudo python setup.py develop
+
+install-gpsutils: lib/GPSUtils/setup.py lib/GPSUtils/GPSUtils.egg-info
+
+lib/GPSUtils/setup.py:
+	cd lib/GPSUtils && sudo python setup.py develop
+	
+lib/GPSUtils/GPSUtils.egg-info:
+	cd lib/GPSUtils && sudo python setup.py develop
+
 
 varrun: /var/run/tripplanner
 
