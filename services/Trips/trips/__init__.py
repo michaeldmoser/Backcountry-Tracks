@@ -5,6 +5,7 @@ from riak import RiakClient
 
 from bctplugins import entrypoint
 from bctmessaging.remoting import RemotingClient
+from gpsutils import GPSFormatConverter
 
 from .service import TripsDb
 
@@ -16,7 +17,8 @@ class EntryPoint(object):
 
         remoting_client = RemotingClient(self.service_channel)
 
-        return TripsDb(remoting_client, riak, bucket_name, self.config['url'])
+        return TripsDb(remoting_client, riak, bucket_name, self.config['url'],
+                converter=GPSFormatConverter)
 
     def __init__(self, configuration, environ):
         self.environ = environ

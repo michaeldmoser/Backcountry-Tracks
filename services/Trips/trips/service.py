@@ -8,6 +8,9 @@ from bctservices.crud import BasicCRUDService
 class TripsDb(BasicCRUDService):
     list_mapreduce = """
         function (value, keyData, arg) {
+            if (value.values[0].metadata['content-type'] != 'application/json')
+                return [];
+
             if (value.values[0].data.length < 1)
                 return [];
 
@@ -26,9 +29,10 @@ class TripsDb(BasicCRUDService):
         }
     """
 
-    def __init__(self, remote_client, riak, bucket_name, url):
+    def __init__(self, remote_client, riak, bucket_name, url, converter = None):
         self.remoting = remote_client
         self.url = url
+        self.converter = converter
         BasicCRUDService.__init__(self, riak, bucket_name)
 
     def __send_invite_email(self, trip_id, trip_data, invite):
@@ -183,20 +187,39 @@ class TripsDb(BasicCRUDService):
     def store_route(self, trip_id, document):
         '''Store a GPS file as a route for a trip'''
         bucket = self.riak.bucket(self.bucket_name)
+        mapbucket = self.riak.bucket('maps')
         tripobj = bucket.get(str(trip_id))
-        data = tripobj.get_data()
 
-        data['route'] = document
-        tripobj.set_data(data)
-        tripobj.store()
+        converter = self.converter(document)
+        kml_doc = converter.convert('kml')
+
+        links = tripobj.get_links()
+        routes = filter(lambda x: x.get_tag() == 'route', links)
+        if len(routes) == 0:
+            route_id = str(uuid.uuid4())
+            routeobj = mapbucket.new_binary(route_id, str(kml_doc), content_type = 'application/vnd.google-earth.kml+xml')
+            routeobj.store()
+            tripobj.add_link(routeobj, tag='route')
+            tripobj.store()
+        else:
+            route = routes[0].get()
+            route.set_data(kml_doc)
+            route.store()
 
     def get_route(self, trip_id):
         '''Retrieve a route for a trip'''
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip_id))
-        data = tripobj.get_data()
 
-        return data.get('route', '')
+        links = tripobj.get_links()
+        routes = filter(lambda x: x.get_tag() == 'route', links)
+
+        try:
+            route = routes[0].get()
+            return route.get_data() or ''
+        except IndexError:
+            return ''
+
 
 
         

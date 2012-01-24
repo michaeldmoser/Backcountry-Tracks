@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+	xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <name>GPS device</name>
+    <Snippet>Created Sun Jan 22 12:17:12 2012</Snippet>
+<!-- Normal track style -->
+    <Style id="track_n">
+      <LabelStyle>
+        <scale>0</scale>
+      </LabelStyle>
+      <IconStyle>
+        <scale>.5</scale>
+        <Icon>
+          <href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+<!-- Highlighted track style -->
+    <Style id="track_h">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <StyleMap id="track">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#track_n</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#track_h</styleUrl>
+      </Pair>
+    </StyleMap>
+<!-- Normal waypoint style -->
+    <Style id="waypoint_n">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+<!-- Highlighted waypoint style -->
+    <Style id="waypoint_h">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <StyleMap id="waypoint">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#waypoint_n</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#waypoint_h</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Style id="lineStyle">
+      <LineStyle>
+        <color>99ffac59</color>
+        <width>6</width>
+      </LineStyle>
+    </Style>
+    <Folder>
+      <name>Tracks</name>
+      <Folder>
+        <name>The Bob - My Path</name>
+        <Snippet/>
+        <description>
+<![CDATA[<table>
+            <tr><td><b>Distance</b> 4.0 mi </td></tr>
+            <tr><td><b>Min Alt</b> 621371.192 mi </td></tr>
+            <tr><td><b>Max Alt</b> 0.000 ft </td></tr>
+          </table>]]>
+        </description>
+        <Folder>
+          <name>Points</name>
+          <Placemark>
+            <name>The Bob - My Path-0</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.191406 </td></tr>
+                <tr><td>Latitude: 47.629856 </td></tr>
+                <tr><td>Heading: 320.0 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.191406</longitude>
+              <latitude>47.629856</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.191406,47.629856</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-1</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.190939 </td></tr>
+                <tr><td>Latitude: 47.633383 </td></tr>
+                <tr><td>Heading: 5.1 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.190939</longitude>
+              <latitude>47.633383</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.190939,47.633383</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-2</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.194142 </td></tr>
+                <tr><td>Latitude: 47.636819 </td></tr>
+                <tr><td>Heading: 327.9 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.194142</longitude>
+              <latitude>47.636819</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.194142,47.636819</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-3</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.204061 </td></tr>
+                <tr><td>Latitude: 47.636749 </td></tr>
+                <tr><td>Heading: 269.4 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.204061</longitude>
+              <latitude>47.636749</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.204061,47.636749</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-4</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.212196 </td></tr>
+                <tr><td>Latitude: 47.634132 </td></tr>
+                <tr><td>Heading: 244.5 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.212196</longitude>
+              <latitude>47.634132</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.212196,47.634132</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-5</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.212001 </td></tr>
+                <tr><td>Latitude: 47.630531 </td></tr>
+                <tr><td>Heading: 177.9 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.212001</longitude>
+              <latitude>47.630531</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.212001,47.630531</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-6</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.209870 </td></tr>
+                <tr><td>Latitude: 47.628938 </td></tr>
+                <tr><td>Heading: 138.0 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.209870</longitude>
+              <latitude>47.628938</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.209870,47.628938</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-7</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.210234 </td></tr>
+                <tr><td>Latitude: 47.627377 </td></tr>
+                <tr><td>Heading: 188.9 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.210234</longitude>
+              <latitude>47.627377</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.210234,47.627377</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-8</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.207909 </td></tr>
+                <tr><td>Latitude: 47.624945 </td></tr>
+                <tr><td>Heading: 147.2 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.207909</longitude>
+              <latitude>47.624945</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.207909,47.624945</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-9</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.208714 </td></tr>
+                <tr><td>Latitude: 47.621785 </td></tr>
+                <tr><td>Heading: 189.7 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.208714</longitude>
+              <latitude>47.621785</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.208714,47.621785</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-10</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.209345 </td></tr>
+                <tr><td>Latitude: 47.619291 </td></tr>
+                <tr><td>Heading: 189.7 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.209345</longitude>
+              <latitude>47.619291</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.209345,47.619291</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-11</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.205585 </td></tr>
+                <tr><td>Latitude: 47.618585 </td></tr>
+                <tr><td>Heading: 105.6 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.205585</longitude>
+              <latitude>47.618585</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.205585,47.618585</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-12</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.198463 </td></tr>
+                <tr><td>Latitude: 47.619347 </td></tr>
+                <tr><td>Heading: 81.0 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.198463</longitude>
+              <latitude>47.619347</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.198463,47.619347</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-13</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.191140 </td></tr>
+                <tr><td>Latitude: 47.620809 </td></tr>
+                <tr><td>Heading: 73.5 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.191140</longitude>
+              <latitude>47.620809</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.191140,47.620809</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-14</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.189597 </td></tr>
+                <tr><td>Latitude: 47.623706 </td></tr>
+                <tr><td>Heading: 19.8 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.189597</longitude>
+              <latitude>47.623706</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.189597,47.623706</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-15</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.190798 </td></tr>
+                <tr><td>Latitude: 47.627432 </td></tr>
+                <tr><td>Heading: 347.7 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.190798</longitude>
+              <latitude>47.627432</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.190798,47.627432</coordinates>
+            </Point>
+          </Placemark>
+          <Placemark>
+            <name>The Bob - My Path-16</name>
+            <Snippet/>
+            <description><![CDATA[
+              <table>
+                <tr><td>Longitude: -113.191028 </td></tr>
+                <tr><td>Latitude: 47.628963 </td></tr>
+                <tr><td>Heading: 354.2 </td></tr>
+              </table>
+            ]]></description>
+            <LookAt>
+              <longitude>-113.191028</longitude>
+              <latitude>47.628963</latitude>
+              <tilt>66</tilt>
+            </LookAt>
+            <styleUrl>#track</styleUrl>
+            <Point>
+              <coordinates>-113.191028,47.628963</coordinates>
+            </Point>
+          </Placemark>
+        </Folder>
+        <Placemark>
+          <name>Path</name>
+          <styleUrl>#lineStyle</styleUrl>
+          <LineString>
+            <tessellate>1</tessellate>
+            <coordinates>
+              -113.191406,47.629856
+              -113.191406,47.629856
+              -113.190939,47.633383
+              -113.190939,47.633383
+              -113.194142,47.636819
+              -113.194142,47.636819
+              -113.204061,47.636749
+              -113.204061,47.636749
+              -113.212196,47.634132
+              -113.212196,47.634132
+              -113.212001,47.630531
+              -113.212001,47.630531
+              -113.209870,47.628938
+              -113.209870,47.628938
+              -113.210234,47.627377
+              -113.210234,47.627377
+              -113.207909,47.624945
+              -113.207909,47.624945
+              -113.208714,47.621785
+              -113.208714,47.621785
+              -113.209345,47.619291
+              -113.209345,47.619291
+              -113.205585,47.618585
+              -113.205585,47.618585
+              -113.198463,47.619347
+              -113.198463,47.619347
+              -113.191140,47.620809
+              -113.191140,47.620809
+              -113.189597,47.623706
+              -113.189597,47.623706
+              -113.190798,47.627432
+              -113.190798,47.627432
+              -113.191028,47.628963
+              -113.191028,47.628963
+            </coordinates>
+          </LineString>
+        </Placemark>
+      </Folder>
+    </Folder>
+    <LookAt>
+      <longitude>-113.200896</longitude>
+      <latitude>47.627702</latitude>
+      <range>3438.235699</range>
+    </LookAt>
+  </Document>
+</kml>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx
+  version="1.0"
+  creator="GPSBabel - http://www.gpsbabel.org"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/0"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+<time>2012-01-22T18:16:53Z</time>
+<bounds minlat="47.618584526" minlon="-113.212195695" maxlat="47.636819248" maxlon="-113.189596753"/>
+<trk>
+  <name>The Bob - My Path</name>
+<trkseg>
+<trkpt lat="47.629856234" lon="-113.191406409">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.633383468" lon="-113.190939165">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.636819248" lon="-113.194141747">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.636748967" lon="-113.204061366">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.634132407" lon="-113.212195695">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.630531041" lon="-113.212000662">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.628938444" lon="-113.209869631">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.627377344" lon="-113.210234168">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.624945118" lon="-113.207909052">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.621784803" lon="-113.208713563">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.619291485" lon="-113.209344761">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.618584526" lon="-113.205585269">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.619346947" lon="-113.198462971">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.620809386" lon="-113.191140095">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.623705938" lon="-113.189596753">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.627432255" lon="-113.190798158">
+  <ele>0.000000</ele>
+</trkpt>
+<trkpt lat="47.628963081" lon="-113.191028168">
+  <ele>0.000000</ele>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>
