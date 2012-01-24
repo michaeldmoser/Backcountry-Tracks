@@ -53,7 +53,7 @@ class MessagingEndPointController(object):
                     }
                 }
             trace_back = traceback.format_exc()
-            logging.error('Exception raised in method %s while processing:\n %s', request['method'], request)
+            logging.error('Exception raised in method %s while processing %s', request['method'], header.correlation_id)
             logging.error(trace_back)
         else:
             if response is None:
@@ -64,7 +64,6 @@ class MessagingEndPointController(object):
                     'result': response,
                     'id': properties.correlation_id
                     }
-            logging.debug('Response to %s is: %s' % (header.correlation_id, response))
         finally:
             self.channel.basic_ack(delivery_tag=mq_method.delivery_tag)
 
