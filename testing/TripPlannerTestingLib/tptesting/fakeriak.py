@@ -20,6 +20,18 @@ Checking the data
 
 import uuid
 from copy import deepcopy
+from riak.mapreduce import RiakLink
+
+class RiakDocument(dict):
+
+    def __init__(self, *args, **kwargs):
+        dict.__init__(self, *args, **kwargs)
+        self.links = list()
+
+class RiakBinary(str):
+    def __init__(self, data):
+        str.__init__(self, data)
+        self.links = list()
 
 
 class RiakClientFake(object):
@@ -129,11 +141,13 @@ class RiakBucketFake(object):
         '''
         return self.__documents
 
-    def add_document(self, key, data):
+    def add_document(self, key, data, links=[]):
         '''
         Creates a document for retrieval by the SUT code
         '''
-        self.__documents[key] = deepcopy(data)
+        document = RiakDocument(deepcopy(data))
+        document.links.extend(links)
+        self.__documents[key] = document
 
     def __init__(self, client, name):
         self.name = name
@@ -181,13 +195,17 @@ class RiakBucketFake(object):
 
     def new(self, key, data=None, content_type='application/json'):
         obj = RiakObjectFake(self.client, self, key)
-        obj.set_data(deepcopy(data))
         obj.set_content_type(content_type)
+        obj.set_data(deepcopy(data))
         obj._encode_data = True
         return obj
 
     def new_binary(self, key, data, content_type='application/octet-stream'):
-		raise NotImplementedError
+        obj = RiakObjectFake(self.client, self, key)
+        obj.set_content_type(content_type)
+        obj.set_data(deepcopy(data))
+        obj._encode_data = True
+        return obj
 
     def get(self, key, r=None):
         try:
@@ -196,7 +214,13 @@ class RiakBucketFake(object):
             return RiakObjectFake(self.client, self)
 
         obj = RiakObjectFake(self.client, self, key=key)
+        if isinstance(document, RiakBinary):
+            obj.set_content_type('application/octet-stream')
+
         obj.set_data(document)
+
+        for link in self.__documents[key].links:
+            obj.add_link(link)
 
         # in production this is not random data but for testing purposes this will work
         # for the time being
@@ -271,6 +295,7 @@ class RiakObjectFake(object):
         self.bucket = bucket
         self._encode_data = False
         self.__data = None
+        self.content_type = 'application/json'
 
         self._exists = False
 
@@ -284,7 +309,12 @@ class RiakObjectFake(object):
         return self.__data
 
     def set_data(self, data):
-        self.__data = data
+        if not isinstance(data, str) and not isinstance(data, dict):
+            raise TypeError("You must use str()'s or dict()'s for data. The underlying pycurl library will reject it otherwise")
+        if self.content_type == 'application/json':
+            self.__data = RiakDocument(data)
+        else:
+            self.__data = RiakBinary(data)
 
     def get_encoded_data(self):
 		raise NotImplementedError
@@ -308,13 +338,26 @@ class RiakObjectFake(object):
         self.content_type = content_type
 
     def add_link(self, obj, tag=None):
-		raise NotImplementedError
+        if isinstance(obj, RiakLink):
+            newlink = obj
+        else:
+            newlink = RiakLink(obj.bucket.name, obj.key, tag)
+
+        newlink._client = self.client
+
+        if not isinstance(self.__data, RiakDocument):
+            self.__data = RiakDocument(self.__data)
+
+        self.__data.links.append(newlink)
 
     def remove_link(self, obj, tag=None):
 		raise NotImplementedError
 
     def get_links(self):
-		raise NotImplementedError
+        if not isinstance(self.__data, RiakDocument):
+            return []
+
+        return self.__data.links
 
     def store(self, w=None, dw=None, return_body=True):
         if self.bucket.documents.has_key(self.key) and \
