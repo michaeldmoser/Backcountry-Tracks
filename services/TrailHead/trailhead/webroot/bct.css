@@ -364,12 +364,19 @@ li.dragging {
 div.route_overview_section {
 }
 
-#route_map {
+#drophere {
 	position: absolute;
 	right: 20px;
 	left: 40%;
 	height: 350px;
 	top: 60px;
+}
+#route_map {
+	position: absolute;
+	right: 20px;
+	left: 40%;
+	height: 350px;
+	top: 90px;
 }
 
 #route_beta dl dt {
