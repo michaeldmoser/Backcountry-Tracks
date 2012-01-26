@@ -630,7 +630,15 @@ var DateRangeEditor = Backbone.View.extend({
 				paramname: 'userfile',
 				afterAll: function () {
 					reset_map();	
-				}
+				},
+				error: function (err, file) {
+					switch(err) {
+						case 'FileTooLarge':
+							alert('The file you are trying to upload is to large. Please limit your route files to 2 MB');
+							break;
+					}
+				},
+				maxfilesize: 2
 			});
 		},
 
