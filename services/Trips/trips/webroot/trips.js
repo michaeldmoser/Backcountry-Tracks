@@ -572,7 +572,8 @@ var DateRangeEditor = Backbone.View.extend({
 			var latlng = new google.maps.LatLng(33.224795, -108.25165);
 			var myOptions = {
 			  center: latlng,
-			  mapTypeId: google.maps.MapTypeId.TERRAIN
+			  mapTypeId: google.maps.MapTypeId.TERRAIN,
+			  scaleControl: true
 			};
 			this.map = new google.maps.Map(this.$("#route_map")[0], myOptions);
 
