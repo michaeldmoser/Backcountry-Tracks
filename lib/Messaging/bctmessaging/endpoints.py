@@ -56,9 +56,9 @@ class MessagingEndPointController(object):
             logging.error('Exception raised in method %s while processing %s', request['method'], header.correlation_id)
             logging.error(trace_back)
         else:
-            if response is None:
-                logging.debug('Completed request, no response... %s' % header.correlation_id)
+            if not properties.correlation_id:
                 return
+
             reply = {
                     'jsonrpc': '2.0',
                     'result': response,

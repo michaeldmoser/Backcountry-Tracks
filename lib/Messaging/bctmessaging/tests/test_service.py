@@ -214,6 +214,49 @@ class TestMessagingEndPointControllerExceptions(unittest.TestCase):
 
         self.assertEquals(response_should_be, jsonrpc_response)
 
+class TestNoneResponse(unittest.TestCase):
+
+    def test_replies_with_none(self):
+        '''Should reply to the RPC with None'''
+        class MessageServiceSpy(object):
+            def service_method(spy):
+                return None
+        spy_service = MessageServiceSpy()
+
+        queue_name = 'an_rpc_queue'
+        reply_exchange = 'rpc_reply_exchange'
+        method_name = 'service_method'
+
+        mq, request, properties = create_endpoint_sut(spy_service,
+                method_name, queue_name=queue_name, rpc_args=[],
+                reply_exchange_name=reply_exchange)
+
+        reply = mq.published_messages[0]
+
+        expected = {
+                'jsonrpc': '2.0',
+                'result': None,
+                'id': properties.correlation_id
+                }
+
+        self.assertEquals(expected, json.loads(reply.body))
+
+    def test_no_reply_without_correlation_id(self):
+        '''Should reply to the RPC with None'''
+        class MessageServiceSpy(object):
+            def service_method(spy):
+                return None
+        spy_service = MessageServiceSpy()
+
+        queue_name = 'an_rpc_queue'
+        reply_exchange = 'rpc_reply_exchange'
+        method_name = 'service_method'
+
+        mq, request, properties = create_endpoint_sut(spy_service,
+                method_name, queue_name=queue_name, rpc_args=[],
+                reply_exchange_name=reply_exchange, correlation_id=None)
+
+        self.assertEquals(len(mq.published_messages), 0)
 
 if __name__ == '__main__':
     unittest.main()

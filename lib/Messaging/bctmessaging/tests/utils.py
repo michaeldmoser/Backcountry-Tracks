@@ -18,7 +18,7 @@ def create_messaging_channel():
     return channel, mq
 
 def create_endpoint_sut(service_double, method_name, queue_name="rpc_queue",
-       reply_exchange_name="rpc_rpley", rpc_args=[], trigger=True):
+       reply_exchange_name="rpc_rpley", rpc_args=[], trigger=True, correlation_id=str(uuid.uuid4())):
     '''
     Builds a MessagingEndPointController for testing and then injects a message
     for consumption. Will trigger consuming the message unless @trigger is False
@@ -33,7 +33,7 @@ def create_endpoint_sut(service_double, method_name, queue_name="rpc_queue",
 
     properties = pika.BasicProperties(
             content_type = 'application/json',
-            correlation_id = str(uuid.uuid4()),
+            correlation_id = correlation_id,
             reply_to = str(uuid.uuid4())
             )
     request = {

@@ -86,7 +86,7 @@ class TestRouteHandlerPOST(thandlers.TornadoHandlerTestCase):
 
 
     def rpc_result(self):
-        return ''
+        return True
 
     def http_response(self):
         return True

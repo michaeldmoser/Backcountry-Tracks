@@ -206,6 +206,8 @@ class TripsDb(BasicCRUDService):
             route.set_data(kml_doc)
             route.store()
 
+        return True
+
     def get_route(self, trip_id):
         '''Retrieve a route for a trip'''
         bucket = self.riak.bucket(self.bucket_name)

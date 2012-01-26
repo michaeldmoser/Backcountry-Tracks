@@ -83,6 +83,12 @@ class TestTripStoreRoute(unittest.TestCase):
 
         self.assertIn(route, KML_DOCUMENT)
 
+    def test_store_kml_result(self):
+        '''store_route should return true'''
+        gear = self.app.store_route(self.trip_id, KML_DOCUMENT)
+        self.assertTrue(gear)
+
+
 class TestTripRetrieveRoute(unittest.TestCase):
 
     def setUp(self):
