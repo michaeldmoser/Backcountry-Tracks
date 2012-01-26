@@ -19,26 +19,26 @@ class TripsEnvironment(object):
 
         return stored_trips
 
-    def add(self, owner=None, name=None, description=None, start=None, end=None, destination=None):
+    def add(self, **kwargs):
         """
         Add a new trips to the user's trip list
         """
-        assert owner is not None, "You must provide a owner"
-        assert name is not None, "You must provide a name for the trip"
-        assert description is not None, "You must provide a description for the trip"
-        assert start is not None, "You must provide a start for the trip"
-        assert end is not None, "You must provide a end for the trip"
+        trip = {
+                'route_description': '',
+                'trip_distance': '',
+                'elevation_gain': '',
+                'difficulty': '',
+                }
+        assert kwargs['owner'] is not None, "You must provide a owner"
+        assert kwargs['name'] is not None, "You must provide a name for the trip"
+        assert kwargs['description'] is not None, "You must provide a description for the trip"
+        assert kwargs['start'] is not None, "You must provide a start for the trip"
+        assert kwargs['end'] is not None, "You must provide a end for the trip"
+
+        trip.update(kwargs)
 
         trip_id = str(uuid.uuid4())
-        trip = {
-                'name': name,
-                'description': description,
-                'owner': owner,
-                'id': trip_id,
-                'start': start,
-                'end': end,
-                'destination': destination,
-                }
+        trip['id'] = trip_id
         new_trip = self.tripsdb.new(trip_id, data=trip)
         new_trip.store()
 

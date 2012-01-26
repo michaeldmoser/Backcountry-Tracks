@@ -27,12 +27,16 @@
 		<div id="route_beta">
 			<dl>
 				<dt>Round Trip Distance</dt>
-				<dd>40 miles</dd>
+				<dd><span id="trip_distance"></span> <input type="text" name="trip_distance" /></dd>
 				<dt>Elevation gain/loss</dt>
-				<dd>2000 ft</dd>
+				<dd><span id="trip_elevation_gain"></span><input type="text" name="elevation_gain" /></dd>
 				<dt>Difficulty</dt>
-				<dd>Hard</dd>
+				<dd><span id="trip_difficulty"></span><input type="text" name="difficulty" /></dd>
 			</dl>
+			<h3>Route Description</h3>
+			<div class="trip_route_description">
+			</div>
+			<textarea name="route_description"></textarea>
 			<a href="#">+ add additional details</a>
 		</div>
 		<div id="drophere">Upload a KML/GPX file <input type="file" name="upload_button" id="upload_button" /></div>

@@ -220,6 +220,10 @@ var DateRangeEditor = Backbone.View.extend({
 			'end': '',
 			'destination': '',
 			'description': '',
+			'route_description': '',
+			'trip_distance': '',
+			'elevation_gain': '',
+			'difficulty': '',
 			'friends': null
 		},
 
@@ -526,6 +530,26 @@ var DateRangeEditor = Backbone.View.extend({
 					input_selector: 'input[name="trip_destination"]',
 					label_selector: 'div.route_overview_section h4',
 					field: 'destination',
+				},
+				'trip_distance': {
+					input_selector: 'input[name="trip_distance"]',
+					label_selector: 'span#trip_distance',
+					field: 'trip_distance',
+				},
+				'elevation_gain': {
+					input_selector: 'input[name="elevation_gain"]',
+					label_selector: 'span#trip_elevation_gain',
+					field: 'elevation_gain',
+				},
+				'difficulty': {
+					input_selector: 'input[name="difficulty"]',
+					label_selector: 'span#trip_difficulty',
+					field: 'difficulty',
+				},
+				'route_description': {
+					input_selector: 'textarea[name="route_description"]',
+					label_selector: 'div.trip_route_description',
+					field: 'route_description',
 				},
 			};
 			_.each(views, function(view) {

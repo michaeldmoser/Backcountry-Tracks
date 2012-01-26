@@ -388,6 +388,10 @@ div.route_overview_section {
 	margin: 5px auto;
 }
 
+#route_beta .trip_route_description {
+	width: 38%;
+}
+
 span.invite_status {
 	font-size: .7em;
 	color: #717171;
