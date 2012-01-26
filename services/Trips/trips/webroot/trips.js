@@ -32,6 +32,7 @@ var FieldEditor = Backbone.View.extend({
 		var update = new Object;
 		update[this.field] = this.input.val();
 		this.model.save(update);
+		this.render();
 	},
 
 	render: function () {
@@ -535,21 +536,25 @@ var DateRangeEditor = Backbone.View.extend({
 					input_selector: 'input[name="trip_distance"]',
 					label_selector: 'span#trip_distance',
 					field: 'trip_distance',
+					default_value: 'Enter a distance...'
 				},
 				'elevation_gain': {
 					input_selector: 'input[name="elevation_gain"]',
 					label_selector: 'span#trip_elevation_gain',
 					field: 'elevation_gain',
+					default_value: 'Enter an elevation gain/loss'
 				},
 				'difficulty': {
 					input_selector: 'input[name="difficulty"]',
 					label_selector: 'span#trip_difficulty',
 					field: 'difficulty',
+					default_value: 'Enter a difficulty...',
 				},
 				'route_description': {
 					input_selector: 'textarea[name="route_description"]',
 					label_selector: 'div.trip_route_description',
 					field: 'route_description',
+					default_value: 'Enter a description...'
 				},
 			};
 			_.each(views, function(view) {
