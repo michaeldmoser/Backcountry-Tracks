@@ -201,8 +201,6 @@ class TpEnvironment(object):
         os.chown(mbox_path, pwd.getpwnam(user)[2], grp.getgrnam('mail')[2])
 
 def create():
-    # TODO: reading in the config file needs to be cached. Especially for unittesting
-
     environ = TpEnvironment(environ_config)
     return environ
 
