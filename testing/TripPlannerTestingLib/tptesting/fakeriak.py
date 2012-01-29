@@ -225,6 +225,7 @@ class RiakBucketFake(object):
         # in production this is not random data but for testing purposes this will work
         # for the time being
         obj._vclock = str(uuid.uuid4())
+        obj._exists = True
         return obj
 
 
@@ -365,6 +366,8 @@ class RiakObjectFake(object):
             self.__data = self.bucket.documents[self.key]
         else:
             self.bucket.documents[self.key] = self.__data
+
+        self._exists = True
 
         return self
 
