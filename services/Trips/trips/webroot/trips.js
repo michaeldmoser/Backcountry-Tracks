@@ -16,9 +16,15 @@ var FieldEditor = Backbone.View.extend({
 		this.label.toggleClass('highlight');
 	},
 
-	edit_on_click: function () {
+	edit_on_click: function (evt, eh) {
+		if (evt.target.tagName == 'A') {
+			window.open(evt.target.href, '_blank');
+			evt.stopPropagation();
+			return false;
+		}
+
 		this.label.hide();
-		this.input.val(this.label.html());
+		this.input.val(this.model.get(this.field));
 		this.input.show();
 		this.input.focus();
 		this.input.select();
@@ -39,7 +45,17 @@ var FieldEditor = Backbone.View.extend({
 		var field_value = this.model.get(this.field);
 		if (field_value == '' && this.options.default_value)
 			field_value = this.options.default_value
-		this.label.html(field_value);
+
+		var urlreg = /((http:\/\/)|(www\.))([^ \n]+)/igm;
+		var urls = field_value.match(urlreg, '<a href="http://$4$5" target="_blank">$1</a>');
+		for(url_index in urls) {
+			var url = urls[url_index];
+			if (url.indexOf('http://') > -1)
+				field_value = field_value.replace(url, '<a href="' + url + '">' + url + '</a>');
+			else
+				field_value = field_value.replace(url, '<a href="http://' + url + '">' + url + '</a>');
+		}
+		this.label.html(field_value.replace('\n', '\n<br />'));
 	}
 });
 
@@ -611,8 +627,6 @@ var DateRangeEditor = Backbone.View.extend({
 
 			var urlreg = /(((http:\/\/)|(www\.))([^ ]+))/gmi;
 			rendered_comment['comment'] = rendered_comment['comment'].replace(urlreg, '<a href="http://$4$5" target="_blank">$1</a>');
-			
-
 
 			var html_comment = $('<div class="trip_comment"/>').html(this.template(rendered_comment));
 			html_comment.addClass(this.row_class);
