@@ -148,6 +148,24 @@ div.trip_dates {
 	font-size: 1.1em;
 }
 
+div.trip_description_container {
+	padding: 0px;
+	margin: 0px;
+	width: 48%;
+	float:left;
+}
+
+div.itinerary {
+	padding: 0px;
+	margin: 0px;
+	width: 48%;
+	float: right;
+}
+
+div.trip_activities {
+	clear:both;
+}
+
 .trip_description {
 	width: 100%;
 	font-size: 16px;
@@ -156,9 +174,27 @@ div.trip_dates {
 	min-height: 100px;
 	background-color: transparent;
 	font-family: Arial,sans-serif;
+	border: 1px solid transparent;
+}
+textarea.trip_description {
+	border: 1px solid black;
 }
 .trip_description p {
 	padding: 2px;
+}
+div.trip_itinerary_content,
+textarea.trip_itinerary {
+	width: 100%;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+	min-height: 100px;
+	background-color: transparent;
+	font-family: Arial,sans-serif;
+	border: 1px solid transparent;
+}
+textarea.trip_itinerary {
+	border: 1px solid black;
 }
 
 div.friends_section {
