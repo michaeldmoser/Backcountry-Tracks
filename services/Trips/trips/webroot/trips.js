@@ -608,6 +608,11 @@ var DateRangeEditor = Backbone.View.extend({
 			rendered_comment['date'] = local_date;
 			rendered_comment['time'] = local_time;
 
+			var urlreg = /(((http:\/\/)|(www\.))([^ ]+))/gmi;
+			rendered_comment['comment'] = rendered_comment['comment'].replace(urlreg, '<a href="http://$4$5" target="_blank">$1</a>');
+			
+
+
 			var html_comment = $('<div class="trip_comment"/>').html(this.template(rendered_comment));
 			html_comment.addClass(this.row_class);
 
