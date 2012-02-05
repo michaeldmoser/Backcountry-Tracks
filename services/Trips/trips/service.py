@@ -1,5 +1,6 @@
 import logging
 import time
+from datetime import datetime
 
 import uuid
 
@@ -10,6 +11,11 @@ class TripsDb(BasicCRUDService):
         function (value, keyData, arg) {
             if (value.values[0].metadata['content-type'] != 'application/json')
                 return [];
+
+            var usermeta = value.values[0].metadata['X-Riak-Meta'];
+            if (usermeta['X-Riak-Meta-object_type'] &&
+                    usermeta['X-Riak-Meta-object_type'] == 'comment')
+                return[];
 
             if (value.values[0].data.length < 1)
                 return [];
@@ -222,11 +228,47 @@ class TripsDb(BasicCRUDService):
         except IndexError:
             return ''
 
+    def comment(self, trip_id, owner, comment):
+        '''Add a comment to a trip'''
+        trips = self.riak.bucket(self.bucket_name)
 
+        adventurers = self.riak.bucket('adventurers')
+        adventurer_obj = adventurers.get(str(owner))
+        adventurer = adventurer_obj.get_data()
 
+        comment_id = str(uuid.uuid4())
+        comment_data = {
+                'comment': comment,
+                'date': str(datetime.utcnow().strftime('%B %d, %Y %H:%M:%S GMT+0000')),
+                'owner': owner,
+                'id': comment_id,
+                'first_name': adventurer['first_name'],
+                'last_name': adventurer['last_name']
+                }
+
+        comment_obj = trips.new(comment_id, comment_data)
+        comment_obj.set_usermeta({'object_type': 'comment'})
+        comment_obj.store()
+
+        trip = trips.get(str(trip_id))
+        trip.add_link(comment_obj, tag='comment')
+
+        trip.store()
+
+        return comment_data
+
+    def get_comments(self, trip_id):
+        '''Get all comments on a trip'''
+        trips = self.riak.bucket(self.bucket_name)
+        trip = trips.get(str(trip_id))
+
+        linked_objects = trip.get_links()
+        comment_links = filter(lambda x: x.get_tag() == 'comment', linked_objects)
+        def map_comment(comment_link):
+            comment = comment_link.get()
+            comment_data = comment.get_data()
+            return comment_data
+        comments = map(map_comment, comment_links)
+
+        return comments
         
-
-        
-
-
-

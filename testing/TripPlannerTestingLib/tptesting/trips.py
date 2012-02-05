@@ -1,5 +1,7 @@
 import uuid
 import time
+from datetime import datetime
+from dateutil import tz
 
 class TripsEnvironment(object):
     def __init__(self, env):
@@ -141,6 +143,29 @@ class TripsEnvironment(object):
 
         trip.set_data(trip_data)
         trip.store()
+
+    def add_comment(self, trip_id, owner, comment, date=None):
+        '''
+        Add a comment to a trip
+        '''
+        comment_date = date or datetime.now(tz.tzutc())
+        trip = self.tripsdb.get(str(trip_id))
+        comment_id = str(uuid.uuid4())
+        comment_data = {
+            'comment': comment,
+            'date': str(comment_date.strftime('%B %d, %Y %H:%M:%S GMT%z')),
+            'owner': owner,
+            'id': comment_id
+            }
+
+        comment = self.tripsdb.new(comment_id, comment_data)
+        comment.set_usermeta({'object_type': 'comment'})
+        comment.store()
+
+        trip.add_link(comment, tag='comment')
+        trip.store()
+
+        return comment_data
 
         
 

@@ -64,25 +64,14 @@
 	</div>
 	<div id="trip_discussion" class="trip_discussion">
 		<h3>discussion</h3>
-		<div class="trip_comments">
-			<div class="trip_comment odd">
-				<h4 class="comment_who">Walt said on 02/10/2011 at 8:34pm</h4>
-				<p>Vestibulum ut nulla ac justo vulputate pharetra ac ut magna. Nunc lacinia risus sit amet sapien ullamcorper ultricies. Vestibulum sed tellus ipsum, eu mattis enim. Mauris eleifend ligula id purus mattis eget lobortis odio scelerisque. Donec ac massa ipsum, quis hendrerit tortor.</p>
-			</div>
-			<div class="trip_comment">
-				<h4 class="comment_who">Zach said on 02/11/2011 at 5:12pm</h4>
-				<p>Sed consequat ornare nulla, ac laoreet velit pretium nec. Donec fermentum, libero ut dapibus rutrum, orci lorem luctus arcu, a euismod orci dui nec quam.</p>
-			</div>
-			<div class="trip_comment odd">
-				<h4 class="comment_who">Michael said on 02/11/2011 at 5:26pm</h4>
-				<p>Sed consequat ornare nulla, ac laoreet velit pretium nec. Donec fermentum, libero ut dapibus rutrum, orci lorem luctus arcu, a euismod orci dui nec quam.</p>
-				<p>Vestibulum ut nulla ac justo vulputate pharetra ac ut magna. Nunc lacinia risus sit amet sapien ullamcorper ultricies. Vestibulum sed tellus ipsum, eu mattis enim. Mauris eleifend ligula id purus mattis eget lobortis odio scelerisque. Donec ac massa ipsum, quis hendrerit tortor.</p>
-			</div>
-		</div>
 		<div class="discussion_controls">
 			<textarea></textarea>
 			<button>Add comment</button>
 		</div>
+		<div class="discussion_sorting">
+			Sort by <a href="#" class="posted">Order posted</a> / <a href="#" class="recent">Most recent first</a>
+		</div>
+		<div class="trip_comments"></div>
 	</div>
 	<div id="gear_tab">
 		<div id="trip_personal_gear">
@@ -137,4 +126,9 @@
 
 <script id="trip_gear_group_item_template" type="text/template+html">
 	<li class="group_gear">{{ name }} - {{ weight }}</li>
+</script>
+
+<script id="trip_discussion_comment_template" type="text/template+html">
+	<h4 class="comment_who">{{ first_name }} {{ last_name }} said on {{ date }} at {{ time }}</h4>
+	<p>{{ comment }}</p>
 </script>

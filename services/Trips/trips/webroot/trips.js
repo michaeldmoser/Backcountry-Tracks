@@ -214,6 +214,56 @@ var DateRangeEditor = Backbone.View.extend({
 		}
 	});
 
+	t.Comment = Backbone.Model.extend({
+		defaults: {
+			'owner': '',
+			'date': '',
+			'comment': '',
+			'first_name': '',
+			'last_name': ''
+		},
+
+		local_date: function () {
+			var local_date = new Date(this.get('date'));
+			
+			return local_date.toLocaleDateString();
+		},
+
+		local_time: function () {
+			var local_date = new Date(this.get('date'));
+			return local_date.toLocaleTimeString();
+		}
+	});
+
+	t.Comments = Backbone.Collection.extend({
+		model: t.Comment,
+
+		ordering: 1,
+
+		initialize: function () {
+			_.bindAll(this, 'comparator', 'url', 'reverse_sort', 'forward_sort');
+		},
+
+		url: function () {
+			return "/app/trips/" + this.trip_id + "/comments";
+		},
+
+		comparator: function (item) {
+			var date = new Date(item.get('date'));
+			return this.ordering * date.getTime();
+		},
+
+		reverse_sort: function () {
+			this.ordering = -1;
+			this.sort();
+		},
+
+		forward_sort: function () {
+			this.ordering = 1;
+			this.sort();
+		}
+	});
+
 	t.Trip = Backbone.Model.extend({
 		defaults: {
 			'name': '',
@@ -503,10 +553,79 @@ var DateRangeEditor = Backbone.View.extend({
 		}
 	});
 
+	t.CommentListView = Backbone.View.extend({
+		className: 'trip_discussion',
+
+		events: {
+			'click .discussion_controls button': 'post_comment',
+			'click a.posted': 'sort_order_posted',
+			'click a.recent': 'sort_recent_first'
+		},
+
+		initialize: function () {
+			_.bindAll(this, 'post_comment', 'render', 'render_comment',
+				'sort_order_posted', 'sort_recent_first');
+
+			this.template = _.template($('#trip_discussion_comment_template').html());
+			this.collection.bind('add', this.render, this);
+			this.collection.bind('remove', this.render, this);
+			this.collection.bind('reset', this.render, this);
+
+			this.row_class = '';
+		},
+
+		post_comment: function () {
+			var comment = this.$('textarea').val();
+			this.collection.create({
+				'comment': comment
+			});
+			this.$('textarea').val('');
+		},
+
+		sort_order_posted: function (ev) {
+			this.collection.forward_sort();
+			ev.stopPropagation();
+			return false;
+		},
+
+		sort_recent_first: function (ev) {
+			this.collection.reverse_sort();
+			ev.stopPropagation();
+			return false;
+		},
+
+		render: function () {
+			this.$('div.trip_comments').html('');
+			this.collection.each(this.render_comment);
+			return this;	
+		},
+
+		render_comment: function (comment) {
+			var local_date = comment.local_date();
+			var local_time = comment.local_time();
+
+			var rendered_comment = comment.toJSON();
+			rendered_comment['date'] = local_date;
+			rendered_comment['time'] = local_time;
+
+			var html_comment = $('<div class="trip_comment"/>').html(this.template(rendered_comment));
+			html_comment.addClass(this.row_class);
+
+			this.$('div.trip_comments').append(html_comment);
+
+			this.row_class = this.row_class == '' ? 'odd' : '';
+		},
+
+		set_model: function (model) {
+			this.model = model
+			this.collection.trip_id = model.id;
+		}
+	});
+
 	t.TripDetail = BackcountryTracks.MainScreen.extend({
 
 		initialize: function () {
-			_.bindAll(this, 'set_model', 'render', 'show', 'reset_map');
+			_.bindAll(this, 'set_model', 'render', 'show', 'reset_view');
 
 			this.model = new t.Trip;
 
@@ -579,7 +698,7 @@ var DateRangeEditor = Backbone.View.extend({
 					duration: 125
 				},
 
-				show: this.reset_map
+				show: this.reset_view
 			});
 
 			this.views.friends = new t.TripDetailFriendsView({
@@ -595,6 +714,11 @@ var DateRangeEditor = Backbone.View.extend({
 				inventory: this.$('#add_personal_gear')[0],
 				group: this.$('#trip_group_gear')[0]
 			});
+
+			this.views.discussion = new t.CommentListView({
+				collection: new t.Comments(),
+				el: this.$('#trip_discussion')[0]
+			});
 		},
 
 		create_maps: function () {
@@ -608,14 +732,18 @@ var DateRangeEditor = Backbone.View.extend({
 
 		},
 
-		reset_map: function () {
-			try {
-				google.maps.event.trigger(this.map, 'resize');
-				var kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
-				kml.setMap(this.map);
-			} catch (err) {
-				// yeah, do nothing, that's the way to handle it
-			};
+		reset_view: function (evnt, ui) {
+			if (ui.panel.id == 'route_tab') {
+				try {
+					google.maps.event.trigger(this.map, 'resize');
+					var kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
+					kml.setMap(this.map);
+				} catch (err) {
+					// yeah, do nothing, that's the way to handle it
+				};
+			} else if (ui.panel.id == 'trip_discussion') {
+				this.views.discussion.collection.fetch();
+			}
 		},
 
 		render: function () {

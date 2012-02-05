@@ -26,12 +26,24 @@ class RiakDocument(dict):
 
     def __init__(self, *args, **kwargs):
         dict.__init__(self, *args, **kwargs)
-        self.links = list()
+        self.metadata = {
+                'content-type': 'application/json',
+                'vtag': str(uuid.uuid4()),
+                'lastmod': 'Sun, 29 Jan 2012 22:39:35 GMT',
+                'links': list(),
+                'usermeta': dict(),
+                }
 
 class RiakBinary(str):
     def __init__(self, data):
         str.__init__(self, data)
-        self.links = list()
+        self.metadata = {
+                'content-type': 'application/json',
+                'vtag': str(uuid.uuid4()),
+                'lastmod': 'Sun, 29 Jan 2012 22:39:35 GMT',
+                'links': list(),
+                'usermeta': dict(),
+                }
 
 
 class RiakClientFake(object):
@@ -146,7 +158,7 @@ class RiakBucketFake(object):
         Creates a document for retrieval by the SUT code
         '''
         document = RiakDocument(deepcopy(data))
-        document.links.extend(links)
+        document.metadata['links'].extend(links)
         self.__documents[key] = document
 
     def __init__(self, client, name):
@@ -218,9 +230,7 @@ class RiakBucketFake(object):
             obj.set_content_type('application/octet-stream')
 
         obj.set_data(document)
-
-        for link in self.__documents[key].links:
-            obj.add_link(link)
+        obj.set_metadata(document.metadata)
 
         # in production this is not random data but for testing purposes this will work
         # for the time being
@@ -324,10 +334,30 @@ class RiakObjectFake(object):
 		raise NotImplementedError
 
     def get_metadata(self):
-		raise NotImplementedError
+        return deepcopy(self.__data.metadata)
 
     def set_metadata(self, metadata):
-		raise NotImplementedError
+        self.__data.metadata = deepcopy(metadata)
+        return self
+
+    def get_usermeta(self):
+        if 'usermeta' in self.__data.metadata:
+          return deepcopy(self.__data.metadata['usermeta'])
+        else:
+          return {}
+
+    def set_usermeta(self, usermeta):
+        """
+        Sets the custom user metadata on this object. This doesn't include things
+        like content type and links, but only user-defined meta attributes stored
+        with the Riak object.
+
+        :param userdata: The user metadata to store.
+        :type userdata: dict
+        :rtype: data
+        """
+        self.__data.metadata['usermeta'] = deepcopy(usermeta)
+        return self
 
     def exists(self):
         return self._exists
@@ -349,7 +379,7 @@ class RiakObjectFake(object):
         if not isinstance(self.__data, RiakDocument):
             self.__data = RiakDocument(self.__data)
 
-        self.__data.links.append(newlink)
+        self.__data.metadata['links'].append(newlink)
 
     def remove_link(self, obj, tag=None):
 		raise NotImplementedError
@@ -358,7 +388,7 @@ class RiakObjectFake(object):
         if not isinstance(self.__data, RiakDocument):
             return []
 
-        return self.__data.links
+        return self.__data.metadata['links']
 
     def store(self, w=None, dw=None, return_body=True):
         if self.bucket.documents.has_key(self.key) and \

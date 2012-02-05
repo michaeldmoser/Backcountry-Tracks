@@ -192,6 +192,10 @@ div.trip_discussion  {
 	font-size: .9em;
 }
 
+div.discussion_sorting {
+	text-align: right;
+}
+
 div.trip_comment,
 div.trip_activity {
 	padding: 4px;
