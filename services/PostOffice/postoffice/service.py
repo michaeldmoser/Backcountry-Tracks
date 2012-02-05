@@ -24,10 +24,17 @@ class EmailService(object):
         from_line = self.config.get('from_line')
         logging.debug("From header is: %s" % from_line)
 
+        if '@' not in to:
+            to_header = ', '.join(to)
+            recipients = to
+        else:
+            to_header = to
+            recipients = [to]
+
         email = MIMEText(message)
         email['From'] = from_line
-        email['To'] = to
+        email['To'] = to_header
         email['Subject'] = subject
 
         logging.debug('Sending email message:\n=============================================\n%s\n=============================================' % str(email))
-        stmp.sendmail(from_, [to], email.as_string())
+        stmp.sendmail(from_, recipients, email.as_string())

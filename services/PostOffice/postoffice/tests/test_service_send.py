@@ -94,7 +94,39 @@ class TestServiceSending(unittest.TestCase):
         self.assertEquals(self.subject, message['Subject'])
 
 
+class TestServiceSendingMultipleAddresses(unittest.TestCase):
 
+    def setUp(self):
+        self.smtp = FakeSMTP()
+        self.from_ = 'noreply@backcountrytracks.com'
+        self.from_line = 'Backcountry Tracks'
+        service = EmailService(
+                {'from': self.from_, 'from_line': self.from_line},
+                smtp=self.smtp
+                )
+        self.recipient = ['bob@example.com', 'tim@example.com', 'jane@example.com']
+        self.message = 'Hello Bob!\nThis is a test'
+        self.subject = 'Hi Bob'
+        service.send(to=self.recipient, message=self.message, subject=self.subject)
+
+    def test_sends_to_correct_recipient(self):
+        '''Should send to the correct recipients'''
+        self.assertEquals(self.smtp.messages[0]['to'], self.recipient)
+
+    def test_bob_in_to(self):
+        '''Bob should be addresses in the to line'''
+        message = self.smtp.messages[0]['message']
+        self.assertIn('bob@example.com', message['To'])
+
+    def test_tim_in_to(self):
+        '''Tim should be addresses in the to line'''
+        message = self.smtp.messages[0]['message']
+        self.assertIn('tim@example.com', message['To'])
+
+    def test_jane_in_to(self):
+        '''Jane should be addresses in the to line'''
+        message = self.smtp.messages[0]['message']
+        self.assertIn('jane@example.com', message['To'])
 
 
 if __name__ == '__main__':

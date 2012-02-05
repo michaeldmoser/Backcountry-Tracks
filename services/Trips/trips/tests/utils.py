@@ -23,6 +23,7 @@ class TestTripFixture(unittest.TestCase):
 
         pika_connection = SelectConnectionFake()
         channel = pika_connection._channel
+        self.channel = channel
         rpc_client = RemotingClient(channel)
 
         self.app = TripsDb(
@@ -36,6 +37,8 @@ class TestTripFixture(unittest.TestCase):
         self.trip_id = unicode(uuid4())
 
         ramona = self.environ.ramona
+        douglas = self.environ.douglas
+        albert = self.environ.albert
         self.trip = {
             'name': 'Glacier',
             'start': '2012-07-19',
@@ -45,7 +48,17 @@ class TestTripFixture(unittest.TestCase):
                 {'first': ramona.first_name,
                     'last': ramona.last_name,
                     'email': ramona.email,
-                    'invite_status': 'accepted'}
+                    'invite_status': 'accepted'},
+                {'first': douglas.first_name,
+                    'last': douglas.last_name,
+                    'email': douglas.email,
+                    'invite_status': 'accepted',
+                    },
+                {'first': albert.first_name,
+                    'last': albert.last_name,
+                    'email': albert.email,
+                    'invite_status': 'rejected',
+                    }
                 ],
             'gear': dict(),
             'groupgear': list()

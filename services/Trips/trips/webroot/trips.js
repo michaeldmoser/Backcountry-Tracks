@@ -698,11 +698,6 @@ var DateRangeEditor = Backbone.View.extend({
 			this.views.date_range = new DateRangeEditor(date_range_options);
 
 			this.$('#trip_organizer_tabs').tabs({
-				fx: {
-					opacity: 'toggle',
-					duration: 125
-				},
-
 				show: this.reset_view
 			});
 
@@ -752,6 +747,8 @@ var DateRangeEditor = Backbone.View.extend({
 		},
 
 		render: function () {
+			this.$('#trip_organizer_tabs').tabs('select', 0);
+
 			_.each(this.views, function (view) {
 				view.render();
 			});
@@ -773,6 +770,7 @@ var DateRangeEditor = Backbone.View.extend({
 				},
 				maxfilesize: 2
 			});
+
 		},
 
 		set_model: function (model) {
@@ -792,6 +790,17 @@ var DateRangeEditor = Backbone.View.extend({
 
 		hide: function () {
 			$(this.el).hide();
+		},
+
+		select_tab: function (tab_id) {
+			var tab_ids = new Array;
+			this.$('#trip_organizer_tabs > ul.ui-tabs-nav li a').each(function (index, item) {
+				var parts = item.href.split('#');
+				tab_ids.push(parts[1]);
+			});
+
+			var tab_index = tab_ids.indexOf(tab_id);
+			this.$('#trip_organizer_tabs').tabs('select', tab_index);
 		}
 	});
 
@@ -938,7 +947,8 @@ var DateRangeEditor = Backbone.View.extend({
 
 		routes: {
 			'trips/:id': 'view',
-			'trips': 'list'
+			'trips': 'list',
+			'trips/:id/discussion': 'view_discussion'
 		},
 		
 		initialize: function () {
@@ -974,6 +984,16 @@ var DateRangeEditor = Backbone.View.extend({
 					var trip = this.collection.get(id)
 					this.views.detail.set_model(trip);
 					BackcountryTracks.screens.activate(this.views.detail);
+				}, this);
+			this.collection.fetch({success: view_trip});
+		},
+
+		view_discussion: function (id) {
+			var view_trip = _.bind(function () {
+					var trip = this.collection.get(id)
+					this.views.detail.set_model(trip);
+					BackcountryTracks.screens.activate(this.views.detail);
+					this.views.detail.select_tab('trip_discussion');
 				}, this);
 			this.collection.fetch({success: view_trip});
 		},

@@ -137,7 +137,32 @@ class TestRetrieveComments(utils.TestTripFixture):
         expected_comments = ['This is a test comment', 'This is a test comment 2']
         self.assertEquals(expected_comments, comment_texts)
 
+class TestSendCommentNotificationEmail(utils.TestTripFixture):
 
+    def continueSetUp(self):
+        adventurers = self.riak.bucket('adventurers')
+        adventurers.add_document(self.environ.ramona.email, self.environ.ramona)
+
+        result = self.app.comment(self.trip_id, self.environ.ramona.email,
+                'This is a test comment')
+
+        self.message = self.channel.messages[0]
+        self.jsonrpc = json.loads(self.message.body)
+
+    def test_douglas_should_receive_email(self):
+        '''Douglas should have been sent a discussion email notification'''
+        to = self.jsonrpc['params']['to'];
+        self.assertIn(self.environ.douglas.email, to)
+
+    def test_ramona_should_receive_email(self):
+        '''Ramona should have been sent a discussion email notification'''
+        to = self.jsonrpc['params']['to'];
+        self.assertIn(self.environ.ramona.email, to)
+
+    def test_albert_should_not_receive_email(self):
+        '''Albert should not have been sent a discussion email notification'''
+        to = self.jsonrpc['params']['to'];
+        self.assertNotIn(self.environ.albert.email, to)
         
 
 if __name__ == '__main__':

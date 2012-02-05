@@ -228,6 +228,31 @@ class TripsDb(BasicCRUDService):
         except IndexError:
             return ''
 
+    def __send_comment_notification(self, trip_id, comment_data, trip_data):
+        template_vars = comment_data.copy()
+        template_vars.update(trip_data.copy())
+        template_vars['url'] = self.url
+        template_vars['id'] = trip_id
+
+        message = """
+        %(first_name)s %(last_name)s posted a new comment on the %(name)s trip.
+        ----
+        %(comment)s
+        ----
+
+        To view the discussion for the trip goto %(url)s#trips/%(id)s/discussion
+        """ % template_vars
+
+        invites = trip_data['friends']
+        send_to = filter(lambda invite: invite['invite_status'] == 'accepted', invites)
+        to = [invite['email'] for invite in send_to]
+
+        email_service = self.remoting.service('Email')
+        command = email_service.send(to=to,
+                subject="New comment on %s trip" % trip_data['name'],
+                message=message)
+        self.remoting.call(command)
+
     def comment(self, trip_id, owner, comment):
         '''Add a comment to a trip'''
         trips = self.riak.bucket(self.bucket_name)
@@ -254,6 +279,8 @@ class TripsDb(BasicCRUDService):
         trip.add_link(comment_obj, tag='comment')
 
         trip.store()
+
+        self.__send_comment_notification(trip_id, comment_data, trip.get_data())
 
         return comment_data
 
