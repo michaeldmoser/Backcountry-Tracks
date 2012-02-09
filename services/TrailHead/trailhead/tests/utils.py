@@ -18,7 +18,7 @@ def make_user_authenticated(handler, user):
     handler.set_secure_cookie('user', user)
     cookie_value = handler._new_cookies[0]
     handler._cookies = Cookie.BaseCookie()
-    handler._cookies['user'] = cookie_value['user'].value
+    handler.request.cookies['user'] = cookie_value['user'].value
 
 def setup_handler(Handler, method, url, user=None, body=None, headers=None, files=None):
     '''

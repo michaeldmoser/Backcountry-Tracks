@@ -6,7 +6,7 @@ setup(
     packages = ['trailhead'],
     test_suite = 'trailhead',
     install_requires = '''
-        tornado
+        tornado >= 2.2
         pika
         python-daemon
         lockfile

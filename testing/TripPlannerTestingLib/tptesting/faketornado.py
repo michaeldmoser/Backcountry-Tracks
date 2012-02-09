@@ -1,5 +1,7 @@
 from tornado.web import ChunkedTransferEncoding
 from tornado import httputil
+from tornado.escape import utf8, native_str, parse_qs_bytes
+import Cookie
 import urlparse
 import cgi
 
@@ -174,8 +176,21 @@ class HTTPRequestFake(object):
     def supports_http_1_1(self):
         return self.version == 'HTTP/1.1'
 
-    def write(self, chunk):
+    def write(self, chunk, callback=None):
         self.record_usage(self.finish, chunk)
         self._output += str(chunk)
+
+    @property
+    def cookies(self):
+        """A dictionary of Cookie.Morsel objects."""
+        if not hasattr(self, "_cookies"):
+            self._cookies = Cookie.SimpleCookie()
+            if "Cookie" in self.headers:
+                try:
+                    self._cookies.load(
+                        native_str(self.headers["Cookie"]))
+                except Exception:
+                    self._cookies = {}
+        return self._cookies
 
 

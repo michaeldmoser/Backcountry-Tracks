@@ -99,10 +99,9 @@ class TestNotLoggedIn(unittest.TestCase):
         handler, self.application, pika = setup_handler(UserHandler, 'GET', 
                 url)
 
-        with self.assertRaises(HTTPError) as exp:
-            handler.get()
+        handler.get()
 
-        self.assertEquals(exp.exception.status_code, 403)
+        self.assertEquals(handler.get_status(), 403)
 
 
 
