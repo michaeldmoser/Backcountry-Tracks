@@ -77,6 +77,7 @@ services:
             - ['/app/trips/([0-9a-f-]+)/gear/group/([0-9a-f-]+)$', 'Trips/groupgear']
             - ['/app/trips/([0-9a-f-]+)/map/route$', 'Trips/route']
             - ['/app/trips/([0-9a-f-]+)/comments$', 'Trips/comments']
+            - ['/app/password$', 'Adventurer/passreset']
     PostOffice/postoffice:
         from: noreply@backcountrytracks.com
         from_line: 'Backcountry Tracks Email Service'

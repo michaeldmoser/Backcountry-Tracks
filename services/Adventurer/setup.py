@@ -12,6 +12,7 @@ setup(
             'activate = adventurer.register:ActivateHandler',
             'user = adventurer.user:UserHandler',
             'login = adventurer.login:LoginHandler',
+            'passreset = adventurer.passwordreset:PasswordResetHandler',
             ],
         }
     )

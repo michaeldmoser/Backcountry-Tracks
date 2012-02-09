@@ -11,13 +11,15 @@ class AdventurerRepository(BasicCRUDService):
             bucket_name = 'adventurers',
             mailer = None,
             db = None,
-            trailhead_url = 'http://www.backcountrytracks.com/app'
+            trailhead_url = 'http://www.backcountrytracks.com/app',
+            remoting = None
             ):
         self.riak = db
         self.bucket_name = bucket_name
         self.bucket = self.riak.bucket(bucket_name)
         self.trailhead_url = trailhead_url
         self.mailer = mailer
+        self.remoting = remoting
 
     def register(self, **data):
         '''
@@ -141,5 +143,79 @@ class AdventurerRepository(BasicCRUDService):
             return {'successful': True}
 
         return {'successful': False}
+
+    def __send_password_reset(self, user):
+        template_vars = user.copy()
+        template_vars['url'] = self.trailhead_url
+        template_vars['reset_key'] = user['password_reset_key']
+
+        message = """
+        %(first_name)s %(last_name)s,
+
+        So finish reseting your password please go to %(url)s/password/%(reset_key)s
+        """ % template_vars
+
+        to = [user['email']]
+
+        email_service = self.remoting.service('Email')
+        command = email_service.send(to=to,
+                subject="Password reset for Backcountry Tracks",
+                message=message)
+        self.remoting.call(command)
+
+    def reset_password(self, email):
+        user_object = self.bucket.get(str(email))
+
+        if not user_object.exists():
+            raise Exception('The email does not exist')
+
+        user = user_object.get_data()
+
+        user['password_reset_key'] = str(uuid.uuid4())
+        user_object.set_data(user)
+        user_object.store()
+
+        self.__send_password_reset(user)
+
+        return True
+
+    def validate_reset_key(self, key):
+        mapred_js = """
+            function (value, keyData, arg) {
+                if (value.values[0].data.length < 1)
+                    return [];
+
+                var data = Riak.mapValuesJson(value)[0];
+                if (data.password_reset_key == arg['reset_key'])
+                    return [data];
+                else
+                    return [];
+            }
+        """
+
+        mapreduce = self.riak.add(self.bucket_name)
+        mapreduce.map(mapred_js, options={'arg': {'reset_key': key}})
+        results = mapreduce.run()
+        return bool(results) 
+
+    def reset_change_password(self, reset_key, email, password):
+        user_object = self.bucket.get(str(email))
+
+        if not user_object.exists():
+            raise Exception('The email does not exist')
+
+        user = user_object.get_data()
+
+        if user['password_reset_key'] != reset_key:
+            raise Exception('The reset key is invalid.');
+
+        user['password'] = password;
+        user['password_reset_key'] = None;
+        user_object.set_data(user);
+        user_object.store()
+
+        return True
+
+
 
 
