@@ -7,7 +7,7 @@ install-infrastructure: install-rabbitmq install-riak install-nginx
 
 install-libraries: install-messaging install-plugins install-servicelib install-gpsutils
 
-install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel
+install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel install-messagingservices
 
 install-dependencies: install-libyaml install-python-setproctitle 
 
@@ -202,6 +202,14 @@ services/Adventurer/setup.py:
 	
 services/Adventurer/Adventurer.egg-info:
 	cd services/Adventurer && sudo python setup.py develop
+
+install-messagingservices: services/MessagingServices/setup.py services/MessagingServices/MessagingServices.egg-info
+
+services/MessagingServices/setup.py:
+	cd services/MessagingServices && sudo python setup.py develop
+	
+services/MessagingServices/MessagingServices.egg-info:
+	cd services/MessagingServices && sudo python setup.py develop
 
 install-gear: services/Gear/setup.py services/Gear/Gear.egg-info
 

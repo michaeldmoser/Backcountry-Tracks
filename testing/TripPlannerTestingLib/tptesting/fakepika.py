@@ -85,11 +85,11 @@ class ChannelFake(object):
         self.queues = dict()
         self.bindings = list()
 
-    def inject(self, queue, header, body):
+    def inject(self, queue, header, body, routing_key='rpc.fake'):
         if not self.injected.has_key(queue):
             self.injected[queue] = list()
 
-        self.injected[queue].append(dict(header = header, body = body))
+        self.injected[queue].append(dict(header = header, body = body, routing_key = routing_key))
 
     def trigger_consume(self, queue):
         if not self.injected.has_key(queue):
@@ -113,6 +113,7 @@ class ChannelFake(object):
             for message in self.injected[queue]:
                 method = frame.Method(1, spec.Basic.ConsumeOk())
                 method.delivery_tag = 1
+                method.routing_key = message['routing_key']
                 headers = message['header']
                 body = message['body']
                 logging.debug('Calling consumer %s with data:\n%s' % 
@@ -308,8 +309,8 @@ class SelectConnectionFake(object):
         logging.debug('calling on_open_callback: %s' % self.on_open_callback.__name__)
         self.on_open_callback(self)
 
-    def inject(self, queue, header, body):
-        self._channel.inject(queue, header, body)
+    def inject(self, queue, header, body, routing_key='rpc.fake'):
+        self._channel.inject(queue, header, body, routing_key)
 
     def trigger_consume(self, queue):
         self._channel.trigger_consume(queue)
@@ -500,8 +501,8 @@ class BlockingConnectionFake(SelectConnectionFake):
         logging.debug('calling on_open_callback: %s' % self.on_open_callback.__name__)
         self.on_open_callback(self)
 
-    def inject(self, queue, header, body):
-        self._channel.inject(queue, header, body)
+    def inject(self, queue, header, body, routing_key='rpc.fake'):
+        self._channel.inject(queue, header, body, routing_key)
 
     def trigger_consume(self, queue):
         self._channel.trigger_consume(queue)
