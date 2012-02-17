@@ -6,7 +6,7 @@ setup(
     packages = ['adventurer'],
     test_suite = 'adventurer',
     entry_points = {
-        'tripplanner.service': ['adventurer = adventurer:EntryPoint'],
+        'tripplanner.endpoint': ['adventurer = adventurer:EntryPoint'],
         'tripplanner.trailhead.handler': [
             'register = adventurer.register:RegisterHandler',
             'activate = adventurer.register:ActivateHandler',

@@ -28,6 +28,7 @@ class TestTripListing(unittest.TestCase):
         tripsdb = TripsDb(remoting, client, 'trips', 'http://test.com')
 
         invited_on = tripsdb.list(env.ramona.email)
+        invited_on[0]['friends'] = []
 
         self.assertDictContainsSubset(env.data['trips'][0], invited_on[0])
 
@@ -54,6 +55,7 @@ class TestTripListingWithIgnored(unittest.TestCase):
         tripsdb = TripsDb(remoting, client, 'trips', 'http://test.com')
 
         cls.invited_on = tripsdb.list(cls.env.ramona.email)
+        cls.invited_on[0]['friends'] = []
 
     def test_accepted_trip(self):
         '''TripsDb.list() should return trips a user is invited on but has not ignored'''

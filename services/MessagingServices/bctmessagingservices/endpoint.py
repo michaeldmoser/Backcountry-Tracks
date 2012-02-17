@@ -47,6 +47,9 @@ class MessagingEndpointServiceController(object):
         request = json.loads(data)
         routing_key = mq_method.routing_key
 
+        logging.info('Received %s request with correlation id %s' %
+                (request['method'], header.correlation_id))
+
 
         try:
             service = self.services.get(routing_key)
@@ -54,6 +57,7 @@ class MessagingEndpointServiceController(object):
             method = getattr(service, request['method'])
             params = request['params']
         except (AttributeError, TypeError) as err:
+            logging.error('Request for invalid method: %s.%s(). Actual error was:  %s' % (routing_key, request['method'], str(err)))
             reply = {
                 'jsonrpc': '2.0',
                 'id': header.correlation_id,
@@ -64,9 +68,8 @@ class MessagingEndpointServiceController(object):
                 }
 
             self.send_reply(reply, header.correlation_id, header.reply_to)
+            return
 
-        logging.info('Received %s request with correlation id %s' %
-                (request['method'], header.correlation_id))
         try:
             if isinstance(params, dict):
                 response = method(**request['params'])

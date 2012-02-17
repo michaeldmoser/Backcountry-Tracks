@@ -6,7 +6,7 @@ setup(
     packages = ['postoffice'],
     test_suite = 'postoffice',
     entry_points = {
-        'tripplanner.service': ['postoffice = postoffice:EntryPoint'],
+        'tripplanner.endpoint': ['postoffice = postoffice:EntryPoint'],
         }
     )
 
