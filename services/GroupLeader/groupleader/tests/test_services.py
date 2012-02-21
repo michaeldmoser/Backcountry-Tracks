@@ -8,11 +8,12 @@ class TestServices(unittest.TestCase):
 
     def setUp(self):
         self.config = {
-                'services': {
-                    'TestService/test_service': {
-                            'option1': '1',
-                            'option2': '2'
-                        }
+                'processes': [
+                    {'name': 'TestService', 'entrypoint': 'TestService/test_service'},
+                    ],
+                'TestService': {
+                    'option1': '1',
+                    'option2': '2'
                     },
 
                 'messaging': {
@@ -42,7 +43,7 @@ class TestServices(unittest.TestCase):
 
     def test_creates_service(self):
         '''Loads a service correctly'''
-        service_config = self.config['services']['TestService/test_service']
+        service_config = self.config['TestService']
         use = spy.UsageRecord('__init__', 'TestService', 'test_service', service_config)
 
         self.assertTrue(self.servicespy.verify_usage(use))
@@ -60,11 +61,12 @@ class TestServicesShutrdown(unittest.TestCase):
     def test_shutdown_all_services(self):
         '''Shutsdown all started services'''
         self.config = {
-                'services': {
-                    'TestService/test_service': {
-                            'option1': '1',
-                            'option2': '2'
-                        }
+                'processes': [
+                    {'name': 'TestService', 'entrypoint': 'TestService/test_service'},
+                    ],
+                'TestService': {
+                    'option1': '1',
+                    'option2': '2'
                     },
 
                 'messaging': {
@@ -79,6 +81,7 @@ class TestServicesShutrdown(unittest.TestCase):
                     'handlers': None, 'loggers': None,
                     }
                 }
+
 
 
         self.processspy = spy.SpyObject()

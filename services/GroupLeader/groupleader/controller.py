@@ -17,7 +17,6 @@ class GroupLeader(object):
         pidfile = self.config['pidfile']
         with self.daemonizer(pidfile, self.shutdown):
             self.logging(self.config)
-            logging.debug('GroupLeader about to daemonize')
             logging.debug('GroupLeader daemonized')
             self.setproctitle('GroupLeader: master')
             self.services = self.load_services(self.config)

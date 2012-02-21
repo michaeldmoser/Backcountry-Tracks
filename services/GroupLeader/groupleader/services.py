@@ -5,7 +5,7 @@ log = logging.getLogger('top')
 
 class Service(object):
     def __init__(self, dist, name, entry_point, config, environ, setproctitle):
-        log.debug('Created service for %s' % str(entry_point))
+        log.debug('Created process for %s' % str(entry_point))
         self.entry_point = entry_point
         self.config = config
         self.environ = environ
@@ -15,7 +15,7 @@ class Service(object):
 
     def __call__(self):
         try:
-            log.debug('Start service: %s/%s' % (self.dist, self.name))
+            log.debug('Start process: %s/%s' % (self.dist, self.name))
             self.setproctitle('GroupLeader: %s/%s' % (self.dist, self.name))
             self.entry_point(self.config, self.environ).start()
             log.debug('Process (%s/%s) finished' % (self.dist, self.name))
@@ -35,7 +35,7 @@ class ServiceBuilder(object):
         self.setproctitle = setproctitle
 
     def __call__(self, dist, name, config):
-        log.debug("Loading entry point: %s, %s, %s" % (dist, self.group, name))
+        logging.debug("Loading entry point: %s, %s, %s" % (dist, self.group, name))
         entry_point = self.load_entry_point(dist, self.group, name)
         service = self.Service(dist, name, entry_point, config,
                 self.environ, self.setproctitle)
@@ -48,10 +48,16 @@ class Services(object):
 
     def __call__(self, config):
         self.config = config
-        for service, config in self.config['services'].items():
+        logging.debug('Start loading processes %s', self.config['processes'])
+
+        for service in self.config['processes']:
+            config_name = service['name']
+            entrypoint = service['entrypoint']
+            logging.warn('Loading service %s ', config_name)
+            service_config = self.config[config_name]
             try:
-                dist, name = service.split('/')
-                service = self.load_service(dist, name, config)
+                dist, name = service['entrypoint'].split('/')
+                service = self.load_service(dist, name, service_config)
                 self.services.append(service)
             except Exception:
                 trace_back = traceback.format_exc()

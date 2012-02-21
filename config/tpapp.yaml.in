@@ -31,59 +31,81 @@ messaging:
     connection_params:
         host: localhost
 
-services:
-    Gear/gear:
-        queues:
-            rpc: user_gear_rpc
-        reply_exchange: rpc
-        database:
-            host: localhost
-            bucket: personal_gear
-    Adventurer/adventurer:
-        queues:
-            rpc: adventurer_rpc
-        reply_exchange: rpc
-        database:
-            host: localhost
-            bucket: adventurers
-        stmp:
-            host: localhost
-            port: 25
-    Trips/trips:
-        queues:
-            rpc: trips_rpc
-        reply_exchange: rpc
-        database:
-            host: localhost
-            bucket: trips
-        url: http://{{ hostname }}/app/home
-    TrailHead/trailhead:
-        cookie_secret: psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja
-        login_url: "/"
-        handlers: 
-            - ['/app/register', 'Adventurer/register']
-            - ['/app/activate/(.*)/(.*)', 'Adventurer/activate']
-            - ['/app/login', 'Adventurer/login']
-            - ['/app/users/([^/]+)/gear', 'Gear/gear']
-            - ['/app/users/([^/]+)/gear/([^/]+)$', 'Gear/gear']
-            - ['/app/user', 'Adventurer/user']
-            - ['/app/trips$', 'Trips/trips']
-            - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
-            - ['/app/trips/([0-9a-f-]+)/friends$', 'Trips/friends']
-            - ['/app/trips/([0-9a-f-]+)/friends/([^/]+)$', 'Trips/friends']
-            - ['/app/trips/([0-9a-f-]+)/gear/personal$', 'Trips/gear']
-            - ['/app/trips/([0-9a-f-]+)/gear/personal/([0-9a-f-]+)$', 'Trips/gear']
-            - ['/app/trips/([0-9a-f-]+)/gear/group$', 'Trips/groupgear']
-            - ['/app/trips/([0-9a-f-]+)/gear/group/([0-9a-f-]+)$', 'Trips/groupgear']
-            - ['/app/trips/([0-9a-f-]+)/map/route$', 'Trips/route']
-            - ['/app/trips/([0-9a-f-]+)/comments$', 'Trips/comments']
-            - ['/app/password$', 'Adventurer/passreset']
-            - ['/app/password/([0-9a-f-]+)$', 'Adventurer/passreset']
-    PostOffice/postoffice:
-        from: noreply@backcountrytracks.com
-        from_line: 'Backcountry Tracks Email Service'
-        queues:
-            rpc: email_rpc
+processes:
+    - 
+        name: GeneralMessaging
+        entrypoint: MessagingService/messagingservice
+    - 
+        name: TrailHead
+        entrypoint: TrailHead/trailhead
+
+TrailHead:
+    cookie_secret: psx4I0LFuKEZhL2un7HUhoDMq7UR2ZUV2ja
+    login_url: "/"
+    handlers: 
+        - ['/app/register', 'Adventurer/register']
+        - ['/app/activate/(.*)/(.*)', 'Adventurer/activate']
+        - ['/app/login', 'Adventurer/login']
+        - ['/app/users/([^/]+)/gear', 'Gear/gear']
+        - ['/app/users/([^/]+)/gear/([^/]+)$', 'Gear/gear']
+        - ['/app/user', 'Adventurer/user']
+        - ['/app/trips$', 'Trips/trips']
+        - ['/app/trips/([0-9a-f-]+)$', 'Trips/trip']
+        - ['/app/trips/([0-9a-f-]+)/friends$', 'Trips/friends']
+        - ['/app/trips/([0-9a-f-]+)/friends/([^/]+)$', 'Trips/friends']
+        - ['/app/trips/([0-9a-f-]+)/gear/personal$', 'Trips/gear']
+        - ['/app/trips/([0-9a-f-]+)/gear/personal/([0-9a-f-]+)$', 'Trips/gear']
+        - ['/app/trips/([0-9a-f-]+)/gear/group$', 'Trips/groupgear']
+        - ['/app/trips/([0-9a-f-]+)/gear/group/([0-9a-f-]+)$', 'Trips/groupgear']
+        - ['/app/trips/([0-9a-f-]+)/map/route$', 'Trips/route']
+        - ['/app/trips/([0-9a-f-]+)/comments$', 'Trips/comments']
+        - ['/app/password$', 'Adventurer/passreset']
+        - ['/app/password/([0-9a-f-]+)$', 'Adventurer/passreset']
+
+GeneralMessaging:
+    reply_exchange: rpc
+    queues:
+        rpc: rpc_processer
+    services:
+        rpc.email: PostOffice/postoffice
+        rpc.trips: Trips/trips
+        rpc.adventurer: Adventurer/adventurer
+        rpc.gear: Gear/gear
+            
+Gear/gear:
+    queues:
+        rpc: user_gear_rpc
+    reply_exchange: rpc
+    database:
+        host: localhost
+        bucket: personal_gear
+
+Adventurer/adventurer:
+    queues:
+        rpc: adventurer_rpc
+    reply_exchange: rpc
+    database:
+        host: localhost
+        bucket: adventurers
+    stmp:
+        host: localhost
+        port: 25
+
+Trips/trips:
+    queues:
+        rpc: trips_rpc
+    reply_exchange: rpc
+    database:
+        host: localhost
+        bucket: trips
+    url: http://bctrax.dev/app/home
+
+PostOffice/postoffice:
+    from: noreply@backcountrytracks.com
+    from_line: 'Backcountry Tracks Email Service'
+    reply_exchange: rpc
+    queues:
+        rpc: email_rpc
 
 webroot:
     - Trailhead/trailhead
@@ -97,6 +119,9 @@ message_routing:
             durable: True
             type: topic
     queues:
+        - 
+            queue: rpc_processer
+            durable: True
         - 
             queue: user_gear_rpc
             durable: True
@@ -112,19 +137,19 @@ message_routing:
     bindings:
         - 
             exchange: rpc
-            queue: user_gear_rpc
+            queue: rpc_processer
             routing_key: rpc.gear
         - 
             exchange: rpc
-            queue: adventurer_rpc
+            queue: rpc_processer
             routing_key: rpc.adventurer
         - 
             exchange: rpc
-            queue: trips_rpc
+            queue: rpc_processer
             routing_key: rpc.trips
         - 
             exchange: rpc
-            queue: email_rpc
+            queue: rpc_processer
             routing_key: rpc.email
 
 logging:
