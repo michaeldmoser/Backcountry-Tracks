@@ -1,11 +1,13 @@
 import unittest
 
 import json, pika
-from tptesting import faketornado, environment, fakepika
+from tptesting import faketornado, environment, fakepika, fakeriak
 from trailhead.tests.utils import setup_handler
 from tornado.web import HTTPError
 
+from adventurer.tests.test_registration import FakeMailer
 from adventurer.user import UserHandler
+from adventurer.service import AdventurerRepository
 
 class TestUserHandlerGet(unittest.TestCase):
 
@@ -102,6 +104,32 @@ class TestNotLoggedIn(unittest.TestCase):
         handler.get()
 
         self.assertEquals(handler.get_status(), 403)
+
+class TestMessageServiceGet(unittest.TestCase):
+
+    def setUp(self):
+        self.environ = environment.create()
+        self.riak = fakeriak.RiakClientFake()
+        self.bucket_name = 'adventurers'
+        self.bucket = self.riak.bucket(self.bucket_name)
+        self.fakemail = FakeMailer()
+
+        albert = self.environ.albert
+        albert.mark_registered()
+        self.bucket.add_document(albert.email, albert)
+        self.albert = albert
+
+        self.app = AdventurerRepository(
+                bucket_name = self.bucket_name, 
+                mailer = self.fakemail, 
+                db = self.riak
+                )
+
+    def test_no_password_returned(self):
+        '''Adventurer get should not return the user's password'''
+        user = self.app.get(self.albert.email)
+        self.assertFalse(user.has_key('password'))
+
 
 
 

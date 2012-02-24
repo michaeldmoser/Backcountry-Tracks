@@ -64,6 +64,11 @@ class AdventurerRepository(BasicCRUDService):
     def generate_confirmation_key(self):
         return str(uuid.uuid4())
 
+    def get(self, email):
+        user = BasicCRUDService.get(self, email)
+        del user['password']
+        return user
+
     def send_complete_registration_email(self, email, first_name, last_name, confirmation_key):
         '''
         Sends a registration confirmation message to user with a link to complete registration
