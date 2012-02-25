@@ -67,10 +67,16 @@ GeneralMessaging:
     queues:
         rpc: rpc_processer
     services:
-        rpc.email: PostOffice/postoffice
         rpc.trips: Trips/trips
         rpc.adventurer: Adventurer/adventurer
         rpc.gear: Gear/gear
+
+PostOfficeOnly:
+    reply_exchange: rpc
+    queues:
+        rpc: postoffice_rpc_processer
+    services:
+        rpc.email: PostOffice/postoffice
             
 Gear/gear:
     queues:
@@ -105,7 +111,7 @@ PostOffice/postoffice:
     from_line: 'Backcountry Tracks Email Service'
     reply_exchange: rpc
     queues:
-        rpc: email_rpc
+        rpc: postoffice_rpc_processor
 
 webroot:
     - Trailhead/trailhead
@@ -123,6 +129,9 @@ message_routing:
             queue: rpc_processer
             durable: True
         - 
+            queue: postoffice_rpc_processer
+            durable: True
+        - 
             queue: user_gear_rpc
             durable: True
         - 
@@ -131,10 +140,11 @@ message_routing:
         - 
             queue: trips_rpc
             durable: True
-        - 
-            queue: email_rpc
-            durable: True
     bindings:
+        - 
+            exchange: rpc
+            queue: postoffice_rpc_processer
+            routing_key: rpc.email
         - 
             exchange: rpc
             queue: rpc_processer
@@ -147,10 +157,6 @@ message_routing:
             exchange: rpc
             queue: rpc_processer
             routing_key: rpc.trips
-        - 
-            exchange: rpc
-            queue: rpc_processer
-            routing_key: rpc.email
 
 logging:
     version: 1

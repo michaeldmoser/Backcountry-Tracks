@@ -17,7 +17,7 @@ class TestService(unittest.TestCase):
         self.setproctitle()
 
         self.service = Service('TestService', 'test_service', self.EntryPoint,
-                self.config, self.Environ, self.setproctitle)
+                self.config, self.Environ, self.setproctitle, 'Test Service')
 
     def test_instantiate_entry_point(self):
         '''Instantiates and entry point with the config'''
@@ -42,7 +42,7 @@ class TestService(unittest.TestCase):
     def test_process_title_set(self):
         '''The process name gets set'''
         self.service()
-        use = spy.UsageRecord('__call__', 'GroupLeader: TestService/test_service')
+        use = spy.UsageRecord('__call__', 'GroupLeader: Test Service')
         self.assertTrue(self.setproctitle.verify_usage(use))
 
 class TestServiceExceptions(unittest.TestCase):
@@ -69,7 +69,7 @@ class TestServiceExceptions(unittest.TestCase):
 
         self.Environ = spy.SpyObject()
         self.service = Service('Test', 'test', EntryPointStub, self.config,
-                self.Environ, setproctitle_stub)
+                self.Environ, setproctitle_stub, 'process name')
 
         try:
             self.service()

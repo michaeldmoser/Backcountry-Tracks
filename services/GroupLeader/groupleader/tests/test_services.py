@@ -44,7 +44,7 @@ class TestServices(unittest.TestCase):
     def test_creates_service(self):
         '''Loads a service correctly'''
         service_config = self.config['TestService']
-        use = spy.UsageRecord('__init__', 'TestService', 'test_service', service_config)
+        use = spy.UsageRecord('__init__', 'TestService', 'test_service', service_config, 'TestService')
 
         self.assertTrue(self.servicespy.verify_usage(use))
 
@@ -86,7 +86,7 @@ class TestServicesShutrdown(unittest.TestCase):
 
         self.processspy = spy.SpyObject()
         class ServiceBuilderStub(object):
-            def __call__(stub, dist, name, config):
+            def __call__(stub, dist, name, config, process_name):
                 return self.processspy
         
         load_services = Services(ServiceBuilderStub())
@@ -130,7 +130,7 @@ class TestServiceBuilder(unittest.TestCase):
         builder = ServiceBuilder(self.load_entry_point, self.group,
                 self.servicespy, self.ProcessSpy, self.Environ, self.setproctitle)
         self.service_config = {'test': 'config'}
-        self.service = builder(self.dist, self.name, self.service_config)
+        self.service = builder(self.dist, self.name, self.service_config, 'process name')
 
     def test_load_entry_point(self):
         '''Load a services entry point'''
@@ -144,7 +144,7 @@ class TestServiceBuilder(unittest.TestCase):
     def test_service_created(self):
         '''Service creation'''
         use = spy.UsageRecord('__init__', self.dist, self.name, self.TestEntryPoint,
-                self.service_config, self.Environ, self.setproctitle)
+                self.service_config, self.Environ, self.setproctitle, 'process name')
         self.assertTrue(self.servicespy.verify_usage(use))
 
     def test_process_target(self):

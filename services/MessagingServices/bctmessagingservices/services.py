@@ -1,4 +1,5 @@
 from pkg_resources import load_entry_point
+import logging
 
 class ServiceLookup(object):
 
@@ -12,7 +13,11 @@ class ServiceLookup(object):
     def get(self, routing_key):
         '''Return the service configured for use with routing_key'''
         if not self.services.has_key(routing_key):
-            key = self.services_list[routing_key]
+            try:
+                key = self.services_list[routing_key]
+            except KeyError:
+                logging.debug("List of services is: %s" % self.services_list)
+                raise
             dist, name = key.split('/')
             config = self.env.config[key]
 
