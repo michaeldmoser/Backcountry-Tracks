@@ -104,7 +104,7 @@ class TestAdventurerRegistration(unittest.TestCase):
         # get a true comparison
         del ramona_data['confirmation_key']
 
-        self.assertEquals(ramona_data, self.ramona)
+        self.assertEquals(ramona_data, self.environ.ramona.for_storage())
 
     def test_registration_successful_http_status_code(self):
         """Submitting a valid registration should return successful"""

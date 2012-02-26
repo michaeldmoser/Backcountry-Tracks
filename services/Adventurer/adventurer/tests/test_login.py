@@ -2,6 +2,7 @@ import unittest
 
 import json
 import pika
+import hashlib
 from tptesting import faketornado, environment, fakepika, fakeriak
 from trailhead.tests.utils import setup_handler
 
@@ -15,7 +16,7 @@ class TestLoginHTTPRequest(unittest.TestCase):
 
         self.credentials = {
             'email': environ.ramona.email,
-            'password': environ.ramona.password,
+            'password': environ.ramona.password
             }
 
         body = json.dumps(self.credentials);
@@ -176,7 +177,7 @@ class TestAdventurerRepositoryLogin(unittest.TestCase):
 
         albert = self.environ.albert
         albert.mark_registered()
-        self.bucket.add_document(albert.email, albert)
+        self.bucket.add_document(albert.email, albert.for_storage())
 
         self.app = AdventurerRepository(
                 bucket_name = self.bucket_name, 

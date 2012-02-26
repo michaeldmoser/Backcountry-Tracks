@@ -1,6 +1,7 @@
 import urllib2
 import cookielib
 import json
+import hashlib
 
 class UserTemplate(dict):
     '''
@@ -41,6 +42,10 @@ class UserTemplate(dict):
     def mark_registered(self):
         self['registration_complete'] = True
 
+    @property
+    def hashed_password(self):
+        return hashlib.sha256(self['password']).hexdigest()
+
     def login(self):
         jar = cookielib.CookieJar()
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(jar))
@@ -66,5 +71,11 @@ class UserTemplate(dict):
         registration['password_again'] = self['password']
 
         return registration
+
+    def for_storage(self):
+        storage_object = self.copy()
+        storage_object['password'] = self.hashed_password
+
+        return storage_object
 
 

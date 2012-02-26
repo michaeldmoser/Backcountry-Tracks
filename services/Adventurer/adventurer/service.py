@@ -1,4 +1,5 @@
 import uuid
+import hashlib
 import logging
 log = logging.getLogger('Adventurer/service')
 
@@ -36,6 +37,8 @@ class AdventurerRepository(BasicCRUDService):
         email = str(clean_data['email'])
         confirmation_key = self.generate_confirmation_key()
         clean_data['confirmation_key'] = confirmation_key
+        clean_data['password'] = hashlib.sha256(clean_data['password']).hexdigest()
+        del clean_data['password_again']
 
         #check that the user isn't already in the system
         user_object = self.bucket.get(email)
@@ -126,7 +129,8 @@ class AdventurerRepository(BasicCRUDService):
                     'email': email
                     }
 
-        if user['password'] == str(password):
+        password_hashed = hashlib.sha256(password).hexdigest()
+        if user['password'] == password_hashed:
             return {
                     'successful': True,
                     'email': email
@@ -214,7 +218,7 @@ class AdventurerRepository(BasicCRUDService):
         if user['password_reset_key'] != reset_key:
             raise Exception('The reset key is invalid.');
 
-        user['password'] = password;
+        user['password'] = hashlib.sha256(password).hexdigest()
         user['password_reset_key'] = None;
         user_object.set_data(user);
         user_object.store()

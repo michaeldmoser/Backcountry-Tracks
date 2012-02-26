@@ -29,7 +29,7 @@ class TestAdventurerRepository(unittest.TestCase):
 
         user = self.environ.albert.registration_data()
         self.app.register(**user)
-        expected_data = user
+        expected_data = self.environ.albert.for_storage()
         expected_data['confirmation_key'] = 'generated_confirmation_key'
 
         riak_object = self.bucket.get(self.environ.albert['email'])

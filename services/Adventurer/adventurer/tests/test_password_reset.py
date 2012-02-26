@@ -2,6 +2,7 @@ import unittest
 
 import json
 import types
+import hashlib
 
 from tptesting import environment
 
@@ -30,8 +31,8 @@ class PasswordResetFixture(unittest.TestCase):
 
         douglas = env.douglas
         douglas.mark_registered()
-        douglas['password'] = '1234';
-        bucket.add_document(douglas.email, douglas)
+        douglas['password'] = '1234'
+        bucket.add_document(douglas.email, douglas.for_storage())
 
         app = AdventurerRepository(
                 bucket_name = bucket_name, 
@@ -53,8 +54,7 @@ class TestPasswordReset(PasswordResetFixture):
     def continueSetUp(self):
         douglas = self.env.douglas
         douglas.mark_registered()
-        douglas['password'] = '1234';
-        self.bucket.add_document(douglas.email, douglas)
+        self.bucket.add_document(douglas.email, douglas.for_storage())
 
         self.app.reset_password(douglas.email)
 
@@ -68,7 +68,7 @@ class TestPasswordReset(PasswordResetFixture):
 
     def test_password_is_unchanged(self):
         '''Password should remain unchanged when creating a password reset code'''
-        self.assertEquals(self.data['password'], '1234')
+        self.assertEquals(self.data['password'], self.env.douglas.hashed_password)
 
 class TestRestNonExistingUser(PasswordResetFixture):
 
@@ -86,7 +86,7 @@ class TestPasswordResetEmail(PasswordResetFixture):
         douglas = self.env.douglas
         douglas.mark_registered()
         douglas['password'] = '1234';
-        self.bucket.add_document(douglas.email, douglas)
+        self.bucket.add_document(douglas.email, douglas.for_storage())
 
         self.app.reset_password(douglas.email)
 

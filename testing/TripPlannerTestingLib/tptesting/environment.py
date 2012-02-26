@@ -184,7 +184,7 @@ class TpEnvironment(object):
         self.nginx.stop()
 
     def create_user(self, user):
-        user_data = user.copy()
+        user_data = user.for_storage()
         user_data['registration_complete'] = True
 
         adventurers = self.riak.get_database('adventurers')
