@@ -25,7 +25,11 @@ from riak.mapreduce import RiakLink
 class RiakDocument(dict):
 
     def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
+        if args[0] is not None:
+            dict.__init__(self, *args, **kwargs)
+        else:
+            dict.__init__(self)
+
         self.metadata = {
                 'content-type': 'application/json',
                 'vtag': str(uuid.uuid4()),
@@ -208,14 +212,20 @@ class RiakBucketFake(object):
     def new(self, key, data=None, content_type='application/json'):
         obj = RiakObjectFake(self.client, self, key)
         obj.set_content_type(content_type)
-        obj.set_data(deepcopy(data))
+        if data is not None:
+            obj.set_data(deepcopy(data))
+        else:
+            obj.set_data(data)
         obj._encode_data = True
         return obj
 
     def new_binary(self, key, data, content_type='application/octet-stream'):
         obj = RiakObjectFake(self.client, self, key)
         obj.set_content_type(content_type)
-        obj.set_data(deepcopy(data))
+        if data is not None:
+            obj.set_data(deepcopy(data))
+        else:
+            obj.set_data(data)
         obj._encode_data = True
         return obj
 
@@ -307,6 +317,7 @@ class RiakObjectFake(object):
         self._encode_data = False
         self.__data = None
         self.content_type = 'application/json'
+        self._vclock = None
 
         self._exists = False
 
@@ -314,14 +325,19 @@ class RiakObjectFake(object):
 		raise NotImplementedError
 
     def get_key(self):
-		raise NotImplementedError
+        return self.key
 
     def get_data(self):
         return self.__data
 
     def set_data(self, data):
-        if not isinstance(data, str) and not isinstance(data, dict):
+        if not isinstance(data, str) and not isinstance(data, dict) and data is not None:
             raise TypeError("You must use str()'s or dict()'s for data. The underlying pycurl library will reject it otherwise")
+
+        if isinstance(self.__data, RiakDocument):
+            self.__data.update(data)
+            return
+
         if self.content_type == 'application/json':
             self.__data = RiakDocument(data)
         else:

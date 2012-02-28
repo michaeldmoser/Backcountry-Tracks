@@ -5,7 +5,7 @@ infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-libraries: install-messaging install-plugins install-servicelib install-gpsutils
+install-libraries: install-messaging install-plugins install-servicelib install-gpsutils install-glbldb
 
 install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel install-messagingservices
 
@@ -282,6 +282,14 @@ lib/GPSUtils/setup.py:
 	
 lib/GPSUtils/GPSUtils.egg-info:
 	cd lib/GPSUtils && sudo python setup.py develop
+
+install-glbldb: lib/GlobalDatabase/setup.py lib/GlobalDatabase/GlobalDatabase.egg-info
+
+lib/GlobalDatabase/setup.py:
+	cd lib/GlobalDatabase && sudo python setup.py develop
+	
+lib/GlobalDatabase/GlobalDatabase.egg-info:
+	cd lib/GlobalDatabase && sudo python setup.py develop
 
 
 varrun: /var/run/tripplanner
