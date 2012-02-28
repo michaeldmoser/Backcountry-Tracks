@@ -357,6 +357,9 @@ class RiakObjectFake(object):
         return self
 
     def get_usermeta(self):
+        if not self.__data:
+            return {}
+
         if 'usermeta' in self.__data.metadata:
           return deepcopy(self.__data.metadata['usermeta'])
         else:
@@ -372,6 +375,9 @@ class RiakObjectFake(object):
         :type userdata: dict
         :rtype: data
         """
+        if not self.__data:
+            return self
+
         self.__data.metadata['usermeta'] = deepcopy(usermeta)
         return self
 
