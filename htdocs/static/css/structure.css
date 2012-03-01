@@ -1,0 +1,44 @@
+
+.page_center {
+	display: block;
+	margin: 0 auto;
+	width: 915px;
+	padding: 0;
+}
+
+body > header {
+	width: 100%;
+	display: block;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid black;
+	height: 41px;
+	background-color: #ccc;
+}
+
+
+#main {
+	margin: 0 auto;
+	width: 915px;
+	display: table;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+
+#main_body, #main_navigation, #sidebar {
+	display: table-cell;
+	vertical-align: top;
+	padding: 14px 0 0 0;
+	margin: 0;
+}
+
+#main_body {
+	width: 548px;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+
+#main_navigation {
+	width: 179px;
+}
+
