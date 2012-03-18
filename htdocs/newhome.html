@@ -7,6 +7,7 @@
 	<![endif]-->
 	<title>Backcountry Tracks&trade; Trip Planner</title>
 	<link rel="stylesheet" type="text/css" href="/static/css/normalize.css" />	
+	<link rel="stylesheet" type="text/css" href="/static/css/typography.css" />
 	<link rel="stylesheet" type="text/css" href="/static/css/structure.css" />
 </head>
 <body>
@@ -16,12 +17,45 @@
 		</div>
 	</header>
 	<div id="main">
-		<nav id="main_navigation">
-			<img src="/static/img/logo_75.png" alt="Backcountry Tracks&trade;" title="Backcountry Tracks&trade;"/>
-		</nav>
-		<section id="main_body">
-			Main body goes here
-		</section>
+		<div id="left_column">
+			<img src="/static/img/app_logo_v1.png" alt="Backcountry Tracks&trade;" title="Backcountry Tracks&trade;"/>
+			<div id="profile_name">
+				<img id="profile_image" src="/static/img/profile_pic.jpg" alt="profile picure" />
+				<div id="profile_name_text">Profile Name</div>
+			</div>
+			<nav id="main_navigation">
+				<ul id="app_navigation">
+					<li><a href="#">basecamp</a></li>
+					<li><a href="#">my trips</a></li>
+					<li><a href="#">my gear</a></li>
+					<li><a href="#">my settings</a></li>
+				</ul>
+			</nav>
+			<nav id="outside_navigation">
+				<ul id="site_navigation">
+					<li><a href="#">tutorials</a></li>
+					<li><a href="#">forums</a></li>
+					<li><a href="#">provide feedback</a></li>
+				</ul>
+			</nav>
+		</div>
+		<article id="main_body">
+			<header>
+				<h1>Gila Wilderness</h1>
+				<p>Trip details go here such as dates</p>
+			</header>
+			<section>
+				<nav id="sub_app_navigation">
+					<ul>
+						<li><a href="#">Overview</a></li>
+						<li><a href="#">Gear</a></li>
+						<li><a href="#">Discussions</a></li>
+						<li><a href="#">Friends</a></li>
+						<li><a href="#">Route</a></li>
+					</ul>
+				</nav>
+			</section>
+		</article>
 		<aside id="sidebar">
 			Tips and tricks and ads go here
 		</aside>

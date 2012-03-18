@@ -13,7 +13,7 @@ body > header {
 	padding: 0;
 	border-bottom: 1px solid black;
 	height: 41px;
-	background-color: #ccc;
+	background-color: #ff6633;
 }
 
 
@@ -25,20 +25,62 @@ body > header {
 	border-right: 1px solid #ccc;
 }
 
-#main_body, #main_navigation, #sidebar {
+#main_body, #left_column, #sidebar {
 	display: table-cell;
 	vertical-align: top;
-	padding: 14px 0 0 0;
+	padding: 12px 0 0 0;
 	margin: 0;
 }
 
 #main_body {
-	width: 548px;
-	border-left: 1px solid #ccc;
-	border-right: 1px solid #ccc;
+	width: 510px;
+	border-left: 1px solid #999999;
+	border-right: 1px solid #999999;
+	background-color: #f3f3f3;
+	padding: 19px;
 }
 
-#main_navigation {
+#main_body > section {
+	border: 1px solid #999999;
+	height: 300px;
+	background-color: #ffffff;
+}
+
+header > h1 {
+	color: #ff6633;
+	font-size: 17px;
+	font-weight: bold;
+}
+
+#left_column {
 	width: 179px;
+	display:block;
+	overflow: hidden;
+}
+
+#profile_name {
+	position: relative;
+	margin: 24px 0px;
+	background-image: url("/static/img/profile_image_border_v1.png");
+	background-repeat: no-repeat;
+	background-position: 8px 0px;
+	height: 42px;
+}
+
+#profile_image {
+	position: absolute;
+	left: 12px;
+	top: 4px;
+}
+
+#profile_name_text {
+	position: absolute;
+	left: 60px;
+	height: 42px;
+}
+
+#sub_app_navigation ul li {
+	display: inline-block;
+	font-size: 13px;
 }
 
