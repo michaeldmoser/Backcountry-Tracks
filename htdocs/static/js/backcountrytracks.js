@@ -1,7 +1,10 @@
 
-var SidebarViewChooserButton = Backbone.View.extend({ className: 'app_chooser_button',
+var SidebarViewChooserButton = Backbone.View.extend({
+	className: 'app_chooser_button',
+	tagName: 'li',
 
 	initialize: function () {
+		this.template = _.template('app_choose_button_template');
 		_.bindAll(this, 'render');
 	},
 
@@ -9,6 +12,7 @@ var SidebarViewChooserButton = Backbone.View.extend({ className: 'app_chooser_bu
 		var icon_class = this.model.get('icon');
 		var path = this.model.get('path');
 		var name = this.model.get('name');
+		var rendered = this.template(this.model.toJSON());
 		$(this.el).addClass(icon_class);
 		$(this.el).html('<a href="#' + path + '">' + name + "</a>");
 	}
@@ -209,7 +213,7 @@ var ScreensView = Backbone.View.extend({
 		new GearManager.GearModule;
 
 		bct.sidebar = new SidebarView({
-			el: $('#app_chooser_buttons')[0],
+			el: $('#app_navigation')[0],
 			model: BackcountryTracks.Sidebar
 		});
 		bct.sidebar.render();

@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
 	lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-	<meta name="title" content="Backcountry Tracks"/>
+	<!-- need html5 shiv here -->
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 	<title>Backcountry Tracks&trade; Trip Planner</title>
-
-	<link rel="icon" type="image/ico" href="favicon.ico"/>
-
-	<link rel="stylesheet" type="text/css" href="/static/c/normalize.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/c/default.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/c/Aristo/Aristo.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/css/jquery-ui/jquery-ui-1.8.18.custom.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/normalize.css" />	
+	<link rel="stylesheet" type="text/css" href="/static/css/typography.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/structure.css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
     {% for stylesheet in stylesheets %}
 	<link rel="stylesheet" type="text/css" href="/static/css/{{ stylesheet }}" />
@@ -19,30 +19,44 @@
 
 </head>
 <body id="" >
-	<div id="header">
-		<div id="header-content">
-			<h1><span>Backcountry Tracks</span></h1>
+	<header>
+		<div class="page_center">
+			Page Header Goes Here
 		</div>
-	</div>
-	<div id="sidebar">
-		<div id="app_chooser_buttons"></div>
-		<div id="sidebar-nav">
-			<ul>
-				<li><img src="/static/i/icons/plus_8x8_off.png" height="8" width="8" alt="" />New</li>
-				<li><img src="/static/i/icons/cog_alt_8x8_off.png" height="8" width="8" alt="" />Options</li>
-			</ul>
-		</div>
-	</div>
+	</header>
 	<div id="main">
-
+		<div id="left_column">
+			<img src="/static/img/app_logo_v1.png" alt="Backcountry Tracks&trade;" title="Backcountry Tracks&trade;"/>
+			<div id="profile_name">
+				<img id="profile_image" src="/static/img/profile_pic.jpg" alt="profile picure" />
+				<div id="profile_name_text">Profile Name</div>
+			</div>
+			<nav id="main_navigation">
+				<ul id="app_navigation">
+					<li class="basecamp"><a href="#">basecamp</a></li>
+				</ul>
+			</nav>
+			<nav id="outside_navigation">
+				<ul id="site_navigation">
+					<li class="tutorials"><a href="#">tutorials</a></li>
+					<li class="forums"><a href="#">forums</a></li>
+					<li class="feedback"><a href="#">provide feedback</a></li>
+				</ul>
+			</nav>
+		</div>
+		<article id="main_body">
+		</article>
+		<aside id="sidebar">
+			Tips and tricks and ads go here
+		</aside>
 	</div>
-	<!-- /MAIN -->
-
-	<div id="header-logo">
-		<img src="/static/i/header_logo.png" width="180" height="57" alt="bct logo">
-	</div>
+	<footer>Page footer goes here</footer>
 
 	<div id="splash_screen"></div>
+
+	<script id="add_chooser_button_template" type="text/template+html">
+		<li><a href="#{{ path }}">{{ name }}</a></li>
+	</script>
 
 
     {% for template in templates %}

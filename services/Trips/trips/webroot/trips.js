@@ -976,7 +976,7 @@ var DateRangeEditor = Backbone.View.extend({
 			_.bindAll(this, 'view', 'list', 'new_trip', 'save_trip', 'view_trip');
 
 			this.sidebar = new BackcountryTracks.SidebarItem({
-				name: 'Trips',
+				name: 'my trips',
 				icon: 'trips64',
 				path: 'trips'
 			});

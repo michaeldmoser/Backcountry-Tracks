@@ -211,7 +211,7 @@
 			_.bindAll(this, 'main', 'add_gear', 'save_gear', 'edit_gear');
 
 			var sidebar = new BackcountryTracks.SidebarItem({
-				name: 'Gear',
+				name: 'my gear',
 				icon: 'gear64',
 				path: 'gear',
 			});

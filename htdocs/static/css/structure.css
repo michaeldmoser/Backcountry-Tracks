@@ -84,3 +84,60 @@ header > h1 {
 	font-size: 13px;
 }
 
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+nav ul li {
+	height: 20px;
+	padding: 0px;
+	margin: 0px;	
+}
+nav ul li a,
+nav ul li a:active,
+nav ul li a:visited {
+	padding-left: 31px;
+	height: 20px;
+	width: 132px;
+	background-repeat: no-repeat;
+	background-position: 5px 0px;
+	display: block;
+	text-decoration: none;
+	color: #333333;
+}
+nav ul li a:hover {
+	background-color: #fff2d7;
+	color: #333333;
+}
+
+#main_navigation {
+	padding: 0 0 10px 0;
+	border-bottom: 1px solid #cccccc;
+}
+#outside_navigation {
+	padding: 10px 0 0 0;
+}
+#app_navigation,
+#site_navigation {
+	margin: 0 8px;
+	padding: 0;
+}
+
+li.gear64 a {
+	background-image: url("/static/img/gear_icon_small.png");
+}
+li.trips64 a {
+	background-image: url("/static/img/trips_icon_small.png");
+}
+li.basecamp a {
+	background-image: url("/static/img/basecamp_icon_small.png");
+}
+li.tutorials a {
+	background-image: url("/static/img/tutorials_icon_small.png");
+}
+li.forums a {
+	background-image: url("/static/img/forums_icon_small.png");
+}
+li.feedback a {
+	background-image: url("/static/img/feedback_icon_small.png");
+}
