@@ -1,5 +1,4 @@
 .application_container button.model_add_button {
-	position: fixed;
 	top: 72px;
 	right: 200px;
 	z-index: 2001;
@@ -40,7 +39,6 @@ div.list_view li.list_header {
 	font-size: 12px;
 	height: 32px;
 	border-bottom: 1px solid #807563;
-	position: fixed;
 	top: 126px;
 	right: 16px;
 	left: 196px;
@@ -74,16 +72,6 @@ div.list_view li div.trip_destination {
 
 
 #trip_organizer div.trip_list_container > h1 {
-	position: fixed;
-	top: 50px;
-	left: 196px;
-	right: 16px;
-	margin: 0px;
-	padding: 0px;
-	height: 75px;
-	line-height: 75px;
-	background-color: #ffffff;
-	z-index: 2000;
 }
 
 div.list_view li div.list_item_controls {
@@ -100,7 +88,6 @@ div.list_view li.highlight div.list_item_controls {
  * Trip Detail View
  */
 #trip_organizer div.application_container > h1 {
-	position: fixed;
 	top: 50px;
 	left: 196px;
 	right: 16px;
@@ -120,7 +107,6 @@ h3 {
 }
 
 .application_container input.trip_title {
-	position: fixed;
 	left: 196px;
 	z-index: 9999;
 	top: 50px;

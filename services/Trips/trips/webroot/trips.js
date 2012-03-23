@@ -657,7 +657,7 @@ var DateRangeEditor = Backbone.View.extend({
 			var views = {
 				'name': {
 					input_selector: 'input.trip_title',
-					label_selector: 'h1',
+					label_selector: 'h1.component_title',
 					field: 'name'
 				},
 				'description': {
@@ -718,8 +718,13 @@ var DateRangeEditor = Backbone.View.extend({
 			}
 			this.views.date_range = new DateRangeEditor(date_range_options);
 
-			this.$('#trip_organizer_tabs').tabs({
-				show: this.reset_view
+			this.$('#trip_detail_view').tabs({
+				show: this.reset_view,
+				select: function (evnt, ui) {
+					var position = $(ui.tab.parentNode).position();
+					var width = $(ui.tab.parentNode).width();
+					$('#trip_organizer_header_marker img').css({'left': (position.left + (width / 2) - 19)});
+				}
 			});
 
 			this.views.friends = new t.TripDetailFriendsView({
@@ -870,6 +875,7 @@ var DateRangeEditor = Backbone.View.extend({
 	t.TripListView = Backbone.View.extend({
 		id: 'trip_list_view',
 		className: 'list_view', 
+		tagName: 'section',
 
 		initialize: function () {
 			_.bindAll(this, 'render', 'handle_list_item_events');
@@ -880,15 +886,7 @@ var DateRangeEditor = Backbone.View.extend({
 
 			this.listitemviews = new Array;
 
-			var list_header_string = '';
-			list_header_string += '<li class="list_header">';
-			list_header_string += '<div class="list_item_column trip_name">Trip</div>';
-			list_header_string += '<div class="list_item_column trip_dates">When</div>';
-			list_header_string += '<div class="list_item_column trip_destination">Where</div>';
-			list_header_string += '</li>';
-
 			this.list_el = $('<ul />')[0];
-			$(this.list_el).html(list_header_string);
 			$(this.el).append(this.list_el);
 		},
 		
@@ -933,21 +931,23 @@ var DateRangeEditor = Backbone.View.extend({
 
 		initialize: function () {
 			_.bindAll(this, 'render', 'bubble_events');
-
-			var template_string = '<div class="trip_list_container"><h1>Trip Organizer</h1>';
-			template_string += '<button title="Add Trip" class="model_add_button"> Add Trip </button></div>';
+			var template_string = $('#trip_organizer_list_template').html();
 			this.template = _.template(template_string);
 
-			this.listview = new t.TripListView({
-				collection: this.collection
-			});
-			this.listview.bind('all', this.bubble_events);
 
 		},
 
 		render: function () {
 			$(this.el).html(this.template({}));
-			this.$('div.trip_list_container').append(this.listview.el);
+
+			var listview_section = this.$('section')[0];
+			this.listview = new t.TripListView({
+				collection: this.collection,
+				el: listview_section
+			});
+
+			this.listview.bind('all', this.bubble_events);
+			$(this.el).append(this.listview.el);
 			this.$("button").button();
 			this.listview.render();	
 

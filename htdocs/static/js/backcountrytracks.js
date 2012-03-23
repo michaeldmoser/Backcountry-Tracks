@@ -121,6 +121,7 @@ var ScreensView = Backbone.View.extend({
 
 	bct.MainScreen = function (options) {
 		this.className = 'application_container';
+		this.tagName = 'section';
 		Backbone.View.call(this, options);
 		bct.screens.register(this);
 	};
@@ -219,7 +220,7 @@ var ScreensView = Backbone.View.extend({
 		bct.sidebar.render();
 
 		bct.mainview = new ScreensView({
-			el: $('#main')[0],
+			el: $('#main_body')[0],
 			collection: BackcountryTracks.screens	
 		});
 		bct.mainview.render();

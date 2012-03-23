@@ -1,105 +1,124 @@
+<script id="trip_organizer_list_template" type="text/tempalte+html">
+	<header>
+		<h1>Trip Organizer</h1>
+		<h2>Create and organize your trips</h2>
+	</header>
+	<section id="trip_list_view" class="list_view">
+		<header>
+			<h1>My Trips</h1>
+			<div id="trip_organizer_header_marker" class="heading_marker">
+				<img src="/static/img/heading_arrow.png" alt="up arrow" width="18" height="10" />
+			</div>
+			<h2>Current Trips:</h2>
+		</header>
+	</section>
+</script>
 <script id="trips_detail_template" type="text/template+html">
-<h1></h1>
-<input type="text" value="" name="trip_name" class="trip_title"/>
-<div class="trip_dates">
-	<span class="trip_start_date"></span><input type="text" id="trip_start_date" name="trip_start_date" class="trip_start_date"  value="" readonly="readonly" style="display:none"/> - 
-	<span class="trip_end_date"></span><input type="text" id="trip_end_date" name="trip_end_date" class="trip_end_date" value="" readonly="readonly" style="display:none"/>
-</div>
-
-
-
-<div id="trip_organizer_tabs">
-	<ul>
-		<li><a href="#summary_tab">Overview</a></li>
-		<li><a href="#gear_tab">Gear</a></li>
-		<li><a href="#trip_discussion">Discussion</a></li>
-		<li><a href="#friends_tab">Friends</a></li>
-		<li><a href="#route_tab">Route</a></li>
-	</ul>
-	<div id="friends_tab" class="friends_section">
-		<button class="add_person"><img src="/static/img/icons/person_add32.png" height="24" width="24" class="add_person" /> Invite Friend</button>
-		<h3><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h3>
-		<div class="friends_list"></div>
-	</div>
-	<div id="route_tab" class="route_overview_section">
-		<h4></h4>
-		<input type="text" name="trip_destination" value="" />
-		<div id="route_beta">
-			<dl>
-				<dt>Round Trip Distance</dt>
-				<dd><span id="trip_distance"></span> <input type="text" name="trip_distance" /></dd>
-				<dt>Elevation gain/loss</dt>
-				<dd><span id="trip_elevation_gain"></span><input type="text" name="elevation_gain" /></dd>
-				<dt>Difficulty</dt>
-				<dd><span id="trip_difficulty"></span><input type="text" name="difficulty" /></dd>
-			</dl>
-			<h3>Route Description</h3>
-			<div class="trip_route_description">
+	<header>
+		<h1 class="component_title"></h1>
+		<input type="text" value="" name="trip_name" class="trip_title"/>
+		<div class="trip_dates">
+			<span class="trip_start_date"></span><input type="text" id="trip_start_date" name="trip_start_date" class="trip_start_date"  value="" readonly="readonly" style="display:none"/> - 
+			<span class="trip_end_date"></span><input type="text" id="trip_end_date" name="trip_end_date" class="trip_end_date" value="" readonly="readonly" style="display:none"/>
+		</div>
+	</header>
+	<section id="trip_detail_view" class="detail_view">
+		<nav>
+			<ul>
+				<li><a href="#summary_tab">Overview</a>|</li>
+				<li><a href="#gear_tab">Gear</a>|</li>
+				<li><a href="#trip_discussion">Discussion</a>|</li>
+				<li><a href="#friends_tab">Friends</a>|</li>
+				<li><a href="#route_tab">Route</a></li>
+			</ul>
+			<div id="trip_organizer_header_marker" class="heading_marker">
+				<img src="/static/img/heading_arrow.png" alt="up arrow" width="18" height="10" />
 			</div>
-			<textarea name="route_description"></textarea>
-			<a href="#">+ add additional details</a>
-		</div>
-		<div id="drophere">Upload a KML/GPX file <input type="file" name="upload_button" id="upload_button" /></div>
-		<div id="route_map"></div>
-	</div>
-	<div id="summary_tab">
-		<div class="trip_description_container">
-			<h3>Description</h3>
-			<p class="trip_description"></p>
-			<textarea name="trip_description" class="trip_description"></textarea>
-		</div>
-		<div class="itinerary">
-			<h3>Itinerary</h3>
-			<div class="trip_itinerary_content"></div>
-			<textarea name="trip_itinerary" class="trip_itinerary"></textarea>
-		</div>
-		<div class="trip_activities">
-			<h3>recent activity</h3>
+		</nav>
+		<section id="friends_tab" class="friends_section">
+			<button class="add_person"><img src="/static/img/icons/person_add32.png" height="24" width="24" class="add_person" /> Invite Friend</button>
+			<h1><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h1>
+			<div class="friends_list"></div>
+		</section>
+		<section id="route_tab" class="route_overview_section">
+			<h1></h1>
+			<input type="text" name="trip_destination" value="" />
+			<div id="route_beta">
+				<dl>
+					<dt>Round Trip Distance</dt>
+					<dd><span id="trip_distance"></span> <input type="text" name="trip_distance" /></dd>
+					<dt>Elevation gain/loss</dt>
+					<dd><span id="trip_elevation_gain"></span><input type="text" name="elevation_gain" /></dd>
+					<dt>Difficulty</dt>
+					<dd><span id="trip_difficulty"></span><input type="text" name="difficulty" /></dd>
+				</dl>
+				<h3>Route Description</h3>
+				<div class="trip_route_description">
+				</div>
+				<textarea name="route_description"></textarea>
+				<a href="#">+ add additional details</a>
+			</div>
+			<div id="drophere">Upload a KML/GPX file <input type="file" name="upload_button" id="upload_button" /></div>
+			<div id="route_map"></div>
+		</section>
+		<section id="summary_tab">
+			<div class="trip_description_container">
+				<h1>Description</h1>
+				<p class="trip_description"></p>
+				<textarea name="trip_description" class="trip_description"></textarea>
+			</div>
+			<div class="itinerary">
+				<h1>Itinerary</h1>
+				<div class="trip_itinerary_content"></div>
+				<textarea name="trip_itinerary" class="trip_itinerary"></textarea>
+			</div>
 			<div class="trip_activities">
-				<div class="trip_activity odd">
-					Zach Conrad was invited to the trip. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
-				</div>
-				<div class="trip_activity">
-					Michael posted a <a href="#">comment</a> - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
-				</div>
-				<div class="trip_activity odd">
-					Walt added shared gear. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+				<h1>recent activity</h1>
+				<div class="trip_activities">
+					<div class="trip_activity odd">
+						Zach Conrad was invited to the trip. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+					</div>
+					<div class="trip_activity">
+						Michael posted a <a href="#">comment</a> - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+					</div>
+					<div class="trip_activity odd">
+						Walt added shared gear. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
+					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-	<div id="trip_discussion" class="trip_discussion">
-		<h3>discussion</h3>
-		<div class="discussion_controls">
-			<textarea></textarea>
-			<button>Add comment</button>
-		</div>
-		<div class="discussion_sorting">
-			Sort by <a href="#" class="posted">Order posted</a> / <a href="#" class="recent">Most recent first</a>
-		</div>
-		<div class="trip_comments"></div>
-	</div>
-	<div id="gear_tab">
-		<div id="trip_personal_gear">
-            <h3>Personal Gear</h3>
-            <button id="select_gear"><img src="/static/img/icons/gear_add32.png" height="24" width="24" /> Select gear</button>
-            <ul></ul>
-        </div>
-		<div id="trip_group_gear">
-			<h3>Group/Shared Gear</h3>
-			<ul></ul>
-		</div>
-		<div id="add_personal_gear">
-            <h3>Your Inventory</h3>
-            <div class="inventory_controls">
-				<button id="add_gear"><img src="/static/img/icons/gear_add32.png" height="24" width="24" /> Add gear</button>
-            </div>
-            <p>Drag gear from this list into your Personal Gear for the trip.</p>
-			<ul></ul>
-            <button id="close_inventory">Done</button>
-        </div>
-	</div>
-</div>
+		</section>
+		<section id="trip_discussion" class="trip_discussion">
+			<h1>discussion</h1>
+			<div class="discussion_controls">
+				<textarea></textarea>
+				<button>Add comment</button>
+			</div>
+			<div class="discussion_sorting">
+				Sort by <a href="#" class="posted">Order posted</a> / <a href="#" class="recent">Most recent first</a>
+			</div>
+			<div class="trip_comments"></div>
+		</section>
+		<section id="gear_tab">
+			<div id="trip_personal_gear">
+				<h3>Personal Gear</h3>
+				<button id="select_gear"><img src="/static/img/icons/gear_add32.png" height="24" width="24" /> Select gear</button>
+				<ul></ul>
+			</div>
+			<div id="trip_group_gear">
+				<h3>Group/Shared Gear</h3>
+				<ul></ul>
+			</div>
+			<div id="add_personal_gear">
+				<h3>Your Inventory</h3>
+				<div class="inventory_controls">
+					<button id="add_gear"><img src="/static/img/icons/gear_add32.png" height="24" width="24" /> Add gear</button>
+				</div>
+				<p>Drag gear from this list into your Personal Gear for the trip.</p>
+				<ul></ul>
+				<button id="close_inventory">Done</button>
+			</div>
+		</section>
+	</section>
 </script>
 
 <script id="friends_invite_template" type="text/template+html">
@@ -112,13 +131,10 @@
 </script>
 
 <script id="trip_list_item" type="text/template+html">
-<div class="list_item_column trip_name">{{ name }}</div>
-<div class="list_item_column trip_dates">{{ start }} - {{ end }}</div>
-<div class="list_item_column trip_destination">{{ destination }}</div>
+<div class="list_item_column name_column trip_name">{{ name }}</div>
+<div class="list_item_column description_column trip_dates">{{ start }} - {{ end }}</div>
 <div class="list_item_controls">
-	<img src="/static/img/icons/fugue/slash.png" alt="Delete" />
-	<button title="Accept"> accept </button> 
-	<button title="Ignore"> ignore </button>
+	<button title="Accept"> accept </button><button title="Ignore"> ignore </button><button title="Delete"> X </button>
 </div>
 </script>
 
@@ -138,3 +154,4 @@
 	<h4 class="comment_who">{{ first_name }} {{ last_name }} said on {{ date }} at {{ time }}</h4>
 	<p>{{ comment }}</p>
 </script>
+

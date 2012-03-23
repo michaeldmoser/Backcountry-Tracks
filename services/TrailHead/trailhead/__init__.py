@@ -10,8 +10,8 @@ class Webroot(object):
     def javascript_files(self):
         return [resource_filename('trailhead', 'webroot/tripplannerapp.js')]
     '''
-
+'''
     @property
     def stylesheets(self):
         return [resource_filename('trailhead', 'webroot/bct.css')]
-
+'''

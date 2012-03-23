@@ -9,8 +9,8 @@
    The font-size percentage is of 16px. (0.75 * 16px = 12px) */
 html { font-size:100.01%; }
 body {
-  font-size: 77%;
-  color: #222;
+  font-size: 75%;
+  color: #333333;
   background: #fff;
   font-family: 'Lucida Grande', Tahoma, Verdana, Helvetica, Arial, san-serif;
 }
@@ -113,7 +113,7 @@ caption     { background: #eee; }
 
 .quiet     { color: #666; }
 .loud      { color: #000; }
-.highlight { background:#ff0; }
+.highlight { background:#fff2d7; }
 .added     { background:#060; color: #fff; }
 .removed   { background:#900; color: #fff; }
 
