@@ -28,7 +28,7 @@
 		<div id="left_column">
 			<img src="/static/img/app_logo_v1.png" alt="Backcountry Tracks&trade;" title="Backcountry Tracks&trade;"/>
 			<div id="profile_name">
-				<img id="profile_image" src="/static/img/profile_pic.jpg" alt="profile picure" />
+				<img id="profile_image" src="/static/img/person_icon.png" width="34" height="34" alt="profile picure" />
 				<div id="profile_name_text">Profile Name</div>
 			</div>
 			<nav id="main_navigation">

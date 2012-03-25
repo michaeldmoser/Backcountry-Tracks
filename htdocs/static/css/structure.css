@@ -1,3 +1,6 @@
+body {
+	overflow-y: scroll;
+}
 a {
 	color: #ff6600;
 	text-decoration: none;
@@ -31,23 +34,24 @@ body > header {
 #main_body, #left_column, #sidebar {
 	display: table-cell;
 	vertical-align: top;
-	padding: 12px 0 0 0;
+	padding: 12px 0 12px 0;
 	margin: 0;
 }
 
 #main_body {
-	width: 549px;
+	width: 548px;
 	border-left: 1px solid #999999;
 	border-right: 1px solid #999999;
 	background-color: #f3f3f3;
-	padding: 19px;
-	font-size: .9em;
+	overflow: hidden;
 }
 
 #main_body > article > section {
 	border: 1px solid #999999;
 	background-color: #ffffff;
 	padding: 9px;
+	width: 491px;
+	overflow: hidden;
 }
 
 header > h1 {
@@ -160,7 +164,12 @@ li.feedback a {
 	background-image: url("/static/img/feedback_icon_small.png");
 }
 
-#main_body > section > header h2 {
+#main_body > article {
+	width: 511px;
+	margin: auto;
+	overflow: hidden;
+}
+#main_body > article > header h2 {
 	font-size: 1em;
 	font-weight: normal;
 	color: #333333;
@@ -289,9 +298,8 @@ section.detail_view > section.ui-tabs-panel {
 
 
 section.detail_view > section > .content_block {
-	display: table;
 	border-bottom: 1px solid #999999;
-	width: 529px;
+	width: 469px;
 	padding: 11px;
 }
 section.detail_view > section > .content_block:first-child {
@@ -300,23 +308,34 @@ section.detail_view > section > .content_block:first-child {
 section.detail_view > section > .content_block:last-child {
 	border-bottom: none;
 }
-section.detail_view > section > .content_block > h2, 
-section.detail_view > section > .content_block > div {
-	display:table-cell;
+section.detail_view > section > .content_block > * {
+	display:inline-block;
 	vertical-align: top;
+	margin: 0;
 }
 section.detail_view > section > .content_block > h2 {
 	color: #ff6600;
 	font-weight: bold;
-	font-size: .95em;
-	width: 153px;
+	font-size: 1em;
+	width: 150px;
 }
 section.detail_view > section > .content_block > h2:after {
 	content: ":";
 }
-section.detail_view > section > .content_block button {
-	float: right;
-	margin: 10px 0;
+section.detail_view > section > .content_block > div,
+section.detail_view > section > .content_block > ol.activities {
+	width: 316px;
+}
+section.detail_view > section > .content_block .description_block {
+	width: 312px;
+}
+section.detail_view > section > .content_block .text_input_block {
+	width: 314px;
+	border: 1px solid transparent;
+	padding: 1px 0;
+}
+section.detail_view > section > .content_block input.text_input_block {
+	border: 1px solid #999999;
 }
 
 
@@ -324,7 +343,7 @@ ol.activities {
 	list-style-type: none;
 	margin:0;
 	padding: 0;
-	font-size: .95em;
+	font-size: 1em;
 }
 ol.activities li {
 	border-bottom: 1px solid #999999;
@@ -337,7 +356,7 @@ ol.activities li:last-child {
 	border: none;
 }
 ol.activities h3 {
-	font-size: .95em;	
+	font-size: 1em;	
 	margin: 2px;
 }
 ol.activities time {
@@ -348,8 +367,8 @@ ol.activities  {
 }
 .description_block {
 	border: 1px solid transparent;
-	width: 374px;
 	min-height: 75px;
+	padding: 1px;
 }
 textarea.description_block {
 	border: 1px solid #999999;
@@ -360,7 +379,7 @@ section.activities {
 	list-style-type: none;
 	margin:0;
 	padding: 0;
-	font-size: .95em;
+	font-size: 1em;
 }
 section.activities article {
 	border-bottom: 1px solid #999999;
@@ -378,7 +397,7 @@ section.activities article:last-child {
 }
 section.activities time {
 	color: #999999;
-	font-size:.95em;
+	font-size:1em;
 }
 
 
@@ -418,8 +437,62 @@ section.activities time {
 }
 
 #trip_discussion .sorting {
-	font-size: .9em;
 	margin-bottom: 11px;
+	padding-bottom: 11px;
+	border-bottom: 1px solid #999999;
+	text-align: right;
 }
 
+#route_map {
+	width: 311px;
+	height: 174px;
+	border: 1px solid #999999;
+}
+#drophere {
+	text-align: right;
+	margin-bottom: 11px;
+}
+#drophere input {
+	visibility: hidden;
+	position: absolute;
+	top:-99999;
+}
 
+div.content_button:first-child {
+	margin: 0;
+}
+div.content_button {
+	text-align:right;
+	margin: 11px 0;
+}
+
+#friends_tab ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 316px;
+}
+#friends_tab ul li {
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid #999999;
+	width: 100%;
+	line-height: 16px;
+}
+#friends_tab ul li > div {
+	display: inline-block;
+	margin: 10px 11px;
+	vertical-align: top;
+}
+#friends_tab ul li:last-child {
+	border: 0;
+}
+#friends_tab ul.friends_list span {
+	font-size: .9em;
+}
+#friends_tab ul.friends_list span.status {
+	color: #999999;
+}
+#friends_tab ul.friends_list span.invite_status {
+	text-transform: uppercase;
+}

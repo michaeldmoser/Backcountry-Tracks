@@ -502,10 +502,12 @@ var DateRangeEditor = Backbone.View.extend({
 	});
 
 	t.FriendsListItem = Backbone.View.extend({
+		tagName: 'li',
+		
 		initialize: function () {
 			_.bindAll(this, 'render');
 
-			this.template = _.template('<div class="trip_friend">{{ first }} {{ last }} - {{ invite_status }}</div>');
+			this.template = _.template($('#friends_list_view_item_template').html());
 		},
 
 		render: function () {
@@ -548,7 +550,6 @@ var DateRangeEditor = Backbone.View.extend({
 				collection: this.collection,
 				el: this.$('.friends_list')[0]
 			});
-
 		},
 
 		invite_friends_to_trip: function () {
@@ -655,6 +656,7 @@ var DateRangeEditor = Backbone.View.extend({
 	t.TripDetail = BackcountryTracks.MainScreen.extend({
 
 		initialize: function () {
+			this.rendered_once = false;
 			_.bindAll(this, 'set_model', 'render', 'show', 'reset_view');
 
 			this.model = new t.Trip;
@@ -683,19 +685,19 @@ var DateRangeEditor = Backbone.View.extend({
 				},
 				'trip_distance': {
 					input_selector: 'input[name="trip_distance"]',
-					label_selector: 'span#trip_distance',
+					label_selector: '#trip_distance',
 					field: 'trip_distance',
 					default_value: 'Enter a distance...'
 				},
 				'elevation_gain': {
 					input_selector: 'input[name="elevation_gain"]',
-					label_selector: 'span#trip_elevation_gain',
+					label_selector: '#trip_elevation_gain',
 					field: 'elevation_gain',
 					default_value: 'Enter an elevation gain/loss'
 				},
 				'difficulty': {
 					input_selector: 'input[name="difficulty"]',
-					label_selector: 'span#trip_difficulty',
+					label_selector: '#trip_difficulty',
 					field: 'difficulty',
 					default_value: 'Enter a difficulty...'
 				},
@@ -738,7 +740,7 @@ var DateRangeEditor = Backbone.View.extend({
 			});
 
 			this.views.friends = new t.TripDetailFriendsView({
-				el: this.$('div.friends_section')[0],
+				el: this.$('.friends_section')[0],
 				collection: new t.TripFriends()
 			});
 
@@ -789,6 +791,9 @@ var DateRangeEditor = Backbone.View.extend({
 				view.render();
 			});
 			
+			if (this.rendered_once)
+				return;
+
 			var reset_map = this.reset_map;
 			$('#drophere').filedrop({
 				fallback_id: 'upload_button',
@@ -804,9 +809,25 @@ var DateRangeEditor = Backbone.View.extend({
 							break;
 					}
 				},
-				maxfilesize: 2
+				maxfilesize: 2,
+				docOver: function () {
+					if ($('#drophere').hasClass('highlight'))
+						return;
+
+					$('#drophere').addClass('highlight');
+				},
+
+				docLeave: function () {
+					$('#drophere').removeClass('highlight');
+				}
 			});
 
+			$('#drophere button').button();
+			$('#drophere button').click(function (evt) {
+				evt.stopPropagation();	
+				$('#upload_button').click();
+			});
+			this.rendered_once = true;
 		},
 
 		set_model: function (model) {

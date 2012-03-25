@@ -36,51 +36,48 @@
 			</div>
 		</nav>
 		<section id="friends_tab" class="friends_section">
-			<button class="add_person"><img src="/static/img/icons/person_add32.png" height="24" width="24" class="add_person" /> Invite Friend</button>
-			<h1><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h1>
-			<div class="friends_list"></div>
+			<div class="content_block">
+				<h2>Invite Friends</h2><div class="content_button">
+					<button class="add_person">invite friend</button>
+				</div>
+			</div>
+			<div class="content_block">
+				<h2>Friends on Trip</h2><ul class="friends_list"></ul>
+			</div>
 		</section>
 
 		<section id="route_tab" class="route_overview_section">
-			<h2></h2>
-			<input type="text" name="trip_destination" value="" />
-			<div id="route_beta">
-				<dl>
-					<dt>Round Trip Distance</dt>
-					<dd><span id="trip_distance"></span> <input type="text" name="trip_distance" /></dd>
-					<dt>Elevation gain/loss</dt>
-					<dd><span id="trip_elevation_gain"></span><input type="text" name="elevation_gain" /></dd>
-					<dt>Difficulty</dt>
-					<dd><span id="trip_difficulty"></span><input type="text" name="difficulty" /></dd>
-				</dl>
-				<h3>Route Description</h3>
-				<div class="trip_route_description">
+			<div class="content_block">
+				<h2>Add Map</h2><div>
+				<div id="drophere" class="content_button"><button>choose file</button><input type="file" name="upload_button" id="upload_button"/></div>
+					<div id="route_map"></div>
 				</div>
-				<textarea name="route_description"></textarea>
-				<a href="#">+ add additional details</a>
 			</div>
-			<div id="drophere">Upload a KML/GPX file <input type="file" name="upload_button" id="upload_button" /></div>
-			<div id="route_map"></div>
+			<div class="content_block">
+				<h2>Route Description</h2><div class="trip_route_description description_block"></div><textarea name="route_description" class="description_block"></textarea></div>
+			<div class="content_block">
+				<h2>Round Trip Distance</h2><div id="trip_distance" class="text_input_block"></div><input type="text" name="trip_distance" class="text_input_block"/>
+			</div>
+			<div class="content_block">
+				<h2>Difficutly</h2><div id="trip_difficulty" class="text_input_block"></div><input type="text" name="difficulty" class="text_input_block"/>
+			</div>
+			<div class="content_block">
+				<h2>Elevation Gain/Loss</h2><div id="trip_elevation_gain" class="text_input_block"></div><input type="text" name="elevation_gain" class="text_input_block"/>
+			</div>
 		</section>
 
 		<section id="summary_tab">
 			<div class="trip_description_container content_block">
-				<h2>Description</h2>
-				<div>
+				<h2>Description</h2><div>
 					<div class="trip_description description_block"></div>
 					<textarea name="trip_description" class="trip_description description_block"></textarea>
 				</div>
 			</div>
 			<div class="itinerary content_block">
-				<h2>Itinerary</h2>
-				<div>
-					<div class="trip_itinerary_content description_block"></div>
-					<textarea name="trip_itinerary" class="trip_itinerary description_block"></textarea>
-				</div>
+				<h2>Itinerary</h2><div><div class="trip_itinerary_content description_block"></div><textarea name="trip_itinerary" class="trip_itinerary description_block"></textarea></div>
 			</div>
 			<aside class="trip_activities content_block">
-				<h2>Recent Activity</h2>
-				<ol class="trip_activities activities">
+				<h2>Recent Activity</h2><ol class="trip_activities activities">
 					<li class="trip_activity odd">
 					<a href="#">Zach Conrad</a> was invited to the trip <time class="happened_on">12 hours ago</time>
 					</li>
@@ -95,16 +92,14 @@
 		</section>
 		<section id="trip_discussion" class="trip_discussion">
 			<div class="content_block">
-				<h2>Comment</h2>
-				<div class="discussion_controls">
+				<h2>Comment</h2><div class="discussion_controls">
 					<textarea class="description_block"></textarea>
-					<button>stick it!</button>
+					<div class="content_button"><button>stick it!</button></div>
 				</div>
 			</div>
 			<div class="discussion_sorting content_block">
-				<h2>Recent Comments</h2>
-				<div>
-					<div class="right sorting">Sort comments by: <a href="#" class="posted">Order posted</a> | <a href="#" class="recent">Most recent first</a></div>
+				<h2>Recent Comments</h2><div>
+					<div class="sorting">Sort comments by: <a href="#" class="posted">Order posted</a> | <a href="#" class="recent">Most recent first</a></div>
 					<section class="trip_comments activities"></section>
 				</div>
 			</div>
@@ -168,5 +163,11 @@
 		</header>
 		<div>{{ comment }}</div>
 	</article>
+</script>
+
+<script id="friends_list_view_item_template" type="text/template+html">
+	<div><img src="/static/img/person_icon.png" alt="{{ first }}'s avatar" /></div><div>
+		<a href="#">{{ first }} {{ last }}</a><br/><span class="status">Status:</span> <span class="invite_status">{{ invite_status }}</span>
+		</div>
 </script>
 
