@@ -44,7 +44,7 @@ var FieldEditor = Backbone.View.extend({
 	render: function () {
 		var field_value = this.model.get(this.field);
 		if (field_value == '' && this.options.default_value)
-			field_value = this.options.default_value
+			field_value = this.options.default_value;
 
 		var urlreg = /((http:\/\/)|(www\.))([^ \n]+)/igm;
 		var urls = field_value.match(urlreg, '<a href="http://$4$5" target="_blank">$1</a>');
@@ -254,7 +254,7 @@ var DateRangeEditor = Backbone.View.extend({
 	t.Comments = Backbone.Collection.extend({
 		model: t.Comment,
 
-		ordering: 1,
+		ordering: -1,
 
 		initialize: function () {
 			_.bindAll(this, 'comparator', 'url', 'reverse_sort', 'forward_sort');
@@ -587,6 +587,7 @@ var DateRangeEditor = Backbone.View.extend({
 			this.collection.bind('add', this.render, this);
 			this.collection.bind('remove', this.render, this);
 			this.collection.bind('reset', this.render, this);
+			this.$('button').button();
 
 			this.row_class = '';
 		},
@@ -612,8 +613,18 @@ var DateRangeEditor = Backbone.View.extend({
 		},
 
 		render: function () {
-			this.$('div.trip_comments').html('');
+			this.$('.trip_comments').html('');
 			this.collection.each(this.render_comment);
+
+			this.$('.trip_comments time').each(function (item) {
+				var commentdate = $(this).attr('datetime');
+				var prettydate = prettyDate(commentdate);
+				if (prettydate == undefined) {
+					var prettydate = (new Date(commentdate)).toLocaleDateString() + " " + (new Date(commentdate)).toLocaleTimeString();
+				}
+				$(this).html(prettydate);
+			});
+
 			return this;	
 		},
 
@@ -624,14 +635,13 @@ var DateRangeEditor = Backbone.View.extend({
 			var rendered_comment = comment.toJSON();
 			rendered_comment['date'] = local_date;
 			rendered_comment['time'] = local_time;
+			rendered_comment['datetime'] = comment.get('date');
 
 			var urlreg = /(((http:\/\/)|(www\.))([^ ]+))/gmi;
 			rendered_comment['comment'] = rendered_comment['comment'].replace(urlreg, '<a href="http://$4$5" target="_blank">$1</a>');
 
-			var html_comment = $('<div class="trip_comment"/>').html(this.template(rendered_comment));
-			html_comment.addClass(this.row_class);
-
-			this.$('div.trip_comments').append(html_comment);
+			var html_comment = this.template(rendered_comment);
+			this.$('.trip_comments').append(html_comment);
 
 			this.row_class = this.row_class == '' ? 'odd' : '';
 		},
@@ -662,7 +672,7 @@ var DateRangeEditor = Backbone.View.extend({
 				},
 				'description': {
 					input_selector: 'textarea.trip_description',
-					label_selector: 'p.trip_description',
+					label_selector: 'div.trip_description',
 					field: 'description',
 					default_value: 'Enter a description...'
 				},
@@ -773,7 +783,7 @@ var DateRangeEditor = Backbone.View.extend({
 		},
 
 		render: function () {
-			this.$('#trip_organizer_tabs').tabs('select', 0);
+			this.$('#trip_detail_view').tabs('select', 0);
 
 			_.each(this.views, function (view) {
 				view.render();
@@ -820,13 +830,13 @@ var DateRangeEditor = Backbone.View.extend({
 
 		select_tab: function (tab_id) {
 			var tab_ids = new Array;
-			this.$('#trip_organizer_tabs > ul.ui-tabs-nav li a').each(function (index, item) {
+			this.$('#trip_detail_view > ul.ui-tabs-nav li a').each(function (index, item) {
 				var parts = item.href.split('#');
 				tab_ids.push(parts[1]);
 			});
 
 			var tab_index = tab_ids.indexOf(tab_id);
-			this.$('#trip_organizer_tabs').tabs('select', tab_index);
+			this.$('#trip_detail_view').tabs('select', tab_index);
 		}
 	});
 

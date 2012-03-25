@@ -1,3 +1,7 @@
+a {
+	color: #ff6600;
+	text-decoration: none;
+}
 .page_center {
 	display: block;
 	margin: 0 auto;
@@ -32,7 +36,7 @@ body > header {
 }
 
 #main_body {
-	width: 510px;
+	width: 549px;
 	border-left: 1px solid #999999;
 	border-right: 1px solid #999999;
 	background-color: #f3f3f3;
@@ -40,7 +44,7 @@ body > header {
 	font-size: .9em;
 }
 
-#main_body > section > section {
+#main_body > article > section {
 	border: 1px solid #999999;
 	background-color: #ffffff;
 	padding: 9px;
@@ -162,11 +166,14 @@ li.feedback a {
 	color: #333333;
 }
 
-section.application_container > section > ul {
+article.application_container > header {
+	margin-bottom: 20px;
+}
+article.application_container > section > ul {
 	margin: 0;
 	padding: 0;
 }
-section.application_container > section > ul li {
+article.application_container > section > ul li {
 	position: relative;
 	display: table;
 	margin: 7px 0;
@@ -174,31 +181,31 @@ section.application_container > section > ul li {
 	margin-left:20px;
 	width: 468px;
 }
-section.application_container > section > ul li.highlight {
+article.application_container > section > ul li.highlight {
 	background-color: #fff2d7
 }
-section.application_container > section > ul li > div {
+article.application_container > section > ul li > div {
 	display: table-cell;
 	padding: 3px 8px;
 	height: 1em;
 	overflow: hidden;
 }
-section.application_container > section > ul li > div .ui-button {
+article.application_container > section > ul li > div .ui-button {
 	font-size: 1em;
 	border: 0;
 	height: 100%;
 	margin: 0;
 }
-section.application_container > section > ul li > div .ui-button-text {
+article.application_container > section > ul li > div .ui-button-text {
 	line-height: 1;
 }
-section.application_container > section > ul li > div.name_column {
+article.application_container > section > ul li > div.name_column {
 	text-transform: uppercase;
 	width: 217px;
 	border-right: 1px solid #999999;
 }
 
-section.application_container section.list_view li div.list_item_controls {
+article.application_container section.list_view li div.list_item_controls {
 	display: none;
 	padding: 0px;
 	height: 100%;
@@ -206,7 +213,7 @@ section.application_container section.list_view li div.list_item_controls {
 	background-color: #fff2d7
 }
 
-section.application_container section.list_view li.highlight div.list_item_controls {
+article.application_container section.list_view li.highlight div.list_item_controls {
 	display: block;
 	position: absolute;
 	right: 0px;
@@ -244,6 +251,9 @@ section.list_view > header > div.heading_marker img {
 	left: 35px;
 }
 
+section.detail_view nav {
+	background-color: #fff;
+}
 section.detail_view nav ul {
 	background: transparent;
 	border: 0;
@@ -273,6 +283,111 @@ section.detail_view nav ul li.ui-state-active a {
 	background-color: #fff2d7;
 }
 
+section.detail_view > section.ui-tabs-panel {
+	padding: 0;
+}
+
+
+section.detail_view > section > .content_block {
+	display: table;
+	border-bottom: 1px solid #999999;
+	width: 529px;
+	padding: 11px;
+}
+section.detail_view > section > .content_block:first-child {
+	background-color: #f3f3f3;
+}
+section.detail_view > section > .content_block:last-child {
+	border-bottom: none;
+}
+section.detail_view > section > .content_block > h2, 
+section.detail_view > section > .content_block > div {
+	display:table-cell;
+	vertical-align: top;
+}
+section.detail_view > section > .content_block > h2 {
+	color: #ff6600;
+	font-weight: bold;
+	font-size: .95em;
+	width: 153px;
+}
+section.detail_view > section > .content_block > h2:after {
+	content: ":";
+}
+section.detail_view > section > .content_block button {
+	float: right;
+	margin: 10px 0;
+}
+
+
+ol.activities {
+	list-style-type: none;
+	margin:0;
+	padding: 0;
+	font-size: .95em;
+}
+ol.activities li {
+	border-bottom: 1px solid #999999;
+	padding: 11px 38px 11px 38px;
+}
+ol.activities li:first-child {
+	padding-top: 0;
+}
+ol.activities li:last-child {
+	border: none;
+}
+ol.activities h3 {
+	font-size: .95em;	
+	margin: 2px;
+}
+ol.activities time {
+	color: #999999;
+}
+ol.activities  {
+
+}
+.description_block {
+	border: 1px solid transparent;
+	width: 374px;
+	min-height: 75px;
+}
+textarea.description_block {
+	border: 1px solid #999999;
+}
+
+
+section.activities {
+	list-style-type: none;
+	margin:0;
+	padding: 0;
+	font-size: .95em;
+}
+section.activities article {
+	border-bottom: 1px solid #999999;
+	padding: 11px 0px 11px 38px;
+	clear: both;
+}
+section.activities article header {
+	margin-bottom: 11px;
+}
+section.activities article:first-child {
+	padding-top: 0;
+}
+section.activities article:last-child {
+	border: none;
+}
+section.activities time {
+	color: #999999;
+	font-size:.95em;
+}
+
+
+
+
+
+
+
+
 #trip_detail_view nav ul li a[href='#summary_tab'] {
 	background-position: 0 0;
 }
@@ -289,7 +404,6 @@ section.detail_view nav ul li.ui-state-active a {
 #trip_detail_view nav ul li a[href='#route_tab'] {
 	background-position: 0 -80px;
 }
-
 #trip_organizer_header_marker {
 	position: relative;
 	border-bottom: 1px solid #999999;
@@ -302,4 +416,10 @@ section.detail_view nav ul li.ui-state-active a {
 	left: 41px;
 	top: 1px;
 }
+
+#trip_discussion .sorting {
+	font-size: .9em;
+	margin-bottom: 11px;
+}
+
 

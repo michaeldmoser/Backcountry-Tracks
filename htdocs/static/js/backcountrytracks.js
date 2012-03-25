@@ -121,7 +121,7 @@ var ScreensView = Backbone.View.extend({
 
 	bct.MainScreen = function (options) {
 		this.className = 'application_container';
-		this.tagName = 'section';
+		this.tagName = 'article';
 		Backbone.View.call(this, options);
 		bct.screens.register(this);
 	};

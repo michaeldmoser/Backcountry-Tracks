@@ -40,8 +40,9 @@
 			<h1><img src="/static/img/icons/people48.png" height="48" width="48" /> friends on this trip </h1>
 			<div class="friends_list"></div>
 		</section>
+
 		<section id="route_tab" class="route_overview_section">
-			<h1></h1>
+			<h2></h2>
 			<input type="text" name="trip_destination" value="" />
 			<div id="route_beta">
 				<dl>
@@ -61,42 +62,52 @@
 			<div id="drophere">Upload a KML/GPX file <input type="file" name="upload_button" id="upload_button" /></div>
 			<div id="route_map"></div>
 		</section>
+
 		<section id="summary_tab">
-			<div class="trip_description_container">
-				<h1>Description</h1>
-				<p class="trip_description"></p>
-				<textarea name="trip_description" class="trip_description"></textarea>
-			</div>
-			<div class="itinerary">
-				<h1>Itinerary</h1>
-				<div class="trip_itinerary_content"></div>
-				<textarea name="trip_itinerary" class="trip_itinerary"></textarea>
-			</div>
-			<div class="trip_activities">
-				<h1>recent activity</h1>
-				<div class="trip_activities">
-					<div class="trip_activity odd">
-						Zach Conrad was invited to the trip. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
-					</div>
-					<div class="trip_activity">
-						Michael posted a <a href="#">comment</a> - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
-					</div>
-					<div class="trip_activity odd">
-						Walt added shared gear. - <span class="happened_on">Mon, Nov 28 2011 at 5:30pm</span>
-					</div>
+			<div class="trip_description_container content_block">
+				<h2>Description</h2>
+				<div>
+					<div class="trip_description description_block"></div>
+					<textarea name="trip_description" class="trip_description description_block"></textarea>
 				</div>
 			</div>
+			<div class="itinerary content_block">
+				<h2>Itinerary</h2>
+				<div>
+					<div class="trip_itinerary_content description_block"></div>
+					<textarea name="trip_itinerary" class="trip_itinerary description_block"></textarea>
+				</div>
+			</div>
+			<aside class="trip_activities content_block">
+				<h2>Recent Activity</h2>
+				<ol class="trip_activities activities">
+					<li class="trip_activity odd">
+					<a href="#">Zach Conrad</a> was invited to the trip <time class="happened_on">12 hours ago</time>
+					</li>
+					<li class="trip_activity">
+					<a href="#">Michael</a> posted a <a href="#">comment</a> <time class="happened_on">13 hours ago</time>
+					</li>
+					<li class="trip_activity odd">
+					<a href="#">Walt</a> added shared gear <time class="happened_on">14 hours ago</time>
+					</li>
+				</ol>
+			</aside>
 		</section>
 		<section id="trip_discussion" class="trip_discussion">
-			<h1>discussion</h1>
-			<div class="discussion_controls">
-				<textarea></textarea>
-				<button>Add comment</button>
+			<div class="content_block">
+				<h2>Comment</h2>
+				<div class="discussion_controls">
+					<textarea class="description_block"></textarea>
+					<button>stick it!</button>
+				</div>
 			</div>
-			<div class="discussion_sorting">
-				Sort by <a href="#" class="posted">Order posted</a> / <a href="#" class="recent">Most recent first</a>
+			<div class="discussion_sorting content_block">
+				<h2>Recent Comments</h2>
+				<div>
+					<div class="right sorting">Sort comments by: <a href="#" class="posted">Order posted</a> | <a href="#" class="recent">Most recent first</a></div>
+					<section class="trip_comments activities"></section>
+				</div>
 			</div>
-			<div class="trip_comments"></div>
 		</section>
 		<section id="gear_tab">
 			<div id="trip_personal_gear">
@@ -151,7 +162,11 @@
 </script>
 
 <script id="trip_discussion_comment_template" type="text/template+html">
-	<h4 class="comment_who">{{ first_name }} {{ last_name }} said on {{ date }} at {{ time }}</h4>
-	<p>{{ comment }}</p>
+	<article class="trip_comment">
+		<header>
+			<time datetime="{{ datetime }}">{{ datetime }}</time> <a href="#">{{ first_name }} {{ last_name }}</a> said ...
+		</header>
+		<div>{{ comment }}</div>
+	</article>
 </script>
 
