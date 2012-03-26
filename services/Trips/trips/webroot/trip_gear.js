@@ -55,7 +55,7 @@ function TripGearViews() {
 				tolerance: 'touch'
             });
             this.$('button').button();
-			this.$('ul').html('');
+			this.$('ul.personal_gear').html('');
 
 			this.collection.each(this.render_item);
 
@@ -73,7 +73,7 @@ function TripGearViews() {
 				revert: true
             });
 			draggable.data('model', item);
-			this.$('ul').append(html);
+			this.$('ul.personal_gear').append(html);
 		},
 
 		gear_dropped: function (ev, ui) {
@@ -100,6 +100,7 @@ function TripGearViews() {
 			this.collection.bind('reset', this.render);
 			this.collection.bind('remove', this.render);
 			this.collection.bind('add', this.render);
+			$(this.el).hide();
         },
 
         render: function () {
@@ -109,7 +110,7 @@ function TripGearViews() {
 				tolerance: 'touch'
             });
             this.$('button').button();
-			this.$('ul').html('');
+			this.$('ul.inventory_gear').html('');
 
 			this.collection.each(this.render_item);
 
@@ -136,7 +137,7 @@ function TripGearViews() {
 				revert: true
             });
 			draggable.data('model', item);
-			this.$('ul').append(html);
+			this.$('ul.inventory_gear').append(html);
 		},
 
 		add_gear: function () {
@@ -236,7 +237,7 @@ function TripGearViews() {
         },
 
         select_gear: function () {
-            this.views.group.hide();
+            //this.views.group.hide();
             this.views.inventory.show();
         },
 

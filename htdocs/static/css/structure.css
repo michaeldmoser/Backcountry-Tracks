@@ -313,13 +313,13 @@ section.detail_view > section > .content_block > * {
 	vertical-align: top;
 	margin: 0;
 }
-section.detail_view > section > .content_block > h2 {
+section.detail_view > section > .content_block h2 {
 	color: #ff6600;
 	font-weight: bold;
 	font-size: 1em;
 	width: 150px;
 }
-section.detail_view > section > .content_block > h2:after {
+section.detail_view > section > .content_block h2:after {
 	content: ":";
 }
 section.detail_view > section > .content_block > div,
@@ -400,12 +400,47 @@ section.activities time {
 	font-size:1em;
 }
 
+.howto {
+	color: #999999;
+	font-size: .9em;
+}
 
 
 
 
 
 
+#gear_tab > section ul {
+	margin: 0;
+	padding: 0;
+}
+#gear_tab > section ul li {
+	position: relative;
+	display: table;
+	margin: 7px 0;
+	padding: 0;
+	border: 1px solid #999999;
+	width: 316px;
+	background: white;
+}
+#gear_tab > section ul li.trip_gear div.gear_name {
+	display: inline-block;
+	width: 265px; 
+	padding: 5px;
+	vertical-align: middle;
+	text-transform: uppercase;
+}
+#gear_tab > section ul li.trip_gear div.gear_weight {
+	display: inline-block;
+	width: 30px;
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+	border-left: 1px solid #999999;
+	background: #ff6600;
+	color: white;
+	font-weight: bold;
+}
 
 #trip_detail_view nav ul li a[href='#summary_tab'] {
 	background-position: 0 0;
@@ -495,4 +530,6 @@ div.content_button {
 }
 #friends_tab ul.friends_list span.invite_status {
 	text-transform: uppercase;
+}
+#add_personal_gear {
 }
