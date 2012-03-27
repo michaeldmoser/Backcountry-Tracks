@@ -85,7 +85,7 @@
 		tagName: 'li',
 
 		events: {
-			'click .list_item_controls img[alt="Delete"]': 'handle_delete_clicked',
+			'click .list_item_controls button': 'handle_delete_clicked',
 			'click': 'handle_click'
 		},
 
@@ -98,7 +98,7 @@
 		render: function () {
 			$(this.el).html(this.template(this.model.toJSON()));
 			$(this.el).hover(function () { $(this).toggleClass('highlight'); });
-			this.$('.list_item_controls img[alt="Delete"]').button();
+			this.$('button').button();
 		},
 
 		handle_delete_clicked: function (ev) {

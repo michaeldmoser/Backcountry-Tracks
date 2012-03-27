@@ -210,10 +210,13 @@ article.application_container > section > ul li > div .ui-button-text {
 }
 article.application_container > section > ul li > div.name_column {
 	text-transform: uppercase;
-	width: 217px;
+	width: 190px;
 	border-right: 1px solid #999999;
 }
 
+article.application_container section.list_view ul {
+	clear: both;
+}
 article.application_container section.list_view li div.list_item_controls {
 	display: none;
 	padding: 0px;
@@ -531,5 +534,7 @@ div.content_button {
 #friends_tab ul.friends_list span.invite_status {
 	text-transform: uppercase;
 }
-#add_personal_gear {
+
+#gear_list_view > header > h2 {
+	float: left;
 }
