@@ -865,7 +865,7 @@ var DateRangeEditor = Backbone.View.extend({
 		tagName: 'li',
 
 		events: {
-			'click .list_item_controls img[alt="Delete"]': 'handle_delete_clicked',
+			'click .list_item_controls button[title="Delete"]': 'handle_delete_clicked',
 			'click button[title="Accept"]': 'accept_invitation',
 			'click button[title="Ignore"]': 'ignore_invitation',
 			'click': 'handle_click'

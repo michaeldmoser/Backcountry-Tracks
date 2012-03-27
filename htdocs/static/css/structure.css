@@ -247,6 +247,7 @@ section.list_view > header > h2 {
 	font-size: 1em;
 	color: #ff6600;
 	font-weight: bold;
+	float: left;
 }
 
 section.list_view > header > div.heading_marker {
@@ -535,6 +536,3 @@ div.content_button {
 	text-transform: uppercase;
 }
 
-#gear_list_view > header > h2 {
-	float: left;
-}
