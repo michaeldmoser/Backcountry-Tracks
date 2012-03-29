@@ -38,9 +38,9 @@
 			</nav>
 			<nav id="outside_navigation">
 				<ul id="site_navigation">
-					<li class="tutorials"><a href="#">tutorials</a></li>
-					<li class="forums"><a href="#">forums</a></li>
-					<li class="feedback"><a href="#">provide feedback</a></li>
+					<li class="tutorials"><a href="http://www.backcountrytracks.com/tutorials" title="Backcountry Tracks Tutorials" target="tutorials">tutorials</a></li>
+					<li class="forums"><a href="http://www.backcountrytracks.com/forums" title="Backcountry Tracks Forums" target="forums">forums</a></li>
+					<li class="feedback"><a href="http://www.backcountrytracks.com/feedback" title="Backcountry Tracks Application Feedback" target="feedback">provide feedback</a></li>
 				</ul>
 			</nav>
 		</div>
