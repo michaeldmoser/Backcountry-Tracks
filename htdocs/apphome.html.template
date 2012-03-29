@@ -21,7 +21,6 @@
 <body id="" >
 	<header>
 		<div class="page_center">
-			Page Header Goes Here
 		</div>
 	</header>
 	<div id="main">
@@ -29,7 +28,7 @@
 			<img src="/static/img/app_logo_v1.png" alt="Backcountry Tracks&trade;" title="Backcountry Tracks&trade;"/>
 			<div id="profile_name">
 				<img id="profile_image" src="/static/img/person_icon.png" width="34" height="34" alt="profile picure" />
-				<div id="profile_name_text">Profile Name</div>
+				<div id="profile_name_text"></div>
 			</div>
 			<nav id="main_navigation">
 				<ul id="app_navigation">
@@ -50,7 +49,7 @@
 			Tips and tricks and ads go here
 		</aside>
 	</div>
-	<footer>Page footer goes here</footer>
+	<footer></footer>
 
 	<div id="splash_screen"></div>
 
