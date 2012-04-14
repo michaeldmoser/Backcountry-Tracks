@@ -61,3 +61,9 @@ class LoginHandler(BaseHandler):
 
         self.finish()
 
+class LogoutHandler(BaseHandler):
+    def post(self):
+        self.clear_all_cookies();
+        self.write({"logout": True})
+        self.set_status(204)
+

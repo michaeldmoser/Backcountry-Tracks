@@ -227,6 +227,10 @@ var ScreensView = Backbone.View.extend({
 
 		$('#profile_name_text').html(bct.current_user.get('first_name') + " " + bct.current_user.get('last_name'));
 
+		$('#logout').click(function () {
+			$.post('/app/logout', function () { window.location.href = '/'; });
+		});
+
 		Backbone.history.start();
 
 		$('#splash_screen').fadeOut();

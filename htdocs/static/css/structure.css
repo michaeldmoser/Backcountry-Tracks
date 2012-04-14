@@ -21,7 +21,16 @@ body > header {
 	height: 41px;
 	background-color: #ff6633;
 }
-
+body > header .page_center {
+	height: 21px;
+	text-align:right;
+	display:block;
+	padding: 10px;
+	width: 895px;
+}
+body > header .page_center a {
+	color: white;
+}
 
 #main {
 	margin: 0 auto;

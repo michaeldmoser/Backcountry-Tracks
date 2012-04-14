@@ -46,6 +46,7 @@ TrailHead:
         - ['/app/register', 'Adventurer/register']
         - ['/app/activate/(.*)/(.*)', 'Adventurer/activate']
         - ['/app/login', 'Adventurer/login']
+        - ['/app/logout', 'Adventurer/logout']
         - ['/app/users/([^/]+)/gear', 'Gear/gear']
         - ['/app/users/([^/]+)/gear/([^/]+)$', 'Gear/gear']
         - ['/app/user', 'Adventurer/user']
