@@ -78,7 +78,7 @@ var DateRangeEditor = Backbone.View.extend({
 			yearRange: 'c-2:+3',
 			showButtonPanel: true,
 			buttonImageOnly: true,
-			buttonImage: '/static/img/icons/fugue/calendar.png',
+			buttonImage: '/static/img/calendar_icon.png',
 			showOn: 'both',
 			onSelect: on_select_start_date
 		});
@@ -94,7 +94,7 @@ var DateRangeEditor = Backbone.View.extend({
 			yearRange: 'c-2:+3',
 			showButtonPanel: true,
 			buttonImageOnly: true,
-			buttonImage: '/static/img/icons/fugue/calendar.png',
+			buttonImage: '/static/img/calendar_icon.png',
 			showOn: 'both',
 			onSelect: on_select_end_date
 		});
@@ -386,7 +386,7 @@ var DateRangeEditor = Backbone.View.extend({
 				yearRange: 'c-2:+3',
 				showButtonPanel: true,
 				buttonImageOnly: true,
-				buttonImage: '/static/img/icons/fugue/calendar.png',
+				buttonImage: '/static/img/calendar_icon.png',
 				showOn: 'both',
 				onSelect: function (selectedDate) {
 					var instance = $( this ).data( "datepicker" );
@@ -408,7 +408,7 @@ var DateRangeEditor = Backbone.View.extend({
 				dateFormat: 'yy-mm-dd',
 				showButtonPanel: true,
 				buttonImageOnly: true,
-				buttonImage: '/static/img/icons/fugue/calendar.png',
+				buttonImage: '/static/img/calendar_icon.png',
 				showOn: 'both',
 				onSelect: function (selectedDate) {
 					var instance = $( this ).data( "datepicker" );

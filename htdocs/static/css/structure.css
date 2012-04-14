@@ -451,6 +451,27 @@ section.activities time {
 	font-weight: bold;
 }
 
+.trip_dates {
+	font-size: 1.1em;
+	line-height:20px;
+}
+.trip_dates input { 
+	border: 0;
+	margin: 0;
+	padding: 0;
+	height: 0;
+	display: none;
+}
+.trip_dates span {
+	line-height:20px;
+	display:inline-block;
+	vertical-align:bottom;
+}
+.trip_dates img {
+	line-height:20px;
+	vertical-align:bottom;
+}
+
 #trip_detail_view nav ul li a[href='#summary_tab'] {
 	background-position: 0 0;
 }
