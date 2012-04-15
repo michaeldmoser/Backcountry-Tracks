@@ -32,6 +32,32 @@ body > header .page_center a {
 	color: white;
 }
 
+#error_notification {
+	display: none;
+	position: fixed;
+	width: 100%;
+	top: 50px;
+}
+#error_notification .bounding_box {
+	position: relative;
+	width: 300px;
+	border: 1px solid #ff6600;
+	background: #fff2d7;
+	margin: 0 auto;
+	padding: 4px 4px 4px 30px;
+	font-weight: bold;
+}
+#error_notification .bounding_box .error_icon {
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	background: url("/static/img/css_button_icons.png") 0 -100px;
+	top: 0px;
+	bottom: 0px;
+	left: 4px;
+	margin: auto;
+}
+
 #main {
 	margin: 0 auto;
 	width: 915px;

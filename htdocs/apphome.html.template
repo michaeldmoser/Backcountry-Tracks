@@ -54,8 +54,18 @@
 
 	<div id="splash_screen"></div>
 
+	<div id="error_notification">
+		<div class="bounding_box">
+			<div class="error_icon"></div><div class="error_content"></div>
+		</div>
+	</div>
+
 	<script id="add_chooser_button_template" type="text/template+html">
 		<li><a href="#{{ path }}">{{ name }}</a></li>
+	</script>
+
+	<script id="error_notification_template" type="text/template+html">
+		{{ error_message }}
 	</script>
 
 

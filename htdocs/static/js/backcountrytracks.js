@@ -231,6 +231,12 @@ var ScreensView = Backbone.View.extend({
 			$.post('/app/logout', function () { window.location.href = '/'; });
 		});
 
+		$('body').ajaxError(function (evt, xhr, settings, thrown_error) {
+			$('#error_notification div.error_content').html(xhr.responseText);
+			$('#error_notification').fadeIn();
+			$('#error_notification').delay(4000).fadeOut();
+		});
+
 		Backbone.history.start();
 
 		$('#splash_screen').fadeOut();
