@@ -210,6 +210,7 @@ var ScreensView = Backbone.View.extend({
 	bct.current_user = new bct.UserModel();
 
 	var start_application = function () {
+		new Basecamp.BasecampModule;
 		new TripOrganizer.TripsModule;
 		new GearManager.GearModule;
 
