@@ -60,6 +60,12 @@ class AdventurerRepository(BasicCRUDService):
                 confirmation_key
                 )
 
+        logging.debug("Newsletter subscribe field is: %s", data.get('subscribe'))
+        if data.get('subscribe'):
+            newsletter = self.remoting.service('Newsletter')
+            command = newsletter.subscribe(data)
+            self.remoting.call(command)
+
         log.debug('Completed registration for %s' % email)
         result = {'successful': True}
         return result

@@ -71,6 +71,7 @@ GeneralMessaging:
         rpc.trips: Trips/trips
         rpc.adventurer: Adventurer/adventurer
         rpc.gear: Gear/gear
+        rpc.newsletter: BctksNewsletter/newsletter
 
 PostOfficeOnly:
     reply_exchange: rpc
@@ -113,6 +114,10 @@ PostOffice/postoffice:
     reply_exchange: rpc
     queues:
         rpc: postoffice_rpc_processor
+
+BctksNewsletter/newsletter:
+    apikey: 0cfce29e621096fa2440d9bf9860c1a3-us4 
+    list_id: fcb7f08c5c 
 
 webroot:
     - Trailhead/trailhead
@@ -158,6 +163,10 @@ message_routing:
             exchange: rpc
             queue: rpc_processer
             routing_key: rpc.trips
+        - 
+            exchange: rpc
+            queue: rpc_processer
+            routing_key: rpc.newsletter
 
 logging:
     version: 1
