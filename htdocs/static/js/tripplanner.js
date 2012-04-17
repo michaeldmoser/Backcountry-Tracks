@@ -110,15 +110,14 @@
 
   $.fn.tpLogin.handleComplete = function(data) {
     var jsonData = $.parseJSON(data.responseText);
+	if (data.status > 299) {
+		$('#failed_login').dialog({modal: true});	
+		$('#login-form #password').val('');
+		return;
+	}
     if (jsonData.location) {
       $.fn.tpLogin.window.location = jsonData.location;
     }
-//    var headers = response.getAllResponseHeaders();
-//    var results = headers.match('X-Location: (.*)\n');
-//    if (results && results.length == 2) {
-//      var location = results[1];
-//
-//    }
   }
 
 })( jQuery );
