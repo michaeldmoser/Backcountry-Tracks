@@ -292,12 +292,14 @@ var DateRangeEditor = Backbone.View.extend({
 			'elevation_gain': '',
 			'difficulty': '',
 			'itinerary': '',
-			'friends': null
+			'friends': null,
+			'organizer': true,
+			'responded': false
 		},
 
 		initialize: function () {
 			_.bindAll(this, 'url', 'update_friends_collection',
-				'update_friends_attribute');
+				'update_friends_attribute', 'calculate_responded');
 
 			if (this.get('friends') == null) {
 				this.attributes.friends = new Array;
@@ -308,6 +310,21 @@ var DateRangeEditor = Backbone.View.extend({
 
 			this.gear = new t.PersonalGear;
 			this.inventory = new t.InventoryGear;
+			this.calculate_responded();
+		},
+
+		calculate_responded: function () {
+			var $this = this;
+			this.friends.each(function (friend) {
+				if (friend.get('email') == BackcountryTracks.current_user.get('email')) {
+					$this.set({'organizer': false});
+
+					if (friend.get('invite_status') == 'accepted' || friend.get('invite_status') == 'rejected') {
+						$this.set({'responded': true});
+					}
+				} 
+			});
+
 		},
 
 		url: function () {
@@ -327,6 +344,7 @@ var DateRangeEditor = Backbone.View.extend({
 		update_friends_attribute: function () {
 			var friends = this.friends.toJSON();
 			this.set({'friends': friends});
+			this.calculate_responded();
 		},
 
 		accept_invite: function (email) {
@@ -874,13 +892,25 @@ var DateRangeEditor = Backbone.View.extend({
 		initialize: function () {
 			_.bindAll(this, 'render', 'handle_delete_clicked', 'handle_click');
 			this.template = _.template($('#trip_list_item').html());
+			this.model.bind('change', this.render);
 		},
 
 		render: function () {
+			var $this = this;
+
 			$(this.el).html(this.template(this.model.toJSON()));
-			$(this.el).hover(function () { $(this).toggleClass('highlight'); });
+			$(this.el).mouseenter(function () { $(this).addClass('highlight'); });
+			$(this.el).mouseleave(function () { $(this).removeClass('highlight'); });
 			this.$('.list_item_controls img[alt="Delete"]').button();
 			this.$('.list_item_controls button').button();
+
+			this.$('button[title="Ignore"]').hide();
+			this.$('button[title="Accept"]').hide();
+
+			if (!this.model.get('organizer') && !this.model.get('responded')) {
+				$this.$('button[title="Ignore"]').show();
+				$this.$('button[title="Accept"]').show();
+			}
 		},
 
 		handle_delete_clicked: function (ev) {
