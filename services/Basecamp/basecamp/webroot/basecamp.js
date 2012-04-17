@@ -34,6 +34,7 @@
 			if (!trip_organizer)
 				return;
 
+			Backbone.history.navigate('trips');
 			trip_organizer.list();
 			trip_organizer.new_trip();
 		}
