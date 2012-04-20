@@ -404,7 +404,32 @@ class TestRemotingClientCreateService(unittest.TestCase):
         service = self.remoting.service('Gear')
         self.assertIsInstance(service, RemoteService)
 
-        
+class TestRemotingClientNoCallback(unittest.TestCase):
+
+    def setUp(self):
+        self.default_exchange = 'adventurer'
+        self.pika = fakepika.SelectConnectionFake()
+        self.remoting = RemotingClient(channel=self.pika._channel, exchange=self.default_exchange)
+
+        self.service_name = 'Adventurer'
+        self.service = self.remoting.remote_service(self.service_name)
+        self.command = self.service.get('bob@smith.com')
+
+        self.headers = pika.BasicProperties(
+                content_type = 'application/json'
+                )
+        self.body = json.dumps({
+            'jsonrpc': '2.0',
+            'result': True,
+            'id': self.command.message_id
+            });
+
+
+    def test_client_has_no_callbackl(self):
+        '''Receive a reply with no correlation ID'''
+        self.remoting.call(self.command)
+        self.pika.inject(self.remoting.queue, self.headers, self.body)
+        self.pika.trigger_consume(self.remoting.queue)
 
 
 if __name__ == '__main__':

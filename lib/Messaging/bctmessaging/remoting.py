@@ -79,6 +79,10 @@ class RemotingClient(object):
 
     def receive_message(self, channel, method, headers, body):
         callback = self.__get_callback(headers.correlation_id)
+        if callback is None:
+            self.channel.basic_ack(delivery_tag=method.delivery_tag)
+            return
+    
         response = json.loads(body)
 
         if response.has_key('error'):
@@ -134,7 +138,10 @@ class RemotingClient(object):
                 )
 
     def __get_callback(self, correlation_id):
-        return self.__callbacks[correlation_id]
+        try:
+            return self.__callbacks[correlation_id]
+        except KeyError:
+            return None
 
     def __add_callback(self, correlation_id, callback):
         self.__callbacks[correlation_id] = callback
