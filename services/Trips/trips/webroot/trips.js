@@ -676,6 +676,7 @@ var DateRangeEditor = Backbone.View.extend({
 		initialize: function () {
 			this.rendered_once = false;
 			_.bindAll(this, 'set_model', 'render', 'show', 'reset_view');
+			this.kml = null;
 
 			this.model = new t.Trip;
 
@@ -792,14 +793,22 @@ var DateRangeEditor = Backbone.View.extend({
 			if (ui.panel.id == 'route_tab') {
 				try {
 					google.maps.event.trigger(this.map, 'resize');
-					var kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
-					kml.setMap(this.map);
+					this.kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
+					this.kml.setMap(this.map);
 				} catch (err) {
 					// yeah, do nothing, that's the way to handle it
 				};
 			} else if (ui.panel.id == 'trip_discussion') {
 				this.views.discussion.collection.fetch();
 			}
+		},
+
+		remove_map_overlays: function () {
+			if (!this.kml)
+				return;
+
+			this.kml.setMap(null);
+			this.kml = null;
 		},
 
 		render: function () {
@@ -856,6 +865,7 @@ var DateRangeEditor = Backbone.View.extend({
 				else
 					view.model = model;
 			});
+			this.remove_map_overlays();
 			this.render();
 		},
 
