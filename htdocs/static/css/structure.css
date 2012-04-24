@@ -612,3 +612,16 @@ div.content_button {
 	vertical-align:middle;
 }
 
+
+.ui-dialog {
+	padding: 0px;
+	outline: 10px solid rgba(0,0,0,0.4);
+}
+
+.ui-dialog .ui-dialog-titlebar {
+	border: 0;
+	color: white;
+	padding: 0 20px;
+	margin: 0;
+	line-height: 30px;
+}
