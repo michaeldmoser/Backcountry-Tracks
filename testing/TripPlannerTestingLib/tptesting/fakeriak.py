@@ -398,7 +398,9 @@ class RiakObjectFake(object):
         self.__data.metadata['links'].append(newlink)
 
     def remove_link(self, obj, tag=None):
-		raise NotImplementedError
+        links = self.__data.metadata['links']
+        new_links = filter(lambda x: x.get_key() != obj.get_key(), links)
+        self.__data.metadata['links'] = new_links
 
     def get_links(self):
         if not isinstance(self.__data, RiakDocument):

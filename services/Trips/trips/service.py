@@ -114,25 +114,28 @@ class TripsDb(BasicCRUDService):
         '''Return person's gear for trip'''
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
-        data = tripobj.get_data()
 
-        return data.get('gear', {}).get(person, [])
+        links = tripobj.get_links()
+        gear_links = filter(lambda x: x.get_tag() == 'gear/personal', links)
+        gear = [link.get() for link in gear_links]
+
+        personal_gear = filter(lambda x: x.get_data()['owner'] == person, gear)
+        gear_data = map(lambda x: x.get_data(), personal_gear)
+
+        return gear_data
 
     def add_personal_gear(self, trip, person, gear):
         '''Add a personal gear item to trip for person'''
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
-        data = tripobj.get_data()
 
-        if not data.has_key('gear'):
-            data['gear'] = dict()
+        gearid = str(uuid.uuid4())
+        gear['id'] = gearid
+        gearobj = bucket.new(gearid, gear)
+        gearobj.set_usermeta({'object_type': 'gear/personal'})
+        gearobj.store()
 
-        if not data['gear'].has_key(person):
-            data['gear'][person] = list()
-
-        data['gear'][person].append(gear)
-
-        tripobj.set_data(data)
+        tripobj.add_link(gearobj, tag='gear/personal')
         tripobj.store()
 
     def remove_personal_gear(self, trip_id, person, gear_id):
@@ -140,21 +143,11 @@ class TripsDb(BasicCRUDService):
         Remove a piece of gear from a persons personal gear list for the trip
         '''
         bucket = self.riak.bucket(self.bucket_name)
+        gearobj = bucket.get(str(gear_id))
         tripobj = bucket.get(str(trip_id))
-        data = tripobj.get_data()
-
-        if not data.has_key('gear'):
-            return
-
-        if not data['gear'].has_key(person):
-            return
-
-        def remove_gear(gear):
-            return gear['id'] != gear_id
-        data['gear'][person] = filter(remove_gear, data['gear'][person])
-
-        tripobj.set_data(data)
+        tripobj.remove_link(gearobj, tag='gear/personal')
         tripobj.store()
+        gearobj.delete()
 
     def get_group_gear(self, trip):
         '''Retrieve a list of the trips shared / group gear'''
