@@ -11,10 +11,14 @@ if len(sys.argv) < 2:
 client = RiakClient()
 bucket = client.bucket(sys.argv[1])
 
-for key in bucket.get_keys():
-    obj = bucket.get(str(key))
-    print key
+if len(sys.argv) > 2:
+    obj = bucket.get(str(sys.argv[2]))
     pprint(obj.get_data())
-    print
-    print '---------------------------'
-    print
+else:
+    for key in bucket.get_keys():
+        obj = bucket.get(str(key))
+        print key
+        pprint(obj.get_data())
+        print
+        print '---------------------------'
+        print
