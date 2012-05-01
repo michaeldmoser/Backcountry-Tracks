@@ -34,7 +34,7 @@ function TripGearViews() {
         },
 
         initialize: function () {
-            _.bindAll(this, 'render', 'select_gear', 'render_item', 'gear_dropped');
+            _.bindAll(this, 'render', 'select_gear', 'render_item');
             this.item_template = _.template($('#trip_personal_gear_item_template').html())
 
 			this.collection.bind('change', this.render);
@@ -44,16 +44,6 @@ function TripGearViews() {
         },
 
         render: function () {
-            $(this.el).droppable({
-				accept: function (ui) {
-					if (ui.hasClass('group_gear') || ui.hasClass('inventory_gear'))
-						return true;
-
-					return false;
-				},
-				drop: this.gear_dropped,
-				tolerance: 'touch'
-            });
             this.$('button').button();
 			this.$('ul.personal_gear').html('');
 
@@ -68,22 +58,9 @@ function TripGearViews() {
 
 		render_item: function (item) {
 			var html = $(this.item_template(item.toJSON()));
-            var draggable = html.draggable({
-				zIndex: 9010,
-				revert: true
-            });
-			draggable.data('model', item);
 			this.$('ul.personal_gear').append(html);
-		},
-
-		gear_dropped: function (ev, ui) {
-			var model = ui.draggable.data('model');
-			if (ui.draggable.hasClass('group_gear')) {
-				model.destroy();
-			}
-			this.collection.create(model.toJSON());
-		}
- 	});
+        }
+    });
 
     trips.InventoryView = Backbone.View.extend({
         events: {
@@ -164,7 +141,7 @@ function TripGearViews() {
 
     trips.GroupGearView = Backbone.View.extend({
         initialize: function () {
-            _.bindAll(this, 'render', 'hide', 'show', 'gear_dropped', 'render_item');
+            _.bindAll(this, 'render', 'hide', 'show', 'render_item');
             var template = $('#trip_gear_group_item_template').html();
             this.item_template = _.template(template);
 
@@ -175,23 +152,11 @@ function TripGearViews() {
         },
 
         render: function() {
-            $(this.el).droppable({
-				accept: 'li.trip_gear',
-				tolerance: 'touch',
-				drop: this.gear_dropped
-            });
-			this.$('ul').html('');
-
 			this.collection.each(this.render_item);
         },
 
 		render_item: function (item) {
 			var html = $(this.item_template(item.toJSON()));
-            var draggable = html.draggable({
-				zIndex: 9010,
-				revert: true
-            });
-			draggable.data('model', item);
 			this.$('ul').append(html);
 		},
 
@@ -201,12 +166,6 @@ function TripGearViews() {
 
         show: function () {
             $(this.el).show();
-		},
-
-		gear_dropped: function (ev, ui) {
-			var model = ui.draggable.data('model');
-			this.collection.create(model.toJSON());
-			model.destroy();
 		}
     });
 
