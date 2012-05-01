@@ -116,7 +116,7 @@ class TripsDb(BasicCRUDService):
         tripobj = bucket.get(str(trip))
 
         links = tripobj.get_links()
-        gear_links = filter(lambda x: x.get_tag() == 'gear/personal', links)
+        gear_links = filter(lambda x: x.get_tag() == 'gear_personal', links)
         gear = [link.get() for link in gear_links]
 
         personal_gear = filter(lambda x: x.get_data()['owner'] == person, gear)
@@ -132,10 +132,10 @@ class TripsDb(BasicCRUDService):
         gearid = str(uuid.uuid4())
         gear['id'] = gearid
         gearobj = bucket.new(gearid, gear)
-        gearobj.set_usermeta({'object_type': 'gear/personal'})
+        gearobj.set_usermeta({'object_type': 'gear_personal'})
         gearobj.store()
 
-        tripobj.add_link(gearobj, tag='gear/personal')
+        tripobj.add_link(gearobj, tag='gear_personal')
         tripobj.store()
 
     def remove_personal_gear(self, trip_id, person, gear_id):
@@ -145,7 +145,7 @@ class TripsDb(BasicCRUDService):
         bucket = self.riak.bucket(self.bucket_name)
         gearobj = bucket.get(str(gear_id))
         tripobj = bucket.get(str(trip_id))
-        tripobj.remove_link(gearobj, tag='gear/personal')
+        tripobj.remove_link(gearobj, tag='gear_personal')
         tripobj.store()
         gearobj.delete()
 
@@ -154,33 +154,36 @@ class TripsDb(BasicCRUDService):
         logging.debug('Get Group Gear for %s', trip)
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
-        data = tripobj.get_data()
 
-        return data.get('groupgear', [])
+        links = tripobj.get_links()
+        gearlinks = filter(lambda x: x.get_tag() == 'gear_group', links)
+        gear = map(lambda x: x.get().get_data(), gearlinks)
+
+        return gear 
 
     def share_gear(self, trip, gear):
         '''Share a piece of gear with the trip'''
+        logging.debug('Share %s gear for %s trip', trip, gear)
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
-        data = tripobj.get_data()
 
-        if not data.has_key('groupgear'):
-            data['groupgear'] = list()
-        data['groupgear'].append(gear)
+        gearobj = bucket.new(str(gear['id']), gear)
+        gearobj.set_usermeta({'object_type': 'gear_group'})
+        gearobj.store()
 
-        tripobj.set_data(data)
+        tripobj.add_link(gearobj, tag='gear_group')
         tripobj.store()
+
     
     def unshare_gear(self, trip, gear_id):
         '''Remove a piece of gear from the group gear list'''
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
-        data = tripobj.get_data()
+        
+        gearobj = bucket.get(str(gear_id))
+        tripobj.remove_link(gearobj, tag='gear_group')
 
-        groupgear = filter(lambda gear: gear_id != gear['id'], data['groupgear'])
-
-        data['groupgear'] = groupgear
-        tripobj.set_data(data)
+        gearobj.delete()
         tripobj.store()
 
     def store_route(self, trip_id, document):

@@ -12,151 +12,109 @@ from tptesting.fakeriak import RiakClientFake
 from tptesting.fakepika import SelectConnectionFake
 from bctmessaging.remoting import RemotingClient
 
-class TestTripGearRetrieval(unittest.TestCase):
+from trips.tests import utils
 
-    def setUp(self):
-        self.environ = environment.create()
-        self.riak = RiakClientFake()
-        self.bucket_name = 'trips'
-        self.bucket = self.riak.bucket(self.bucket_name)
+class TestTripGearRetrieval(utils.TestTripFixture):
 
-        pika_connection = SelectConnectionFake()
-        channel = pika_connection._channel
-        rpc_client = RemotingClient(channel)
-
-        self.app = TripsDb(
-                rpc_client,
-                self.riak,
-                self.bucket_name,
-                'http://test.com'
-                )
-
-
-        self.trip_id = unicode(uuid4())
-        def add_id(gear):
+    def continueSetUp(self):
+        trip = self.bucket.get(str(self.trip_id))
+        def add_data(gear):
             item = gear.copy()
             item['id'] = str(uuid4())
+            item['owner'] = self.environ.ramona.email
             return item
-        self.gear = map(add_id, self.environ.data['gear'])
+        self.gear = map(add_data, self.environ.data['gear'])
 
-        ramona = self.environ.ramona
-        self.trip = {
-            'name': 'Glacier',
-            'start': '2012-07-19',
-            'end': '2012-07-24',
-            'destination': 'Glacier National Park',
-            'friends': [
-                {'first': ramona.first_name,
-                    'last': ramona.last_name,
-                    'email': ramona.email,
-                    'invite_status': 'accepted'}
-                ],
-            'gear': dict(),
-            'groupgear': list()
-            }
+        for piece_of_gear in self.gear:
+            obj = self.bucket.new(piece_of_gear['id'], piece_of_gear)
+            obj.set_usermeta({'object_type': 'gear/group'})
+            obj.store()
+
+            trip.add_link(obj, tag="gear/group")
+
+        trip.store()
 
     def test_retrieve_trip_group_gear(self):
         '''Should return the shared gear for a trip'''
-        self.trip['groupgear'] = self.gear
-        self.bucket.add_document(self.trip_id, self.trip)
         gear = self.app.get_group_gear(self.trip_id)
+        actual_keys = [item['id'] for item in gear]
+        actual_keys.sort()
 
-        self.assertEquals(gear, self.gear)
+        expected_keys = [item['id'] for item in self.gear]
+        expected_keys.sort()
+
+        self.assertEquals(expected_keys, actual_keys)
+
+class TestTripGearRetrievalNone(utils.TestTripFixture):
 
     def test_groupgear_is_empty(self):
         '''Should return empty list if there is not group gear'''
-        self.bucket.add_document(self.trip_id, self.trip)
         gear = self.app.get_group_gear(self.trip_id)
 
         self.assertEquals(gear, [])
 
-    def test_groupgear_is_empty(self):
-        '''Should return empty list if there is not group gear'''
-        del self.trip['groupgear']
-        self.bucket.add_document(self.trip_id, self.trip)
-        gear = self.app.get_group_gear(self.trip_id)
-
-        self.assertEquals(gear, [])
+class TestTripGearShare(utils.TestTripFixture):
 
     def test_share_gear(self):
-        '''Share a piece of gear with trip'''
-        del self.trip['groupgear']
-        self.bucket.add_document(self.trip_id, self.trip)
+        '''Share a piece of gear with trip should create new document for gear'''
+        gear_to_share = self.environ.data['gear'][0].copy()
+        gear_to_share['id'] = str(uuid4())
+        gear_to_share['owner'] = self.environ.douglas.email
 
-        gear = self.app.share_gear(self.trip_id, self.gear[0])
+        self.app.share_gear(self.trip_id, gear_to_share)
 
-        tripobj = self.bucket.get(str(self.trip_id))
-        trip = tripobj.get_data()
-        groupgear = trip.get('groupgear', [])
+        gearobj = self.bucket.get(str(gear_to_share['id']))
 
-        self.assertIn(self.gear[0], groupgear)
+        self.assertTrue(gearobj.exists())
         
     def test_share_more_gear(self):
         '''Share a second piece of gear with trip'''
-        self.trip['groupgear'].append(self.gear[0])
-        self.bucket.add_document(self.trip_id, self.trip)
+        def share_gear(item):
+            gear_to_share = item.copy()
+            gear_to_share['id'] = str(uuid4())
+            gear_to_share['owner'] = self.environ.douglas.email
 
-        gear = self.app.share_gear(self.trip_id, self.gear[1])
+            self.app.share_gear(self.trip_id, gear_to_share)
+            return gear_to_share
+        expected_gear = map(share_gear, self.environ.data['gear'])
+        expected_ids = [gear['id'] for gear in expected_gear]
+        expected_ids.sort()
 
         tripobj = self.bucket.get(str(self.trip_id))
-        trip = tripobj.get_data()
-        groupgear = trip.get('groupgear', [])
+        links = tripobj.get_links()
+        actual_ids = [link.get_key() for link in links]
+        actual_ids.sort()
 
-        self.assertEquals(self.gear[0:2], groupgear)
+        self.assertEquals(actual_ids, expected_ids)
 
-class TestTripGearUnshare(unittest.TestCase):
+class TestTripGearUnshare(utils.TestTripFixture):
 
-    def setUp(self):
-        self.environ = environment.create()
-        self.riak = RiakClientFake()
-        self.bucket_name = 'trips'
-        self.bucket = self.riak.bucket(self.bucket_name)
+    def continueSetUp(self):
+        def share_gear(item):
+            gear_to_share = item.copy()
+            gear_to_share['id'] = str(uuid4())
+            gear_to_share['owner'] = self.environ.douglas.email
 
-        pika_connection = SelectConnectionFake()
-        channel = pika_connection._channel
-        rpc_client = RemotingClient(channel)
-
-        self.app = TripsDb(
-                rpc_client,
-                self.riak,
-                self.bucket_name,
-                'http://test.com'
-                )
-
-
-        self.trip_id = unicode(uuid4())
-        def add_id(gear):
-            item = gear.copy()
-            item['id'] = str(uuid4())
-            return item
-        self.gear = map(add_id, self.environ.data['gear'])
-
-        ramona = self.environ.ramona
-        self.trip = {
-            'name': 'Glacier',
-            'start': '2012-07-19',
-            'end': '2012-07-24',
-            'destination': 'Glacier National Park',
-            'friends': [
-                {'first': ramona.first_name,
-                    'last': ramona.last_name,
-                    'email': ramona.email,
-                    'invite_status': 'accepted'}
-                ],
-            'gear': dict(),
-            'groupgear': self.gear,
-            }
+            self.app.share_gear(self.trip_id, gear_to_share)
+            return gear_to_share
+        self.gear = map(share_gear, self.environ.data['gear'])
 
     def test_unshare_gear(self):
         '''Unshare gear should remove from group gear list'''
-        self.bucket.add_document(self.trip_id, self.trip)
         gear = self.app.unshare_gear(self.trip_id, self.gear[0]['id'])
 
         tripobj = self.bucket.get(str(self.trip_id))
-        trip = tripobj.get_data()
-        groupgear = trip['groupgear']
+        links = tripobj.get_links()
+        gear_ids = [link.get_key() for link in links]
 
-        self.assertNotIn(self.gear[0], groupgear)
+        self.assertNotIn(self.gear[0]['id'], gear_ids)
+
+    def test_unshare_gear_is_removed(self):
+        '''Unshare gear should remove from group gear list'''
+        gear = self.app.unshare_gear(self.trip_id, self.gear[0]['id'])
+
+        gearobj = self.bucket.get(str(self.gear[0]['id']))
+        self.assertFalse(gearobj.exists())
 
 if __name__ == '__main__':
     unittest.main()
