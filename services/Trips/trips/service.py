@@ -13,8 +13,8 @@ class TripsDb(BasicCRUDService):
                 return [];
 
             var usermeta = value.values[0].metadata['X-Riak-Meta'];
-            if (usermeta['X-Riak-Meta-object_type'] &&
-                    usermeta['X-Riak-Meta-object_type'] == 'comment')
+            if (!usermeta['X-Riak-Meta-object_type'] ||
+                    usermeta['X-Riak-Meta-object_type'] != 'trip')
                 return[];
 
             if (value.values[0].data.length < 1)
@@ -40,6 +40,23 @@ class TripsDb(BasicCRUDService):
         self.url = url
         self.converter = converter
         BasicCRUDService.__init__(self, riak, bucket_name)
+
+    def create(self, owner, obj):
+        '''
+        Add a new object
+        '''
+        bucket = self.riak.bucket(self.bucket_name)
+
+        key = str(uuid.uuid4())
+        data = obj.copy()
+        data['id'] = key
+        data['owner'] = owner
+
+        riak_object = bucket.new(key, data=data)
+        riak_object.set_usermeta({'object_type': 'trip'})
+        riak_object.store()
+
+        return data
 
     def __send_invite_email(self, trip_id, trip_data, invite):
 # What is the link going to be?

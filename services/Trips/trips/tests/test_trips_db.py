@@ -5,6 +5,8 @@ import json
 
 from tptesting import environment
 
+from trips.tests import utils
+
 from trips.service import TripsDb
 from tptesting.fakeriak import RiakClientFake
 from tptesting.fakepika import SelectConnectionFake
@@ -208,7 +210,13 @@ class TestAcceptIgnore(unittest.TestCase):
         invite['invite_status'] = 'not coming'
         self.assertEquals(invite, result)
 
+class TestOnlyTrips(utils.TestTripFixture):
 
+    def test_object_type_on_trips(self):
+        '''Trips should have an object_type set'''
+        tripobj = self.app.create(self.environ.douglas.email, self.trip)
+        trip = self.bucket.get(str(tripobj['id']))
+        self.assertEquals('trip', trip.get_usermeta().get('object_type'))
 
 if __name__ == '__main__':
     unittest.main()

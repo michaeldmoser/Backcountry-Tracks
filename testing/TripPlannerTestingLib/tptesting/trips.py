@@ -42,6 +42,7 @@ class TripsEnvironment(object):
         trip_id = str(uuid.uuid4())
         trip['id'] = trip_id
         new_trip = self.tripsdb.new(trip_id, data=trip)
+        new_trip.set_usermeta({'object_type': 'trip'})
         new_trip.store()
 
         return trip_id

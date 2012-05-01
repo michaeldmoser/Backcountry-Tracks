@@ -44,6 +44,7 @@ class TestTripFixture(unittest.TestCase):
             'start': '2012-07-19',
             'end': '2012-07-24',
             'destination': 'Glacier National Park',
+            'owner': douglas.email,
             'friends': [
                 {'first': ramona.first_name,
                     'last': ramona.last_name,
