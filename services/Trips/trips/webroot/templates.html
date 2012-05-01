@@ -110,17 +110,8 @@
 		<section id="gear_tab">
 			<section id="trip_personal_gear" class="content_block">
 				<h2>My Gear</h2><div>
-					<div class="content_button"><button id="select_gear">add gear</button></div>
+					<div class="content_button"><button id="select_gear">organize gear</button></div>
 					<ul class="personal_gear"></ul>
-				</div>
-				<div id="add_personal_gear">
-					<h2>Your Inventory</h2>
-					<div class="inventory_controls">
-						<button id="add_gear">Add gear</button>
-					</div>
-					<p>Drag gear from this list into your Personal Gear for the trip.</p>
-					<ul class="inventory_gear"></ul>
-					<button id="close_inventory">Done</button>
 				</div>
 			</section>
 			<section id="trip_group_gear" class="content_block">
@@ -176,5 +167,33 @@
 	<div><img src="/static/img/person_icon.png" alt="{{ first }}'s avatar" /></div><div>
 		<a href="#">{{ first }} {{ last }}</a><br/><span class="status">Status:</span> <span class="invite_status">{{ invite_status }}</span>
 		</div>
+</script>
+
+<script id="trip_gear_organizer_template" type="text/template+html">
+	<section id="trip_gear_organizer">
+		<section id="trip_gear_personal_inventory">
+			<h1>Gear Inventory</h1>
+			<ul></ul>
+		</section>
+		<section id="trip_gear_personal">
+			<h1>Gear for this trip</h1>
+			<ul></ul>
+		</section>
+		<section id="trip_gear_group">
+			<h1>Shared / Group Gear</h1>
+			<ul></ul>
+		</section>
+	</section>
+	<section id="trip_add_new_gear">
+		<h1>Adding New Gear</h1>
+	</section>
+</script>
+
+<script id="gear_organizer_line_item_template" type="text/template+html">
+	<li class="gear_organizer"><div class="trip_gear_name">{{ name }}</div><div class="gear_weight">{{ weight }}</div></li>
+</script>
+
+<script id="gear_organizer_list_header_template" type="text/template+html">
+<li><div class="trip_gear_name">Gear Name</div><div class="gear_weight">Weight</div></li>
 </script>
 

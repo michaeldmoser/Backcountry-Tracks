@@ -1,0 +1,93 @@
+#gear_organizer {
+    margin: 0;
+    padding: 0;
+}
+
+#gear_organizer h1 {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #999999;
+}
+
+#trip_gear_organizer {
+    position: absolute;
+    left: 0;
+    top: 27px;
+    padding: 0;
+    width: 790px;
+    height: 435px;
+}
+#trip_gear_organizer > * {
+    padding: 0;
+    margin: 0;
+    height: 380px;
+    position: absolute;
+    overflow: hidden;
+    width: 372px;
+}
+#trip_gear_personal_inventory {
+    left: 20px;
+    bottom: 0;
+    top: 0px;
+}
+#trip_gear_personal,
+#trip_gear_group {
+    left: 437px;
+    height: 180px;
+}
+#trip_gear_personal {
+    top: 0px;
+}
+#trip_gear_group {
+    bottom: 55px; 
+}
+
+#trip_add_new_gear {
+    position: absolute;
+    top: 463px;
+}
+
+#trip_gear_organizer > section > ul {
+    position: absolute;
+    top: 28px;
+    bottom: 1px;    
+    right: 1px;
+    left: 1px;
+    border: 1px solid #999999;
+    overflow-y: scroll;
+    padding: 5px;
+    margin: 0;
+}
+
+#trip_gear_organizer  li {
+    display: table;
+    width: 100%;
+    margin: 5px 0;
+}
+#trip_gear_organizer > section > ul > li:nth-child(even) {
+    background-color:#f3f3f3;
+}
+#trip_gear_organizer li > div {
+    display: table-cell;
+    padding: 4px;
+}
+#trip_gear_organizer li > div.trip_gear_name {
+    width: 280px;
+}
+#trip_gear_organizer > section > ul > li > div.gear_weight {
+    text-align: right;
+}
+#trip_gear_organizer > section > ul > li:first-child {
+    border-bottom: 1px solid #999999;
+}
+#trip_gear_organizer > section > ul > li:first-child > div {
+    font-size: 1.1em;
+}
+
+#trip_gear_organizer li.ui-draggable-dragging {
+    border: 1px solid #999999;
+    background: #ffffff;
+    width: auto;
+    height: auto;
+}

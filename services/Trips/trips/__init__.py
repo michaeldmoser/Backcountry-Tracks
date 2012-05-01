@@ -37,3 +37,7 @@ class Webroot(object):
     def templates(self):
         return open(resource_filename('trips', 'webroot/templates.html')).read()
 
+    @property
+    def stylesheets(self):
+        return [resource_filename('trips', 'webroot/trips.css')]
+
