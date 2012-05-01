@@ -67,10 +67,10 @@ class TestTripGearRemove(utils.TestTripFixture):
 
         for piece_of_gear in self.gear:
             obj = self.bucket.new(piece_of_gear['id'], piece_of_gear)
-            obj.set_usermeta({'object_type': 'gear/personal'})
+            obj.set_usermeta({'object_type': 'gear_personal'})
             obj.store()
 
-            trip.add_link(obj, tag="gear/personal")
+            trip.add_link(obj, tag="gear_personal")
 
         trip.store()
 
@@ -101,10 +101,10 @@ class TestRetrieveLinkedPersonalGear(utils.TestTripFixture):
 
         for piece_of_gear in self.gear:
             obj = self.bucket.new(piece_of_gear['id'], piece_of_gear)
-            obj.set_usermeta({'object_type': 'gear/personal'})
+            obj.set_usermeta({'object_type': 'gear_personal'})
             obj.store()
 
-            trip.add_link(obj, tag="gear/personal")
+            trip.add_link(obj, tag="gear_personal")
 
         trip.store()
 
@@ -137,10 +137,10 @@ class TestRetrieveLinkedPersonalGearNone(utils.TestTripFixture):
 
         for piece_of_gear in self.gear:
             obj = self.bucket.new(piece_of_gear['id'], piece_of_gear)
-            obj.set_usermeta({'object_type': 'gear/personal'})
+            obj.set_usermeta({'object_type': 'gear_personal'})
             obj.store()
 
-            trip.add_link(obj, tag="gear/personal")
+            trip.add_link(obj, tag="gear_personal")
 
         trip.store()
         personal_gear = self.app.get_personal_gear(self.trip_id, self.environ.douglas.email)
@@ -159,7 +159,7 @@ class TestAddLinkedPersonalGear(utils.TestTripFixture):
 
         trip = self.bucket.get(str(self.trip_id))
         links = trip.get_links()
-        gear_links = filter(lambda x: x.get_tag() == 'gear/personal', links)
+        gear_links = filter(lambda x: x.get_tag() == 'gear_personal', links)
 
         self.assertEquals(gear['id'], gear_links[0].get_key())
 
@@ -174,7 +174,7 @@ class TestAddLinkedPersonalGear(utils.TestTripFixture):
 
         trip = self.bucket.get(str(self.trip_id))
         links = trip.get_links()
-        gear_links = filter(lambda x: x.get_tag() == 'gear/personal', links)
+        gear_links = filter(lambda x: x.get_tag() == 'gear_personal', links)
         actual_gear_ids = map(lambda x: x.get_key(), gear_links)
         actual_gear_ids.sort()
 
@@ -182,6 +182,25 @@ class TestAddLinkedPersonalGear(utils.TestTripFixture):
         expected_gear_ids.sort()
 
         self.assertEquals(expected_gear_ids, actual_gear_ids)
+
+class TestPutGroupGearBack(utils.TestTripFixture):
+    def continueSetUp(self):
+        def share_gear(item):
+            gear_to_share = item.copy()
+            gear_to_share['id'] = str(uuid4())
+            gear_to_share['owner'] = self.environ.douglas.email
+
+            self.app.share_gear(self.trip_id, gear_to_share)
+            return gear_to_share
+        self.gear = map(share_gear, self.environ.data['gear'])
+
+    def test_personal_gear_link_removed(self):
+        '''When sharing gear from the personal gear with the group remove the link to the personal gear'''
+        self.app.add_personal_gear(self.trip_id, self.gear[0]['owner'], self.gear[0])
+
+        group_gear = self.app.get_group_gear(self.trip_id)
+        group_gear_ids = map(lambda x: x['id'], group_gear)
+        self.assertNotIn(self.gear[0]['id'], group_gear_ids)
 
     
 if __name__ == '__main__':

@@ -126,12 +126,20 @@ class TripsDb(BasicCRUDService):
 
     def add_personal_gear(self, trip, person, gear):
         '''Add a personal gear item to trip for person'''
+        gearobj = False
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
 
-        gearid = str(uuid.uuid4())
-        gear['id'] = gearid
-        gearobj = bucket.new(gearid, gear)
+        links = filter(lambda x: x.get_key() == gear['id'], tripobj.get_links())
+        if links:
+            gear_link = links[0]
+            gearobj = gear_link.get()
+            if gear_link.get_tag() != 'gear_personal':
+                tripobj.remove_link(gear_link)
+
+        if not gearobj or not gearobj.exists():
+            gearobj = bucket.new(str(gear['id']), gear)
+
         gearobj.set_usermeta({'object_type': 'gear_personal'})
         gearobj.store()
 
@@ -164,10 +172,20 @@ class TripsDb(BasicCRUDService):
     def share_gear(self, trip, gear):
         '''Share a piece of gear with the trip'''
         logging.debug('Share %s gear for %s trip', trip, gear)
+        gearobj = False
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
 
-        gearobj = bucket.new(str(gear['id']), gear)
+        links = filter(lambda x: x.get_key() == gear['id'], tripobj.get_links())
+        if links:
+            gear_link = links[0]
+            gearobj = gear_link.get()
+            if gear_link.get_tag() != 'gear_group':
+                tripobj.remove_link(gear_link)
+
+        if not gearobj or not gearobj.exists():
+            gearobj = bucket.new(str(gear['id']), gear)
+
         gearobj.set_usermeta({'object_type': 'gear_group'})
         gearobj.store()
 

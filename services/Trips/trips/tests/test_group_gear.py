@@ -27,10 +27,10 @@ class TestTripGearRetrieval(utils.TestTripFixture):
 
         for piece_of_gear in self.gear:
             obj = self.bucket.new(piece_of_gear['id'], piece_of_gear)
-            obj.set_usermeta({'object_type': 'gear/group'})
+            obj.set_usermeta({'object_type': 'gear_group'})
             obj.store()
 
-            trip.add_link(obj, tag="gear/group")
+            trip.add_link(obj, tag="gear_group")
 
         trip.store()
 
@@ -115,6 +115,25 @@ class TestTripGearUnshare(utils.TestTripFixture):
 
         gearobj = self.bucket.get(str(self.gear[0]['id']))
         self.assertFalse(gearobj.exists())
+
+class TestSharePersonalGear(utils.TestTripFixture):
+    def continueSetUp(self):
+        def share_gear(item):
+            gear_to_share = item.copy()
+            gear_to_share['id'] = str(uuid4())
+            gear_to_share['owner'] = self.environ.douglas.email
+
+            self.app.add_personal_gear(self.trip_id, gear_to_share['owner'], gear_to_share)
+            return gear_to_share
+        self.gear = map(share_gear, self.environ.data['gear'])
+
+    def test_personal_gear_link_removed(self):
+        '''When sharing gear from the personal gear with the group remove the link to the personal gear'''
+        self.app.share_gear(self.trip_id, self.gear[0])
+
+        personal_gear = self.app.get_personal_gear(self.trip_id, self.environ.douglas.email)
+        personal_gear_ids = map(lambda x: x['id'], personal_gear)
+        self.assertNotIn(self.gear[0]['id'], personal_gear_ids)
 
 if __name__ == '__main__':
     unittest.main()

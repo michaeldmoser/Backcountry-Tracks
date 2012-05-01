@@ -288,7 +288,15 @@ function TripGearViews() {
 				title: 'Gear Organizer',
 				resizable: false,
 				width: 830,
-				height: 660
+                height: 660,
+                show: {
+                    effect: 'fade',
+                    duration: 400
+                },
+                hide: {
+                    effect: 'fade',
+                    duration: 400
+                }
 			});
 
 			var template = $('#trip_gear_organizer_template').html();
@@ -310,7 +318,7 @@ function TripGearViews() {
 			});
 			this.list_views.personal.bind('gear_dropped', function (collection, item) {
 				var gear = $this.options.collections.group.get(item.get('id'));	
-				if (gear) gear.destroy();
+				if (gear) $this.options.collections.group.remove(item);
 				collection.create(item.toJSON());
 			});
 
@@ -322,7 +330,7 @@ function TripGearViews() {
 			});
 			this.list_views.group.bind('gear_dropped', function (collection, item) {
 				var gear = $this.options.collections.personal.get(item.get('id'));	
-				if (gear) gear.destroy();
+				if (gear) $this.options.collections.personal.remove(item);
 				collection.create(item.toJSON());
 			});
 
