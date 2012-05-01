@@ -152,6 +152,7 @@ function TripGearViews() {
         },
 
         render: function() {
+			this.$('ul').html('');
 			this.collection.each(this.render_item);
         },
 
