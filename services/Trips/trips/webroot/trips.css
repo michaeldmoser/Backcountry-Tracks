@@ -45,7 +45,10 @@
 
 #trip_add_new_gear {
     position: absolute;
-    top: 463px;
+    top: 453px;
+	width: 790px;
+	left: 20px;
+	height: 155px;
 }
 
 #trip_gear_organizer > section > ul {
@@ -80,6 +83,7 @@
 }
 #trip_gear_organizer > section > ul > li:first-child {
     border-bottom: 1px solid #999999;
+	color: #333333;
 }
 #trip_gear_organizer > section > ul > li:first-child > div {
     font-size: 1.1em;
@@ -91,3 +95,65 @@
     width: auto;
     height: auto;
 }
+
+#trip_add_new_gear > h1 {
+	border-bottom: #999999 solid 1px;
+	padding: 3px;
+}
+
+#gearorgctrls {
+	position: absolute;
+	width: 790px;
+	left: 20px;
+	bottom: 37px;
+	height: auto;
+	overflow: visible;
+}
+#gearorgctrls div:first-child {
+	background: url("/static/img/css_button_icons.png") 0 -120px no-repeat;
+	padding-left: 20px;
+	position: absolute;
+	vertical-align: middle;
+	width: 352px;
+	font-size: 0.87em;
+	color: #999999;
+}
+
+#gearorgctrls div:last-child {
+	position: absolute;
+	right: 0px;
+	left: 437px;
+	text-align:right;
+}
+
+#newgearleft {
+	position: absolute;
+	width: 372px;
+}
+#newgearleft > *,
+#newgearright > * {
+	display: block;
+}
+.newgearform > label {
+	margin: 3px 0 0 0;
+}
+
+#newgearright {
+	position: absolute;
+	right: 0px;
+	left: 422px;
+}
+
+.newgearform input {
+	width: 362px;
+	padding: 3px;
+}
+.newgearform label {
+	color: #333333;
+}
+
+#newgearbuttons {
+	position:absolute;
+	bottom: 0px;
+}
+

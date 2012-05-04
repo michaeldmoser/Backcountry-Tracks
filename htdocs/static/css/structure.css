@@ -625,3 +625,7 @@ div.content_button {
 	margin: 0;
 	line-height: 30px;
 }
+
+input[type="text"] {
+	border: 1px solid #999999;
+}

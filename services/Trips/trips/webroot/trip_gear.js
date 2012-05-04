@@ -323,6 +323,11 @@ function TripGearViews() {
 					collection.bind('add', $this.list_views.inventory.render);
 				}
 			);
+
+			this.$('button').button();
+			this.$('#gearorgctrls button').click(function () {
+				$($this.el).dialog('close');
+			});
 		},
 
 		render: function () {
