@@ -239,7 +239,7 @@ function TripGearViews() {
 		
         initialize: function () {
 			var $this = this;
-            _.bindAll(this, 'render', 'show', 'hide');
+            _.bindAll(this, 'render', 'show', 'hide', 'add_new_gear');
 			$('body').append(this.el);
 			$(this.el).dialog({
 				autoOpen: false,
@@ -328,6 +328,8 @@ function TripGearViews() {
 			this.$('#gearorgctrls button').click(function () {
 				$($this.el).dialog('close');
 			});
+
+			this.$('#newgearbuttons button').click(this.add_new_gear);
 		},
 
 		render: function () {
@@ -345,6 +347,21 @@ function TripGearViews() {
         hide: function () {
             $(this.el).hide();
         },
+
+		add_new_gear: function () {
+			var gear_name = this.$('#newgearname').val();
+			var gear_description = this.$('#newgeardescription').val();
+			var gear_weight = this.$('#newgearweight').val();
+
+			var gear = {
+				name: gear_name,
+				description: gear_description,
+				weight: gear_weight
+			};
+
+
+			this.trigger('new_gear', gear);
+		}
 
 	});
 
@@ -367,14 +384,12 @@ function TripGearViews() {
 			this.views.organizer = new trips.GearOrganizer({
 				collections: this.collections
 			});
+			this.views.organizer.bind('new_gear', this.save_new_gear);
 
 			this.views.group = new trips.GroupGearView({
 				el: this.options.group,
 				collection: this.collections.group
 			});
-
-			this.addform = new GearManager.GearAddForm();
-			this.addform.bind('save', this.save_new_gear);
         },
 
         render: function () {
@@ -404,6 +419,7 @@ function TripGearViews() {
 		},
 
 		add_to_personal_gear: function (model) {
+			alert('hi');
 			this.collections.personal.create(model.toJSON());
 		},
 
