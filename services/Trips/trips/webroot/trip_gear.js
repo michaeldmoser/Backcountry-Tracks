@@ -239,7 +239,7 @@ function TripGearViews() {
 		
         initialize: function () {
 			var $this = this;
-            _.bindAll(this, 'render', 'show', 'hide', 'add_new_gear');
+            _.bindAll(this, 'render', 'show', 'hide', 'add_new_gear', 'add_to_personal_gear');
 			$('body').append(this.el);
 			$(this.el).dialog({
 				autoOpen: false,
@@ -359,10 +359,18 @@ function TripGearViews() {
 				weight: gear_weight
 			};
 
+			var model = new GearManager.GearItem(gear);
+			model.bind('change', this.add_to_personal_gear);
+			this.options.collections.inventory.create(model);
+		},
 
-			this.trigger('new_gear', gear);
+		add_to_personal_gear: function (model) {
+			this.$('#newgearname').val('');
+			this.$('#newgeardescription').val('');
+			this.$('#newgearweight').val('');
+
+			this.options.collections.personal.create(model.toJSON());
 		}
-
 	});
 
     trips.TripGearView = Backbone.View.extend({
@@ -399,7 +407,6 @@ function TripGearViews() {
         },
 
         select_gear: function () {
-            //this.views.group.hide();
             this.views.organizer.show();
         },
 
@@ -419,7 +426,6 @@ function TripGearViews() {
 		},
 
 		add_to_personal_gear: function (model) {
-			alert('hi');
 			this.collections.personal.create(model.toJSON());
 		},
 
