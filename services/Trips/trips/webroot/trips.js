@@ -551,6 +551,100 @@ var DateRangeEditor = Backbone.View.extend({
 		}
 	});
 
+	t.TripRouteMap = Backbone.View.extend({
+		className: 'route_overview_section',
+
+		initialize: function () {
+			_.bindAll(this, 'reset_map', 'render', 'create_maps', 'remove_map_overlays',
+					'set_model', 'reset_filedrop');
+
+			this.drophere_template = _.template($('#gear_organizer_filedrop_template').html());
+
+			this.create_maps();
+			this.reset_filedrop();
+		},
+
+		render: function () {
+
+		},
+
+		create_maps: function () {
+			var latlng = new google.maps.LatLng(33.224795, -108.25165);
+			var myOptions = {
+			  center: latlng,
+			  mapTypeId: google.maps.MapTypeId.TERRAIN,
+			  scaleControl: true
+			};
+			this.map = new google.maps.Map(this.$("#route_map")[0], myOptions);
+		},
+
+		reset_map: function () {
+			try {
+				google.maps.event.trigger(this.map, 'resize');
+				this.kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
+				this.kml.setMap(this.map);
+			} catch (err) {
+				// yeah, do nothing, that's the way to handle it
+			};
+		},
+
+		remove_map_overlays: function () {
+			if (!this.kml)
+				return;
+
+			this.kml.setMap(null);
+			this.kml = null;
+		},
+
+		reset_filedrop: function () {
+			if (!this.model) return;
+
+			var $this = this;
+			$('#drophere').remove();
+			$('#route_map_block > div').prepend(this.drophere_template());
+			$('#drophere').filedrop({
+				fallback_id: 'upload_button',
+				url: '/app/trips/' + $this.model.id + '/map/route',
+				paramname: 'userfile',
+				afterAll: function () {
+					$this.reset_map();	
+				},
+				error: function (err, file) {
+					switch(err) {
+						case 'FileTooLarge':
+							alert('The file you are trying to upload is to large. Please limit your route files to 2 MB');
+							break;
+					}
+				},
+				maxfilesize: 2,
+				docOver: function () {
+					if ($('#drophere').hasClass('highlight'))
+						return;
+
+					$('#drophere').addClass('highlight');
+				},
+
+				docLeave: function () {
+					$('#drophere').removeClass('highlight');
+				}
+			});
+
+			$('#drophere button').button();
+			$('#drophere button').click(function (evt) {
+				evt.stopPropagation();	
+				$('#upload_button').click();
+			});
+
+		},
+
+		set_model: function (model) {
+			this.model = model;
+			this.remove_map_overlays();
+			this.reset_filedrop();
+			this.render();
+		}
+	});
+
 	t.TripDetailFriendsView = Backbone.View.extend({
 		className: 'friends_section',
 
@@ -749,21 +843,11 @@ var DateRangeEditor = Backbone.View.extend({
 			}
 			this.views.date_range = new DateRangeEditor(date_range_options);
 
-			this.$('#trip_detail_view').tabs({
-				show: this.reset_view,
-				select: function (evnt, ui) {
-					var position = $(ui.tab.parentNode).position();
-					var width = $(ui.tab.parentNode).width();
-					$('#trip_organizer_header_marker img').css({'left': (position.left + (width / 2) - 19)});
-				}
-			});
 
 			this.views.friends = new t.TripDetailFriendsView({
 				el: this.$('.friends_section')[0],
 				collection: new t.TripFriends()
 			});
-
-			this.create_maps();
 
 			this.views.gear = new t.TripGearView({
 				el: this.$('#gear_tab')[0],
@@ -776,28 +860,24 @@ var DateRangeEditor = Backbone.View.extend({
 				collection: new t.Comments(),
 				el: this.$('#trip_discussion')[0]
 			});
-		},
 
-		create_maps: function () {
-			var latlng = new google.maps.LatLng(33.224795, -108.25165);
-			var myOptions = {
-			  center: latlng,
-			  mapTypeId: google.maps.MapTypeId.TERRAIN,
-			  scaleControl: true
-			};
-			this.map = new google.maps.Map(this.$("#route_map")[0], myOptions);
+			this.views.route = new t.TripRouteMap({
+				el: this.$('#route_map_block')[0]
+			});
 
+			this.$('#trip_detail_view').tabs({
+				show: this.reset_view,
+				select: function (evnt, ui) {
+					var position = $(ui.tab.parentNode).position();
+					var width = $(ui.tab.parentNode).width();
+					$('#trip_organizer_header_marker img').css({'left': (position.left + (width / 2) - 19)});
+				}
+			});
 		},
 
 		reset_view: function (evnt, ui) {
 			if (ui.panel.id == 'route_tab') {
-				try {
-					google.maps.event.trigger(this.map, 'resize');
-					this.kml = new google.maps.KmlLayer('http://' + window.location.hostname + '/app/trips/' + this.model.id + '/map/route');
-					this.kml.setMap(this.map);
-				} catch (err) {
-					// yeah, do nothing, that's the way to handle it
-				};
+					this.views.route.reset_map();
 			} else if (ui.panel.id == 'trip_discussion') {
 				this.views.discussion.collection.fetch();
 			}
@@ -817,44 +897,6 @@ var DateRangeEditor = Backbone.View.extend({
 			_.each(this.views, function (view) {
 				view.render();
 			});
-			
-			if (this.rendered_once)
-				return;
-
-			var reset_map = this.reset_map;
-			$('#drophere').filedrop({
-				fallback_id: 'upload_button',
-				url: '/app/trips/' + this.model.id + '/map/route',
-				paramname: 'userfile',
-				afterAll: function () {
-					reset_map();	
-				},
-				error: function (err, file) {
-					switch(err) {
-						case 'FileTooLarge':
-							alert('The file you are trying to upload is to large. Please limit your route files to 2 MB');
-							break;
-					}
-				},
-				maxfilesize: 2,
-				docOver: function () {
-					if ($('#drophere').hasClass('highlight'))
-						return;
-
-					$('#drophere').addClass('highlight');
-				},
-
-				docLeave: function () {
-					$('#drophere').removeClass('highlight');
-				}
-			});
-
-			$('#drophere button').button();
-			$('#drophere button').click(function (evt) {
-				evt.stopPropagation();	
-				$('#upload_button').click();
-			});
-			this.rendered_once = true;
 		},
 
 		set_model: function (model) {

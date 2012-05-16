@@ -48,9 +48,8 @@
 		</section>
 
 		<section id="route_tab" class="route_overview_section">
-			<div class="content_block">
-				<h2>Add Map</h2><div>
-				<div id="drophere" class="content_button"><button>choose file</button><input type="file" name="upload_button" id="upload_button"/></div>
+			<div id="route_map_block" class="content_block">
+			<h2>Add Map</h2><div>
 					<div id="route_map"></div>
 				</div>
 			</div>
@@ -210,5 +209,9 @@
 
 <script id="gear_organizer_list_header_template" type="text/template+html">
 <li><div class="trip_gear_name">Gear Name</div><div class="gear_weight">Weight</div></li>
+</script>
+
+<script id="gear_organizer_filedrop_template" type="text/template+html">
+<div id="drophere" class="content_button"><button>choose file</button><input type="file" name="upload_button" id="upload_button"/></div>
 </script>
 
