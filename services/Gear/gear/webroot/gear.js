@@ -76,6 +76,10 @@
 				'description': this.$('textarea[name="gear_description"]').val()
 			};
 
+			if (this.model.id) {
+				attributes['id'] = this.model.id;
+			}
+
 			this.trigger('save', attributes);
 			$(this.el).dialog('close');
 		}
