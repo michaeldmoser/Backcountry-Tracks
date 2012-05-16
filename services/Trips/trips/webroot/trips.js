@@ -1,7 +1,7 @@
 var FieldEditor = Backbone.View.extend({
 	
 	initialize: function () {
-		_.bindAll(this, 'render', 'highlight_on_hover', 'edit_on_click', 'save_on_blur');
+		_.bindAll(this, 'render', 'highlight_on_hover', 'edit_on_click', 'save_on_blur', 'submit_field');
 		this.input = this.$(this.options.input_selector);
 		this.label = this.$(this.options.label_selector);
 		this.field = this.options.field;
@@ -10,6 +10,9 @@ var FieldEditor = Backbone.View.extend({
 		this.label.hover(this.highlight_on_hover);
 		this.label.click(this.edit_on_click);
 		this.input.blur(this.save_on_blur);
+
+		if (this.input[0] && this.input[0].nodeName != 'TEXTAREA')
+			this.input.keypress(this.submit_field);
 	},
 
 	highlight_on_hover: function () {
@@ -39,6 +42,13 @@ var FieldEditor = Backbone.View.extend({
 		update[this.field] = this.input.val();
 		this.model.save(update);
 		this.render();
+	},
+
+	submit_field: function (evt) {
+		if (evt.which != 13) return;
+
+		evt.preventDefault();
+		this.save_on_blur();
 	},
 
 	render: function () {
@@ -285,7 +295,6 @@ var DateRangeEditor = Backbone.View.extend({
 			'name': '',
 			'start': '',
 			'end': '',
-			'destination': '',
 			'description': '',
 			'route_description': '',
 			'trip_distance': '',
@@ -790,11 +799,6 @@ var DateRangeEditor = Backbone.View.extend({
 					label_selector: 'div.trip_description',
 					field: 'description',
 					default_value: 'Enter a description...'
-				},
-				'destination': {
-					input_selector: 'input[name="trip_destination"]',
-					label_selector: 'div.route_overview_section h4',
-					field: 'destination'
 				},
 				'trip_distance': {
 					input_selector: 'input[name="trip_distance"]',
