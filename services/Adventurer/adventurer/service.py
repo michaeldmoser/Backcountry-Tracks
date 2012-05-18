@@ -12,7 +12,7 @@ class AdventurerRepository(BasicCRUDService):
             bucket_name = 'adventurers',
             mailer = None,
             db = None,
-            trailhead_url = 'http://www.backcountrytracks.com/app',
+            trailhead_url = 'http://www.backcountrytracks.com/',
             remoting = None
             ):
         self.riak = db
@@ -100,7 +100,7 @@ class AdventurerRepository(BasicCRUDService):
             "To complete your registration, click on the link below or copy and paste it into your browser's location bar." \
             "Once you have completed your registration, you can login to your BackCountryTracks.com account!" % (first_name, last_name)
 
-        href = u'%s/activate/%s/%s' % (self.trailhead_url, email, confirmation_key)
+        href = u'%s#activate/%s/%s' % (self.trailhead_url, email, confirmation_key)
         link = u'<a href="%s">%s</a>' % (href, href)
 
         output.append(u'<html><head><title>Welcome to BackCountryTracks.com!</title></head><body>')

@@ -18,7 +18,7 @@ class EntryPoint(object):
     def __call__(self):
         bucket_name = self.config['database']['bucket']
         riak = RiakClient(self.config['database']['host'])
-        base_url = self.environ.config['trailhead_url']
+        base_url = 'http://' + self.environ.config['hostname']
 
         smtp_config = self.config.get('smtp', {'host': 'localhost', 'port': 25})
         smtp_host = smtp_config.get('host', 'localhost')

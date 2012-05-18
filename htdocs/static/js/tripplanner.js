@@ -111,7 +111,20 @@
   $.fn.tpLogin.handleComplete = function(data) {
     var jsonData = $.parseJSON(data.responseText);
 	if (data.status > 299) {
-		$('#failed_login').dialog({modal: true});	
+		var form_message = $('#failed_login');
+		form_message.html('The email address / password you entered do match any of our records. Please retype your email address and password and try again.');
+		$('#failed_login').dialog({
+			modal: true,
+			title: 'Login failed',
+			buttons: [
+				{
+					text: "OK",
+					click: function () {
+						$('#failed_login').dialog('close');
+					}
+				}
+			]
+		});	
 		$('#login-form #password').val('');
 		return;
 	}
@@ -214,3 +227,61 @@ $(function () {
     });
 });
 
+$(function () {
+	var RegistrationCompleteRoute = Backbone.Router.extend({
+		routes: {
+			'activate/:email/:confirm': 'confirm_registration'
+		},
+
+		initialize: function () {
+			_.bindAll(this, 'confirm_registration');
+		},
+
+		confirm_registration: function (email, key) {
+			var request = $.get('/app/activate/' + email + '/' + key);
+			request.error(function (response) {
+				if (response.status == 403) {
+					var form_message = $('#failed_login');
+					form_message.html('Your account could not be found. Please try registering again.');
+					$('#failed_login').dialog({
+						modal: true,
+						title: 'Account activation failed',
+						buttons: [
+							{
+								text: "OK",
+								click: function () {
+									$('#failed_login').dialog('close');
+								}
+							}
+						]
+					});	
+					$('#failed_login').dialog('open');
+
+				}
+			});
+			request.success(function (response) {
+					var form_message = $('#failed_login');
+					form_message.html('You have successfully registered with BackcountryTracks.com. Please continue to login.');
+					
+					$('#failed_login').dialog({
+						modal: true,
+						title: 'Account Activated',
+						buttons: [
+							{
+								text: "OK",
+								click: function () {
+									$('#failed_login').dialog('close');
+									$('#field-name-email').focus();
+								}
+							}
+						]
+					});	
+					$('#failed_login').dialog('open');
+
+			});
+		}
+	});
+
+	new RegistrationCompleteRoute;
+	Backbone.history.start();
+});
