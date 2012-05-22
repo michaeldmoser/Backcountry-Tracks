@@ -486,6 +486,14 @@ section.activities time {
 	font-weight: bold;
 }
 
+header .dates_controls {
+	display: table;
+	width: 100%;
+}
+header .dates_controls > div {
+	display: table-cell;
+}
+
 .trip_dates {
 	font-size: 1.1em;
 	line-height:20px;
@@ -505,6 +513,10 @@ section.activities time {
 .trip_dates img {
 	line-height:20px;
 	vertical-align:bottom;
+}
+
+header .invitation_controls {
+	text-align: right;
 }
 
 #trip_detail_view nav ul li a[href='#summary_tab'] {
@@ -596,6 +608,7 @@ div.content_button {
 #friends_tab ul.friends_list span.invite_status {
 	text-transform: uppercase;
 }
+
 
 #welcome_screen > header ol {
 	list-style-type: none;

@@ -775,6 +775,11 @@ var DateRangeEditor = Backbone.View.extend({
 	});
 
 	t.TripDetail = BackcountryTracks.MainScreen.extend({
+		events: {
+			'click header .invitation_controls button[title="Accept"]': 'accept_invitation',
+			'click header .invitation_controls button[title="Ignore"]': 'ignore_invitation',
+		},
+
 
 		initialize: function () {
 			this.rendered_once = false;
@@ -877,6 +882,20 @@ var DateRangeEditor = Backbone.View.extend({
 					$('#trip_organizer_header_marker img').css({'left': (position.left + (width / 2) - 19)});
 				}
 			});
+
+
+		},
+
+		accept_invitation: function (ev) {
+			ev.stopPropagation();
+			this.model.accept_invite(BackcountryTracks.current_user.get('email'));
+			this.$('header .invitation_controls button').hide();
+		},
+
+		ignore_invitation: function (ev) {
+			ev.stopPropagation();
+			this.model.ignore_invite(BackcountryTracks.current_user.get('email'));
+			this.$('header .invitation_controls button').hide();
 		},
 
 		reset_view: function (evnt, ui) {
@@ -897,6 +916,12 @@ var DateRangeEditor = Backbone.View.extend({
 
 		render: function () {
 			this.$('#trip_detail_view').tabs('select', 0);
+			this.$('header .invitation_controls button').button();
+
+			this.$('header .invitation_controls button').hide();
+			if (!this.model.get('organizer') && !this.model.get('responded')) {
+				this.$('header .invitation_controls button').show();
+			} 
 
 			_.each(this.views, function (view) {
 				view.render();
