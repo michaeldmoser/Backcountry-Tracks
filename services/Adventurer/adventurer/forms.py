@@ -1,4 +1,4 @@
-from wtforms import Form, validators, TextField
+from wtforms import Form, validators, TextField, BooleanField
 
 class LoginForm(Form):
     email = TextField(None, [validators.Required()])
@@ -17,3 +17,4 @@ class RegisterForm(Form):
         validators.EqualTo('password', message='Passwords do not match')
         ])
     birthdate = TextField(None, [validators.Regexp('^\d{4}-\d{1,2}-\d{1,2}', message='Birthdate is not complete.')])
+    terms_agree = BooleanField(None, [validators.Required(message="You must agree to the Terms Of Use")])
