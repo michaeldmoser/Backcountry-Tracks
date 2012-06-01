@@ -63,6 +63,11 @@ body > header .page_center a {
 	display: table;
 	border-left: 1px solid #ccc;
 	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+body > footer {
+	margin-bottom: 50px;
 }
 
 #main_body, #left_column, #sidebar {
