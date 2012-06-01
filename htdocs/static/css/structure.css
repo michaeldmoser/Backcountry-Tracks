@@ -17,7 +17,6 @@ body > header {
 	display: block;
 	margin: 0;
 	padding: 0;
-	border-bottom: 1px solid black;
 	height: 41px;
 	background-color: #ff6600;
 }
