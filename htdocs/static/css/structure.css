@@ -323,6 +323,10 @@ section.detail_view nav ul li.ui-state-default {
 	font-size: 1.2em;
 	font-weight: normal;
 }
+section.detail_view nav ul li.ui-state-default a:hover {
+	outline: none;
+	color: #333;
+}
 section.detail_view nav ul li.ui-state-default a {
 	color: #999999;
 	padding: 0px 3px 0px 24px;
@@ -531,18 +535,34 @@ header .invitation_controls {
 #trip_detail_view nav ul li a[href='#summary_tab'] {
 	background-position: 0 0;
 }
+#trip_detail_view nav ul li a[href='#summary_tab']:hover {
+	background-position: 0 -140;
+}
 #trip_detail_view nav ul li a[href='#gear_tab'] {
 	background-position: 0 -20px;
 }
+#trip_detail_view nav ul li a[href='#gear_tab']:hover {
+	background-position: 0 -160px;
+}
 #trip_detail_view nav ul li a[href='#trip_discussion'] {
 	background-position: 0 -40px;
+}
+#trip_detail_view nav ul li a[href='#trip_discussion']:hover {
+	background-position: 0 -180px;
 }
 #trip_detail_view nav ul li a[href='#friends_tab'] {
 	background-position: 0 -60px;
 	padding-left: 26px;
 }
+#trip_detail_view nav ul li a[href='#friends_tab']:hover {
+	background-position: 0 -200px;
+	padding-left: 26px;
+}
 #trip_detail_view nav ul li a[href='#route_tab'] {
 	background-position: 0 -80px;
+}
+#trip_detail_view nav ul li a[href='#route_tab']:hover {
+	background-position: 0 -220px;
 }
 #trip_organizer_header_marker {
 	position: relative;
