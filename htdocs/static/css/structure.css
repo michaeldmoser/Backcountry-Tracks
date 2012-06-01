@@ -153,16 +153,17 @@ header > h1 {
 	padding: 0;
 }
 #left_column nav ul li {
-	height: 20px;
+	height: 26px;
 	padding: 0px;
 	margin: 0px;	
 }
 #left_column nav ul li a,
 #left_column nav ul li a:active,
 #left_column nav ul li a:visited {
+	padding: 3px;
 	padding-left: 31px;
 	height: 20px;
-	width: 132px;
+	width: 149px;
 	background-repeat: no-repeat;
 	background-position: 5px 0px;
 	display: block;
@@ -172,6 +173,7 @@ header > h1 {
 #left_column nav ul li a:hover {
 	background-color: #fff2d7;
 	color: #333333;
+	outline:none;
 }
 
 #main_navigation {
