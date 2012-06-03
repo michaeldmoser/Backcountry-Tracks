@@ -75,7 +75,6 @@ class TripsDb(BasicCRUDService):
         More about the trip:
             Trip: %(name)s
             Dates: %(start)s - %(end)s
-            Going to: %(destination)s
         """ % template_vars
 
         email_service = self.remoting.service('Email')

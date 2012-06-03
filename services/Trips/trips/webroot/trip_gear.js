@@ -165,12 +165,11 @@ function TripGearViews() {
                 return friend.email == item.get('owner');
             }
             var owner = _.find(friends, find_owner);
+			if (BackcountryTracks.current_user.get('email') == owner.email)
+				gear_item['owner_name'] = 'me';
+			else
+				gear_item['owner_name'] = owner.first + " " + owner.last;
 
-            if (!owner) {
-                gear_item['owner_name'] = 'me';
-            } else {
-                gear_item['owner_name'] = owner.first_name + " " + owner.last_name;
-            }
 			var html = $(this.item_template(gear_item));
 			this.$('ul').append(html);
 		},
@@ -245,23 +244,23 @@ function TripGearViews() {
                     return friend.email == item.get('owner');
                 }
                 var owner = _.find(friends, find_owner);
-
-                if (!owner) {
-                    gear_item['owner_name'] = 'me';
-                } else {
-                    gear_item['owner_name'] = owner.first_name + " " + owner.last_name;
-                }
+				if (BackcountryTracks.current_user.get('email') == owner.email)
+					gear_item['owner_name'] = 'me';
+				else
+					gear_item['owner_name'] = owner.first + " " + owner.last;
 
                 var template = this.line_item_owner_template;
             }
 
 			var html = $(template(gear_item));
-            var draggable = html.draggable({
-				zIndex: 9010,
-				helper: 'clone',
-				appendTo: '#trip_gear_organizer'
-            });
-			draggable.data('model', item);
+			if (!this.options.show_owner || ((this.options.show_owner && gear_item['owner_name'] == 'me'))) {
+				var draggable = html.draggable({
+					zIndex: 9010,
+					helper: 'clone',
+					appendTo: '#trip_gear_organizer'
+				});
+				draggable.data('model', item);
+			}
 			this.$('ul').append(html);
 			html.addClass(this.options.filterClass);
 		},

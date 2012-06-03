@@ -469,7 +469,16 @@ var DateRangeEditor = Backbone.View.extend({
 				'name': this.$('#trip_name').val(),
 				'start': this.$('#trip_date_start').val(),
 				'end': this.$('#trip_date_end').val(),
-				'destination': this.$('#trip_destination').val()
+				'destination': this.$('#trip_destination').val(),
+				'friends': [
+					{
+						'invite_status': 'owner',
+						'first': BackcountryTracks.current_user.get('first_name'),
+						'last': BackcountryTracks.current_user.get('last_name'),
+						'id': BackcountryTracks.current_user.id,
+						'email': BackcountryTracks.current_user.get('email')
+					}
+				]
 			};
 
 			this.model.save(attributes, {
