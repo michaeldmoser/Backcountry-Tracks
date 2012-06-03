@@ -157,7 +157,21 @@ function TripGearViews() {
         },
 
 		render_item: function (item) {
-			var html = $(this.item_template(item.toJSON()));
+            var gear_item = item.toJSON();
+            var model = this.model();
+            var friends = model.get('friends');
+
+            var find_owner = function (friend) {
+                return friend.email == item.get('owner');
+            }
+            var owner = _.find(friends, find_owner);
+
+            if (!owner) {
+                gear_item['owner_name'] = 'me';
+            } else {
+                gear_item['owner_name'] = owner.first_name + " " + owner.last_name;
+            }
+			var html = $(this.item_template(gear_item));
 			this.$('ul').append(html);
 		},
 
@@ -176,6 +190,9 @@ function TripGearViews() {
 
 			var line_item_template = $('#gear_organizer_line_item_template').html();
 			this.line_item_template = _.template(line_item_template);
+
+			var line_item_owner_template = $('#gear_organizer_line_item_owner_template').html();
+			this.line_item_owner_template = _.template(line_item_owner_template);
 
 			this.list_header_template = $('#gear_organizer_list_header_template').html();
 
@@ -217,7 +234,28 @@ function TripGearViews() {
 				!this.options.display_filter(item))
 				return;
 
-			var html = $(this.line_item_template(item.toJSON()));
+            var template = this.line_item_template;
+                
+            var gear_item = item.toJSON();
+            if (this.options.show_owner) {
+                var model = this.model();
+                var friends = model.get('friends');
+
+                var find_owner = function (friend) {
+                    return friend.email == item.get('owner');
+                }
+                var owner = _.find(friends, find_owner);
+
+                if (!owner) {
+                    gear_item['owner_name'] = 'me';
+                } else {
+                    gear_item['owner_name'] = owner.first_name + " " + owner.last_name;
+                }
+
+                var template = this.line_item_owner_template;
+            }
+
+			var html = $(template(gear_item));
             var draggable = html.draggable({
 				zIndex: 9010,
 				helper: 'clone',
@@ -272,6 +310,7 @@ function TripGearViews() {
 			this.list_views = new Object;
 			this.list_views.personal = new trips.GearListView({
 				el: this.$('#trip_gear_personal'),
+                model: this.model,
 				collection: this.options.collections.personal,
 				accept: ['group', 'inventory'],
 				filterClass: 'personal',
@@ -284,6 +323,8 @@ function TripGearViews() {
 
 			this.list_views.group = new trips.GearListView({
 				el: this.$('#trip_gear_group'),
+                model: this.model,
+                show_owner: true,
 				collection: this.options.collections.group,
 				accept: ['inventory', 'personal'],
 				filterClass: 'group'
@@ -296,6 +337,7 @@ function TripGearViews() {
 
 			this.list_views.inventory = new trips.GearListView({
 				el: this.$('#trip_gear_personal_inventory'),
+                model: this.model,
 				collection: this.options.collections.inventory,
 				accept: ['group', 'personal'],
 				filterClass: 'inventory',
@@ -375,12 +417,17 @@ function TripGearViews() {
 
     trips.TripGearView = Backbone.View.extend({
         initialize: function() {
+            var $this = this;
             _.bindAll(this, 'render', 'select_gear', 'close_inventory', 'set_model', 'add_gear', 'save_new_gear', 'add_to_personal_gear');
 
 			this.collections = new Object;
 			this.collections.personal = new trips.PersonalGear;
 			this.collections.inventory = new GearManager.GearList;
 			this.collections.group = new trips.GroupGear;
+
+            var get_model = function () {
+                return $this.model;
+            }
 
             this.views = new Object;
 			this.views.personal = new trips.PersonalGearView({
@@ -390,13 +437,16 @@ function TripGearViews() {
             this.views.personal.bind('select_gear', this.select_gear);
 
 			this.views.organizer = new trips.GearOrganizer({
-				collections: this.collections
+                collections: this.collections,
+                model: get_model
 			});
 			this.views.organizer.bind('new_gear', this.save_new_gear);
 
+
 			this.views.group = new trips.GroupGearView({
 				el: this.options.group,
-				collection: this.collections.group
+                collection: this.collections.group,
+                model: get_model
 			});
         },
 

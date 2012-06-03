@@ -153,7 +153,7 @@
 </script>
 
 <script id="trip_gear_group_item_template" type="text/template+html">
-	<li class="trip_gear group_gear"><div class="gear_name">{{ name }}</div><div class="gear_weight">{{ weight }}</div></li>
+	<li class="trip_gear group_gear"><div class="gear_name">{{ name }} ({{ owner_name }})</div><div class="gear_weight">{{ weight }}</div></li>
 </script>
 
 <script id="trip_discussion_comment_template" type="text/template+html">
@@ -209,7 +209,10 @@
 </script>
 
 <script id="gear_organizer_line_item_template" type="text/template+html">
-	<li class="gear_organizer"><div class="trip_gear_name">{{ name }}</div><div class="gear_weight">{{ weight }}</div></li>
+    <li class="gear_organizer"><div class="trip_gear_name">{{ name }}</div><div class="gear_weight">{{ weight }}</div></li>
+</script>
+<script id="gear_organizer_line_item_owner_template" type="text/template+html">
+    <li class="gear_organizer"><div class="trip_gear_name">{{ name }} ({{ owner_name }})</div><div class="gear_weight">{{ weight }}</div></li>
 </script>
 
 <script id="gear_organizer_list_header_template" type="text/template+html">
