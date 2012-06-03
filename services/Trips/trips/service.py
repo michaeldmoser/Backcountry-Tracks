@@ -146,21 +146,26 @@ class TripsDb(BasicCRUDService):
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
 
-        links = filter(lambda x: x.get_key() == gear['id'], tripobj.get_links())
-        if links:
-            gear_link = links[0]
-            gearobj = gear_link.get()
-            if gear_link.get_tag() != 'gear_personal':
-                tripobj.remove_link(gear_link)
+        def remove_from_personal_gear(link):
+            obj = link.get();
+            data = obj.get_data()
+            if data['gear_id'] == gear['gear_id'] and link.get_tag() != 'gear_personal':
+                obj.delete()
+                tripobj.remove_link(link)
+        map(remove_from_personal_gear, tripobj.get_links())
 
         if not gearobj or not gearobj.exists():
-            gearobj = bucket.new(str(gear['id']), gear)
+            gear_id = str(uuid.uuid4())
+            gear['id'] = gear_id
+            gearobj = bucket.new(gear_id, gear)
 
         gearobj.set_usermeta({'object_type': 'gear_personal'})
         gearobj.store()
 
         tripobj.add_link(gearobj, tag='gear_personal')
         tripobj.store()
+
+        return gear
 
     def remove_personal_gear(self, trip_id, person, gear_id):
         '''
@@ -192,21 +197,26 @@ class TripsDb(BasicCRUDService):
         bucket = self.riak.bucket(self.bucket_name)
         tripobj = bucket.get(str(trip))
 
-        links = filter(lambda x: x.get_key() == gear['id'], tripobj.get_links())
-        if links:
-            gear_link = links[0]
-            gearobj = gear_link.get()
-            if gear_link.get_tag() != 'gear_group':
-                tripobj.remove_link(gear_link)
+        def remove_from_personal_gear(link):
+            obj = link.get();
+            data = obj.get_data()
+            if data['gear_id'] == gear['gear_id'] and link.get_tag() != 'gear_group':
+                obj.delete()
+                tripobj.remove_link(link)
+        map(remove_from_personal_gear, tripobj.get_links())
 
         if not gearobj or not gearobj.exists():
-            gearobj = bucket.new(str(gear['id']), gear)
+            gear_id = str(uuid.uuid4())
+            gear['id'] = gear_id
+            gearobj = bucket.new(gear_id, gear)
 
         gearobj.set_usermeta({'object_type': 'gear_group'})
         gearobj.store()
 
         tripobj.add_link(gearobj, tag='gear_group')
         tripobj.store()
+
+        return gear
 
     
     def unshare_gear(self, trip, gear_id):

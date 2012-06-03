@@ -229,9 +229,11 @@ function TripGearViews() {
 		},
 
 		render_item: function (item) {
-			if (this.options.display_filter &&
-				!this.options.display_filter(item))
-				return;
+			if (this.options.display_filter) {
+				var display_filter = _.bind(this.options.display_filter, this);
+				if (!display_filter(item))
+					return;
+			}
 
             var template = this.line_item_template;
                 
@@ -267,7 +269,7 @@ function TripGearViews() {
 
 		gear_dropped: function (ev, ui) {
 			var model = ui.draggable.data('model');
-			this.trigger('gear_dropped', this.collection, model);
+			this.trigger('gear_dropped', this.collection, model, this.options.filterClass);
 		}
  	});
 
@@ -314,10 +316,19 @@ function TripGearViews() {
 				accept: ['group', 'inventory'],
 				filterClass: 'personal',
 			});
-			this.list_views.personal.bind('gear_dropped', function (collection, item) {
-				var gear = $this.options.collections.group.get(item.get('id'));	
-				if (gear) $this.options.collections.group.remove(item);
-				collection.create(item.toJSON());
+			this.list_views.personal.bind('gear_dropped', function (collection, item, filter_class) {
+				var personal_gear = item.clone();
+				var not_inventory = filter_class != 'inventory';
+				var gear_id = (not_inventory && item.get('gear_id')) ? item.get('gear_id') : item.get('id');
+				var find_gear = function (gear_item) {
+					return gear_item.get('gear_id') == gear_id;
+				}
+				var gear = $this.options.collections.group.find(find_gear);
+				if (gear) $this.options.collections.group.remove(gear);
+
+				personal_gear.set({'gear_id': gear_id});
+				personal_gear.set({'id': null});
+				collection.create(personal_gear.toJSON());
 			});
 
 			this.list_views.group = new trips.GearListView({
@@ -328,10 +339,19 @@ function TripGearViews() {
 				accept: ['inventory', 'personal'],
 				filterClass: 'group'
 			});
-			this.list_views.group.bind('gear_dropped', function (collection, item) {
-				var gear = $this.options.collections.personal.get(item.get('id'));	
-				if (gear) $this.options.collections.personal.remove(item);
-				collection.create(item.toJSON());
+			this.list_views.group.bind('gear_dropped', function (collection, item, filter_class) {
+				var personal_gear = item.clone();
+				var not_inventory = filter_class != 'inventory';
+				var gear_id = (not_inventory && item.get('gear_id')) ? item.get('gear_id') : item.get('id');
+				var find_gear = function (gear_item) {
+					return gear_item.get('gear_id') == gear_id;
+				}
+				var gear = $this.options.collections.personal.find(find_gear);
+				if (gear) $this.options.collections.personal.remove(gear);
+
+				personal_gear.set({'gear_id': gear_id});
+				personal_gear.set({'id': null});
+				collection.create(personal_gear.toJSON());
 			});
 
 			this.list_views.inventory = new trips.GearListView({
@@ -341,8 +361,12 @@ function TripGearViews() {
 				accept: ['group', 'personal'],
 				filterClass: 'inventory',
 				display_filter: function (item) {
-					if ($this.options.collections.personal.get(item.get('id')) ||
-							$this.options.collections.group.get(item.get('id')))
+					var gear_id = item.get('id');
+					var find_gear = function (gear_item) {
+						return gear_item.get('gear_id') == gear_id;
+					}
+					if ($this.options.collections.personal.any(find_gear) ||
+							$this.options.collections.group.any(find_gear))
 						return false;
 
 					return true;

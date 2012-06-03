@@ -29,6 +29,15 @@ class GroupGearHandler(BaseHandler):
         self.write(self.request.body)
 
     @web.authenticated
+    @web.asynchronous
+    def post(self, trip_id):
+        self.set_header('Content-Type', 'application/json')
+        gear = json.loads(self.request.body)
+        command = self.service.share_gear(trip_id, gear)
+        command.persistant = True
+        self.remoting.call(command, self.handle_result)
+
+    @web.authenticated
     def delete(self, trip_id, gear_id):
         command = self.service.unshare_gear(trip_id, gear_id)
         command.persistant = True

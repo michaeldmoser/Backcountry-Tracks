@@ -12,10 +12,30 @@ class TripsEnvironment(object):
         stored_trips = []
         for trip in trips:
             stored_trip = trip.copy()
-            trip_id = self.add(owner = user.email, **trip)
+            stored_trip.update({
+                'friends': [
+                    {
+                        'id': user.email,
+                        'email': user.email,
+                        'first': user.first_name,
+                        'last': user.last_name,
+                        'invite_status': 'owner'
+                        }
+                    ]
+                });
+            trip_id = self.add(owner = user.email, **stored_trip)
             stored_trip.update({
                 'id': trip_id,
-                'owner': user.email
+                'owner': user.email,
+                'friends': [
+                    {
+                        'id': user.email,
+                        'email': user.email,
+                        'first': user.first_name,
+                        'last': user.last_name,
+                        'invite_status': 'owner'
+                        }
+                    ]
                 });
             stored_trips.append(stored_trip)
 
