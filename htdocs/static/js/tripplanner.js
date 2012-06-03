@@ -36,6 +36,27 @@
         values[field.name] = field.value;
     });
 
+	var now = new Date();
+	var birthdate = values['birthdate'].split('-');
+	var born = new Date(birthdate[0], birthdate[1], birthdate[2]);
+	var years = Math.floor((now.getTime() - born.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
+	if (years < 13) {
+		var form_message = $('#failed_login');
+		form_message.html('You must be 13 years or older to register.');
+		$('#failed_login').dialog({
+			modal: true,
+			title: 'Registration not valid',
+			buttons: [
+				{
+					text: "OK",
+					click: function () {
+						$('#failed_login').dialog('close');
+					}
+				}
+			]
+		});	
+		return;
+	}
     var data = JSON.stringify(values);
 
     $.fn.tpRegistration.ajax($(this).attr('action'), {

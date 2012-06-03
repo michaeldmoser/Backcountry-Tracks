@@ -9,7 +9,6 @@
 <link rel='next' title='About Us' href='http://www.backcountrytracks.com/about-us/' />
 <link rel='canonical' href='http://www.backcountrytracks.com/' />
         <style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
-                <script type="text/javascript" src="http://www.backcountrytracks.com/wp-content/themes/backcountrytracks/js/jquery.main.js"></script>
                 <!--[if lt IE 8]>
                         <link rel="stylesheet" type="text/css" href="http://www.backcountrytracks.com/wp-content/themes/backcountrytracks/css/ie.css" />
                 <![endif]-->
@@ -69,12 +68,7 @@
 </form>
 <div id="thankYouContainer" style="display: none;">Thank you for registering!<br />
 An email with a confirmation link has been sent to your inbox. Please check your email to complete your registration.</div>
-<p><script type="text/javascript" src="/static/js/lib/underscore.js"></script><script type="text/javascript" src="/static/js/lib/backbone.js"></script><script type="text/javascript" src="/static/js/lib/jquery-1.6.1.js"></script><script type="text/javascript" src="/static/js/lib/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script><script type="text/javascript" src="/static/js/lib/jquery.placeholder-enhanced.js"></script><script type="text/javascript" src="/static/js/lib/bday-picker-1.2.min.js"></script><script type="text/javascript" src="/static/js/tripplanner.js"></script><br />
-<script type="text/javascript">// <![CDATA[
-$("#birthdate").birthdaypicker({dateFormat: 'bigEndian'});                                              $('#register-form').tpRegistration({thankYouElement: $('#thankYouContainer')});                                                 $(document).placeholderEnhanced();
-// ]]&gt;</script><script type="text/javascript">// <![CDATA[
-                                                $('.login-form').tpLogin();
-// ]]&gt;</script>
+<p>
 <div id="forgot-password" style="display: none;">
 <form id="forgot-password-form" action="#" method="POST">
 <div>Enter you email address<br />
@@ -103,6 +97,23 @@ $("#birthdate").birthdaypicker({dateFormat: 'bigEndian'});                      
 <div id="footer">
                                     </div>              
                 </div>
+				<script type="text/javascript" src="/static/js/lib/jquery-1.7.1.js"></script>
+				<script type="text/javascript" src="/static/js/lib/underscore.js"></script>
+				<script type="text/javascript" src="/static/js/lib/backbone.js"></script>
+				<script type="text/javascript" src="/static/js/lib/jquery-ui/jquery-ui-1.8.16.custom.min.js"></script>
+				<script type="text/javascript" src="/static/js/lib/jquery.placeholder-enhanced.js"></script>
+				<script type="text/javascript" src="/static/js/lib/bday-picker-1.2.min.js"></script>
+				<script type="text/javascript" src="/static/js/tripplanner.js"></script><br />
+				<script type="text/javascript">// <![CDATA[
+					$("#birthdate").birthdaypicker({dateFormat: 'bigEndian'});
+					$('#register-form').tpRegistration({thankYouElement: $('#thankYouContainer')});
+					$(document).placeholderEnhanced();
+					// ]]>
+					</script>
+					<script type="text/javascript">// <![CDATA[
+                                                $('.login-form').tpLogin();
+												// ]]>
+					</script>
                 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
