@@ -387,18 +387,7 @@ var DateRangeEditor = Backbone.View.extend({
 		},
 
 		render: function () {
-			var form_html = '';
-			form_html += '<div class="form_row">';
-			form_html += '<label for="trip_name">Trip</label> ';
-			form_html += '<input type="text" id="trip_name" name="trip_name" value="{{ name }}"/>';
-			form_html += '</div>';
-			form_html += '<div class="form_row">';
-			form_html += '<label for="trip_date_start">Dates</label> ';
-			form_html += '<input type="text" id="trip_date_start" name="trip_start_date" class="date_start" value="{{ start }}"/>';
-			form_html += ' - <input type="text" id="trip_date_end" name="trip_end_date" class="date_end"  value="{{ end }}" />';
-			form_html += '</div>';
-
-			var template = _.template(form_html);
+			var template = _.template($('#trip_add_form_template').html());
 			$(this.el).html(template(this.model.toJSON()));
 
 			$("#trip_date_end").datepicker({

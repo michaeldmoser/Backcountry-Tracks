@@ -692,3 +692,13 @@ div.form_row textarea {
 	height: 100px;
 }
 
+div.form_date_range_row {
+	margin: 7px 0;
+}
+div.form_date_range_row label {
+	display: block;
+}
+div.form_date_range_row img {
+	margin-left: 5px;
+}
+

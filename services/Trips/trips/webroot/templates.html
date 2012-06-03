@@ -220,3 +220,15 @@
 <div id="drophere" class="content_button"><button>choose file</button><input type="file" name="upload_button" id="upload_button"/></div>
 </script>
 
+<script id="trip_add_form_template" type="text/template+html">
+<div class="form_row">
+<label for="trip_name">Trip</label> 
+<input type="text" id="trip_name" name="trip_name" value="{{ name }}"/>
+</div>
+<div class="form_date_range_row">
+<label for="trip_date_start">Dates</label> 
+<input type="text" id="trip_date_start" name="trip_start_date" class="date_start" value="{{ start }}"/>
+ - <input type="text" id="trip_date_end" name="trip_end_date" class="date_end"  value="{{ end }}" />
+</div>
+</script>
+
