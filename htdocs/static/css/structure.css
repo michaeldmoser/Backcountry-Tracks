@@ -671,3 +671,24 @@ div.content_button {
 input[type="text"] {
 	border: 1px solid #999999;
 }
+
+div.form_row {
+	margin: 7px 0;
+}
+
+div.form_row label,
+div.form_row input,
+div.form_row textarea {
+	display: block;
+}
+
+div.form_row input,
+div.form_row textarea {
+	width: 470px;
+	border: 1px solid #999;
+}
+
+div.form_row textarea {
+	height: 100px;
+}
+

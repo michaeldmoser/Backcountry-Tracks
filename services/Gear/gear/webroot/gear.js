@@ -4,6 +4,7 @@
 	g.GearItem = Backbone.Model.extend({
 		defaults: {
 			'name': '',
+			'make': '',
 			'weight': '',
 			'description': ''
 		},
@@ -72,6 +73,7 @@
 			var this_obj = this;
 			var attributes = {
 				'name': this.$('input[name="gear_name"]').val(),
+				'make': this.$('input[name="gear_make"]').val(),
 				'weight': this.$('input[name="gear_weight"]').val(),
 				'description': this.$('textarea[name="gear_description"]').val()
 			};

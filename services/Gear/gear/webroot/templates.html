@@ -16,14 +16,18 @@
 </script>
 <script id="gear_add_form_template" type="text/template+html">
 	<div class="form_row">
-		<label for="gear_form_name">Name</label>
-		<input name="gear_name" id="gear_form_name" value="{{ name }}" />
+		<label for="gear_form_name">Gear</label>
+		<input type="text" name="gear_name" id="gear_form_name" value="{{ name }}" />
+	</div>
+	<div class="form_row">
+		<label for="gear_form_make">Make / Model</label>
+		<input type="text" name="gear_make" id="gear_form_make" value="{{ make }}" />
 	</div>
 	<div class="form_row">
 		<label for="gear_form_weight">Weight</label>
-		<input name="gear_weight" id="gear_form_weight" value="{{ weight }}" />
+		<input type="text" name="gear_weight" id="gear_form_weight" value="{{ weight }}" />
 	</div>
-	<div class="add_gear_description">
+	<div class="add_gear_description form_row">
 		<label for="gear_form_description">Description</label>
 		<textarea name="gear_description" id="gear_form_description">{{ description }}</textarea>
 	</div>
