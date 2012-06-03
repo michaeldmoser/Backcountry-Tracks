@@ -149,7 +149,7 @@ class TripsDb(BasicCRUDService):
         def remove_from_personal_gear(link):
             obj = link.get();
             data = obj.get_data()
-            if data['gear_id'] == gear['gear_id'] and link.get_tag() != 'gear_personal':
+            if link.get_tag() == 'gear_group' and data['gear_id'] == gear['gear_id']:
                 obj.delete()
                 tripobj.remove_link(link)
         map(remove_from_personal_gear, tripobj.get_links())
@@ -200,7 +200,7 @@ class TripsDb(BasicCRUDService):
         def remove_from_personal_gear(link):
             obj = link.get();
             data = obj.get_data()
-            if data['gear_id'] == gear['gear_id'] and link.get_tag() != 'gear_group':
+            if link.get_tag() == 'gear_personal' and data['gear_id'] == gear['gear_id']:
                 obj.delete()
                 tripobj.remove_link(link)
         map(remove_from_personal_gear, tripobj.get_links())
