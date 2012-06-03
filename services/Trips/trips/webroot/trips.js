@@ -65,7 +65,10 @@ var FieldEditor = Backbone.View.extend({
 			else
 				field_value = field_value.replace(url, '<a href="http://' + url + '">' + url + '</a>');
 		}
-		this.label.html(field_value.replace('\n', '\n<br />'));
+
+		this.label.html(field_value.replace(/\r\n/g, '\n<br />')
+				.replace(/\n/g, '\n<br />')
+				.replace(/\r/g, '\n<br />'));
 	}
 });
 
