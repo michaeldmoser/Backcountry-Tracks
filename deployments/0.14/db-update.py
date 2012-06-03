@@ -7,15 +7,18 @@ if __name__ == '__main__':
     client = riak.RiakClient()
 
     trips_bucket = client.bucket('trips')
+    adventurer_bucket = client.bucket('adventurers')
 
     keys = trips_bucket.get_keys()
     for trip_key in keys:
         obj = trips_bucket.get(str(trip_key))
         usermeta = obj.get_usermeta()
-        if 'object_type' not in usermeta:
-            mark_as_trip(obj)
+        print obj.get_data()
 
-        if usermeta['object_type'] != 'trip':
+        try:
+            if usermeta['object_type'] != 'trip':
+                continue
+        except KeyError:
             continue
 
         links = obj.get_links()
@@ -33,10 +36,25 @@ if __name__ == '__main__':
             print "NEW GEAR ---------------------------------------"
             pprint(data)
 
-            newgear = trips_bucket.new(data['id'], data)
-            newgear.store()
             tag = gear_link.get_tag()
+
+            newgear = trips_bucket.new(data['id'], data)
+            newgear.set_usermeta({'object_type': tag})
+            newgear.store()
+
             obj.add_link(newgear, tag=tag)
+
+        tripdata = obj.get_data()
+        owner = adventurer_bucket.get(str(tripdata['owner']))
+        ownerdata = owner.get_data()
+        tripdata['friends'].append({
+            'invite_status': 'owner',
+            'first': ownerdata['first_name'],
+            'last': ownerdata['last_name'],
+            'email': ownerdata['email'],
+            'id': ownerdata['email'],
+            })
+
 
         obj.store()
 
