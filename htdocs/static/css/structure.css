@@ -601,6 +601,11 @@ header .invitation_controls {
 	position: absolute;
 	top:-99999;
 }
+#drophere > span {
+	display: block;
+	color: #999;
+	font-size:.9em;
+}
 
 div.content_button:first-child {
 	margin: 0;
