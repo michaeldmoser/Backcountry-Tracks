@@ -79,6 +79,9 @@ body > footer {
 	padding: 12px 0 12px 0;
 	margin: 0;
 }
+#sidebar {
+	width: 186px;
+}
 
 #main_body {
 	width: 548px;
