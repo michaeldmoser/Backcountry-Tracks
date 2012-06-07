@@ -331,7 +331,9 @@ var DateRangeEditor = Backbone.View.extend({
 				if (friend.get('email') == BackcountryTracks.current_user.get('email')) {
 					$this.set({'organizer': false});
 
-					if (friend.get('invite_status') == 'accepted' || friend.get('invite_status') == 'rejected') {
+					if (friend.get('invite_status') == 'accepted'
+						|| friend.get('invite_status') == 'rejected'
+						|| friend.get('invite_status') == 'owner') {
 						$this.set({'responded': true});
 					}
 				} 
