@@ -660,6 +660,9 @@ div.content_button {
 	text-align: center;
 	vertical-align:middle;
 }
+#welcome_screen > header ol li img:hover {
+	cursor: pointer;
+}
 
 
 .ui-dialog {

@@ -5,11 +5,13 @@
 		id: 'welcome_screen',
 
 		events: {
-			'click #welcome_step2': 'step2'
+			'click #welcome_step1': 'step1',
+			'click #welcome_step2': 'step2',
+			'click #welcome_step3': 'step2'
 		},
 
 		initialize: function () {
-			_.bindAll(this, 'render', 'bubble_events');
+			_.bindAll(this, 'render', 'bubble_events', 'step1', 'step2');
 			var template_string = $('#welcome_screen_template').html();
 			this.template = _.template(template_string);
 		},
@@ -24,19 +26,33 @@
 			this.trigger(eventname, argument);
 		},
 
-		step2: function () {
+		_get_trip_orgainzer: function () {
 			var trip_organizer;
 			_.each(BackcountryTracks.modules.modules, function (item) {
 				if (item[0].name == 'Trip Organizer')
 					trip_organizer = item[0];
 			});
 
-			if (!trip_organizer)
+			return trip_organizer;
+		},
+
+		step1: function () {
+			var organizer = this._get_trip_orgainzer();
+			if (!organizer)
+				return;
+			
+			this.step2();
+			organizer.new_trip();
+		},
+
+		step2: function () {
+			Backbone.history.navigate('trips');
+
+			var organizer = this._get_trip_orgainzer();
+			if (!organizer)
 				return;
 
-			Backbone.history.navigate('trips');
-			trip_organizer.list();
-			trip_organizer.new_trip();
+			organizer.list();
 		}
 	});
 
