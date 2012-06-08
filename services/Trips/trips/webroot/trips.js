@@ -624,6 +624,22 @@ var DateRangeEditor = Backbone.View.extend({
 							break;
 					}
 				},
+				uploadStarted: function (i, file, len) {
+					$('#route_map_block > div').loading(true, {
+						'img': '/static/img/ajax-loader.gif',
+						at: 'center',
+						mask: true,
+						'text': ''
+					});
+				},
+				uploadFinished: function (i, file, xhr, time) {
+					$('#route_map_block > div').loading(false);
+					if (xhr.status > 200) {
+						$('#error_notification div.error_content').html($.parseJSON(xhr.responseText));
+						$('#error_notification').fadeIn();
+						$('#error_notification').delay(4000).fadeOut();
+					}
+				},
 				maxfilesize: 2,
 				docOver: function () {
 					if ($('#drophere').hasClass('highlight'))

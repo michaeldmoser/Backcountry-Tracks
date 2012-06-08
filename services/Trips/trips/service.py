@@ -1,6 +1,7 @@
 import logging
 import time
 from datetime import datetime
+import base64
 
 import uuid
 
@@ -236,7 +237,7 @@ class TripsDb(BasicCRUDService):
         mapbucket = self.riak.bucket('maps')
         tripobj = bucket.get(str(trip_id))
 
-        converter = self.converter(document)
+        converter = self.converter(base64.b64decode(document))
         kml_doc = converter.convert('kml')
 
         links = tripobj.get_links()

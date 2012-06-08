@@ -1,4 +1,5 @@
 import logging
+import json
 from tornado import web
 
 class BaseHandler(web.RequestHandler):
@@ -22,7 +23,7 @@ class BaseHandler(web.RequestHandler):
         logging.debug('Received error: %s' % message)
         self.set_status(500)
         self.set_header('X-Error-Message', message)
-        self.write(message)
+        self.write(json.dumps(message))
         self.finish()
         
 

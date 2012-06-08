@@ -11,6 +11,9 @@ class GPSFormatConverter(object):
             elif self.input_document.endswith('</gpx>'):
                 self.format = 'gpx'
 
+        if self.format == 'unknown':
+            raise RuntimeError('The file is not supported or is not a valid map file. Please use a GPX or KML file.')
+
     def convert(self, to_format):
         '''Converts a GPSDocument to to_format'''
         if to_format == self.format:

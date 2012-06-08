@@ -1,5 +1,6 @@
 import json
 import logging
+import base64
 
 from tornado import web
 
@@ -27,7 +28,8 @@ class RouteHandler(BaseHandler):
                 self.respond_with_error(code, message, data)
 
         file_data = self.request.files['userfile'][0]['body']
-        command = self.service.store_route(trip_id, file_data)
+        file_data_encoded = base64.b64encode(file_data)
+        command = self.service.store_route(trip_id, file_data_encoded)
         command.persistant = True
         self.remoting.call(command, callback=HandleResult())
 
