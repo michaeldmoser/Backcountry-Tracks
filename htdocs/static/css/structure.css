@@ -256,7 +256,6 @@ article.application_container > section > ul li > div .ui-button-text {
 	line-height: 1;
 }
 article.application_container > section > ul li > div.name_column {
-	text-transform: uppercase;
 	width: 190px;
 	border-right: 1px solid #999999;
 }
@@ -487,14 +486,12 @@ section.activities time {
 	width: 135px; 
 	padding: 5px;
 	vertical-align: middle;
-	text-transform: uppercase;
 }
 #gear_tab > section ul li.trip_gear div.gear_make {
 	display: table-cell;
 	width: 100px; 
 	padding: 5px;
 	vertical-align: middle;
-	text-transform: uppercase;
 	border-left: 1px solid #999;
 }
 #gear_tab > section ul li.trip_gear div.gear_weight {
