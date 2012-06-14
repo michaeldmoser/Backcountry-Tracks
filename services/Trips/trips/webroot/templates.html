@@ -145,7 +145,7 @@
 </script>
 
 <script id="trip_personal_gear_item_template" type="text/template+html">
-	<li class="trip_gear"><div class="gear_name">{{ name }}</div><div class="gear_weight">{{ weight }}</div></li>
+	<li class="trip_gear"><div class="gear_name">{{ name }}</div><div class="gear_make">{{ make }}</div><div class="gear_weight">{{ weight }}</div></li>
 </script>
 
 <script id="trip_gear_inventory_item_template" type="text/template+html">
@@ -153,7 +153,7 @@
 </script>
 
 <script id="trip_gear_group_item_template" type="text/template+html">
-	<li class="trip_gear group_gear"><div class="gear_name">{{ name }} ({{ owner_name }})</div><div class="gear_weight">{{ weight }}</div></li>
+	<li class="trip_gear group_gear"><div class="gear_name">{{ name }} ({{ owner_name }})</div><div class="gear_make">{{ make }}</div><div class="gear_weight">{{ weight }}</div></li>
 </script>
 
 <script id="trip_discussion_comment_template" type="text/template+html">
@@ -199,6 +199,8 @@
 			<input type="text" id="newgeardescription" name="newgeardescription" value="" />
 		</div>
 		<div id="newgearright" class="newgearform">
+			<label for="newgearmakemodel">Make / Model</label>
+			<input type="text" id="newgearmakemodel" name="newgearmakemodel" value="" />
 			<label for="newgearweight">Gear Weight</label>
 			<input type="text" id="newgearweight" name="newgearweight" value="" />
 		</div>
@@ -209,14 +211,14 @@
 </script>
 
 <script id="gear_organizer_line_item_template" type="text/template+html">
-    <li class="gear_organizer"><div class="trip_gear_name">{{ name }}</div><div class="gear_weight">{{ weight }}</div></li>
+	<li class="gear_organizer"><div class="trip_gear_name">{{ name }}</div><div class="trip_gear_make">{{ make }}</div><div class="gear_weight">{{ weight }}</div></li>
 </script>
 <script id="gear_organizer_line_item_owner_template" type="text/template+html">
-    <li class="gear_organizer"><div class="trip_gear_name">{{ name }} ({{ owner_name }})</div><div class="gear_weight">{{ weight }}</div></li>
+    <li class="gear_organizer"><div class="trip_gear_name">{{ name }} ({{ owner_name }})</div><div class="trip_gear_make">{{ make }}</div><div class="gear_weight">{{ weight }}</div></li>
 </script>
 
 <script id="gear_organizer_list_header_template" type="text/template+html">
-<li><div class="trip_gear_name">Gear Name</div><div class="gear_weight">Weight</div></li>
+<li><div class="trip_gear_name">Gear Name</div><div class="trip_gear_make">Make / Model</div><div class="gear_weight">Weight</div></li>
 </script>
 
 <script id="gear_organizer_filedrop_template" type="text/template+html">

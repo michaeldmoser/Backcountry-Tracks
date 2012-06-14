@@ -136,7 +136,7 @@ var ScreensView = Backbone.View.extend({
 		this.SidebarView = this.SidebarView || null;
 
 		Backbone.Router.call(this);
-		bct.modules.add([this]);
+		bct.modules.add(this);
 	};
 	_.extend(bct.Module.prototype, Backbone.Router.prototype, {
 		initialize: function () {}	
@@ -258,6 +258,7 @@ var ScreensView = Backbone.View.extend({
 	};
 
 	root.BackcountryTracks = bct;
+
 		
 }).call(this);
 

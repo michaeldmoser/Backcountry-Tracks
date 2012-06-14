@@ -484,10 +484,18 @@ section.activities time {
 }
 #gear_tab > section ul li.trip_gear div.gear_name {
 	display: table-cell;
-	width: 265px; 
+	width: 135px; 
 	padding: 5px;
 	vertical-align: middle;
 	text-transform: uppercase;
+}
+#gear_tab > section ul li.trip_gear div.gear_make {
+	display: table-cell;
+	width: 100px; 
+	padding: 5px;
+	vertical-align: middle;
+	text-transform: uppercase;
+	border-left: 1px solid #999;
 }
 #gear_tab > section ul li.trip_gear div.gear_weight {
 	display: table-cell;

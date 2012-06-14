@@ -76,7 +76,10 @@
     padding: 4px;
 }
 #trip_gear_organizer li > div.trip_gear_name {
-    width: 280px;
+    width: 150px;
+}
+#trip_gear_organizer li > div.trip_gear_make {
+    width: 122px;
 }
 #trip_gear_organizer > section > ul > li > div.gear_weight {
     text-align: right;

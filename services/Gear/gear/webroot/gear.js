@@ -208,6 +208,7 @@
 
 
 	g.GearModule = BackcountryTracks.Module.extend({
+		name: 'Gear Manager',
 
 		routes: {
 			'gear': 'main'

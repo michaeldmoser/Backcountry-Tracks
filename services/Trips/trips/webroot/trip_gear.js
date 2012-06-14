@@ -417,11 +417,13 @@ function TripGearViews() {
 			var gear_name = this.$('#newgearname').val();
 			var gear_description = this.$('#newgeardescription').val();
 			var gear_weight = this.$('#newgearweight').val();
+			var gear_makemodel = this.$('#newgearmakemodel').val();
 
 			var gear = {
 				name: gear_name,
 				description: gear_description,
-				weight: gear_weight
+				weight: gear_weight,
+				make: gear_makemodel
 			};
 
 			var model = new GearManager.GearItem(gear);
@@ -433,6 +435,7 @@ function TripGearViews() {
 			this.$('#newgearname').val('');
 			this.$('#newgeardescription').val('');
 			this.$('#newgearweight').val('');
+			this.$('#newgearmakemodel').val('');
 
 			this.options.collections.personal.create(model.toJSON());
 		}
