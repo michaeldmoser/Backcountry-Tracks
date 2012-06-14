@@ -241,6 +241,7 @@
 					gearlist.render();	
 				}
 			});
+			$('#trip_organizer_header_marker img').css({'left': 34});
 
 			BackcountryTracks.screens.activate(this.views.gearlist);
 		},

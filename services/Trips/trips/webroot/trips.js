@@ -1161,6 +1161,7 @@ var DateRangeEditor = Backbone.View.extend({
 			var view_trip = _.bind(function () {
 					var trip = this.collection.get(id)
 					this.views.detail.set_model(trip);
+					$('#trip_organizer_header_marker img').css({'left': 38});
 					BackcountryTracks.screens.activate(this.views.detail);
 				}, this);
 			this.collection.fetch({success: view_trip});
@@ -1178,6 +1179,7 @@ var DateRangeEditor = Backbone.View.extend({
 
 		list: function () {
 			this.collection.fetch();
+			$('#trip_organizer_header_marker img').css({'left': 34});
 			BackcountryTracks.screens.activate(this.views.trips);
 		},
 
