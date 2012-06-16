@@ -29,8 +29,8 @@
 		_get_trip_orgainzer: function () {
 			var trip_organizer;
 			_.each(BackcountryTracks.modules.modules, function (item) {
-				if (item[0].name == 'Trip Organizer')
-					trip_organizer = item[0];
+				if (item.name == 'Trip Organizer')
+					trip_organizer = item;
 			});
 
 			return trip_organizer;
