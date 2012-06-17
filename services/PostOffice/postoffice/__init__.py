@@ -8,6 +8,5 @@ class EntryPoint(object):
         self.config = config
 
     def __call__(self):
-        smtp_config = self.config.get('smtp', {'host': 'localhost', 'port': 25})
-        return EmailService(smtp_config)
+        return EmailService(self.config)
 
