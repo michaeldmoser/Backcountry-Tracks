@@ -428,7 +428,7 @@ function TripGearViews() {
 
 			var model = new GearManager.GearItem(gear);
 			model.bind('change', this.add_to_personal_gear);
-			this.options.collections.inventory.create(model);
+			this.options.collections.inventory.create(model, {'wait': true});
 		},
 
 		add_to_personal_gear: function (model) {
@@ -437,7 +437,13 @@ function TripGearViews() {
 			this.$('#newgearweight').val('');
 			this.$('#newgearmakemodel').val('');
 
-			this.options.collections.personal.create(model.toJSON());
+			var personal_item = model.clone();
+			personal_item.set({
+				'gear_id': personal_item.get('id'),
+				'id': null
+			});
+
+			this.options.collections.personal.create(personal_item.toJSON());
 		}
 	});
 
