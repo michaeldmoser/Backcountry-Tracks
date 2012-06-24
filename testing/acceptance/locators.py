@@ -39,4 +39,6 @@ GEAR_EDIT_DESCRIPTION_INPUT = '''xpath=//div[contains(@class, 'gear_add_form')]/
 GEAR_EDIT_SAVE_BUTTON = '''xpath=//div[contains(@class, 'gear_add_form')]//button[contains(.,'Save')]'''
 
 REGISTER_FORM_INPUT = '''xpath=//form[@id='register-form']//input[@name='%s']'''
+LOGIN_FORM = '''xpath=//div[@id='header']//form[@class='login-form']'''
+LOGIN_FORM_SUBMIT_BUTTON = '''xpath=//div[@id='header']//form[@class='login-form']//input[@type='submit']'''
 
