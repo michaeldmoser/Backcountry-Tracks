@@ -1,0 +1,118 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="RIDE" /> 
+<meta name="rf-template" content="False" /> 
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>Gear Helpers</title>
+</head>
+<body>
+<h1>Gear Helpers</h1>
+<table id="settings" border="1">
+<tr>
+<th class="name">Setting</th>
+<th colspan="4">Value</th>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>tpacceptance.gear.Gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>__init__.html</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table id="variables" border="1"></table>
+<table id="testcases" border="1"></table>
+<table id="keywords" border="1">
+<tr>
+<th class="name">Keyword</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Give ${FIRST_NAME} a basic set of gear">Give ${FIRST_NAME} a basic set of gear</a></td>
+<td>${PERSON}</td>
+<td>get person by name</td>
+<td>${FIRST_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Create a basic set of gear for</td>
+<td>${PERSON.email}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The gear list should have a ${FIND_GEAR} in it">The gear list should have a ${FIND_GEAR} in it</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${GEAR_IN_LIST % '${FIND_GEAR}'}</td>
+<td>error="Could not find ${FIND_GEAR} in the gear list"</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>

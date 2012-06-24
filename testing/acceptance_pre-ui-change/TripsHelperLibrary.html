@@ -1,0 +1,671 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="RIDE" /> 
+<meta name="rf-template" content="False" /> 
+<style type="text/css">
+html {
+  font-family: Arial,Helvetica,sans-serif;
+  background-color: white;
+  color: black;
+}
+table {
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 1em 0em;
+  border: 1px solid black;
+}
+th, td {
+  border: 1px solid black;
+  padding: 0.1em 0.2em;
+  height: 1.5em;
+  width: 12em;
+}
+th {
+  background-color: rgb(192, 192, 192);
+  color: black;
+  height: 1.7em;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+td.name {
+  background-color: rgb(240, 240, 240);
+  letter-spacing: 0.1em;
+}
+td.name, th.name {
+  width: 10em;
+}
+</style>
+<title>TripsHelperLibrary</title>
+</head>
+<body>
+<h1>TripsHelperLibrary</h1>
+<table id="settings" border="1">
+<tr>
+<th class="name">Setting</th>
+<th colspan="4">Value</th>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>tpacceptance.trips.Trips</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Resource</td>
+<td>__init__.html</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name">Library</td>
+<td>SeleniumLibrary</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+<table id="variables" border="1"></table>
+<table id="testcases" border="1"></table>
+<table id="keywords" border="1">
+<tr>
+<th class="name">Keyword</th>
+<th>Action</th>
+<th colspan="3">Arguments</th>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Open the ${TRIP_NAME} trip">Open the ${TRIP_NAME} trip</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Click element</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${TRIP_BY_NAME % '${TRIP_NAME}'}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Set Test Variable</td>
+<td>${ACTIVE_TRIP_NAME}</td>
+<td>${TRIP_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Open the invite friends dialog">Open the invite friends dialog</a></td>
+<td>Click Element</td>
+<td>${INVITE_FRIENDS_BUTTON}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${INVITE_TEXT}</td>
+<td>Get value</td>
+<td>${INVITE_TEXT_BOX}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Should be empty</td>
+<td>${INVITE_TEXT}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Give ${PERSON} a basic trip list">Give ${PERSON} a basic trip list</a></td>
+<td>${TRIP_OWNER}</td>
+<td>Get Person By Name</td>
+<td>${PERSON}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Create a basic trip list for user</td>
+<td>${TRIP_OWNER.email}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Add ${PERSON} as a participant on the ${TRIP_NAME} trip">Add ${PERSON} as a participant on the ${TRIP_NAME} trip</a></td>
+<td>Add a trip invitee</td>
+<td>${PERSON}</td>
+<td>${TRIP_NAME}</td>
+<td>accepted</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Click on the ${TRIP_NAME} trip">Click on the ${TRIP_NAME} trip</a></td>
+<td>Open the ${TRIP_NAME} trip</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The ${TRIP_NAME} trip details should be on the page">The ${TRIP_NAME} trip details should be on the page</a></td>
+<td>${TRIP}</td>
+<td>Get trip by name</td>
+<td>${TRIP_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.2</td>
+<td>Page should contain</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${TRIP['start']}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain</td>
+<td>${TRIP['end']}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.2</td>
+<td>Page should contain</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${TRIP['description']}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page should contain</td>
+<td>${TRIP['destination']}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Add ${PERSON} as an invitee on the ${TRIP_NAME} trip">Add ${PERSON} as an invitee on the ${TRIP_NAME} trip</a></td>
+<td>Add a trip invitee</td>
+<td>${PERSON}</td>
+<td>${TRIP_NAME}</td>
+<td>invited</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Accept the invitation for the ${TRIP_NAME} trip">Accept the invitation for the ${TRIP_NAME} trip</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${ACCEPT_TRIP % "${TRIP_NAME}"}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>${ACCEPT_TRIP % "${TRIP_NAME}"}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_${PERSON_INVITED} should appear in the friends list as ${INVITE_STATUS}">${PERSON_INVITED} should appear in the friends list as ${INVITE_STATUS}</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${INVITED_FRIEND_BY_NAME % '${PERSON_INVITED}'}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Page Should Contain Element</td>
+<td>${FRIEND_INVITE_STATUS % ('${PERSON_INVITED}', '${INVITE_STATUS}')}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Open ${INVITED_PERSON}'s invite email and click the trip link">Open ${INVITED_PERSON}'s invite email and click the trip link</a></td>
+<td>${INVITED_PERSON}</td>
+<td>Get person by name</td>
+<td>${PERSON}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${RECEIVED_EMAIL}</td>
+<td>Get email for</td>
+<td>${INVITED_PERSON.email}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>${TRIP_LINK}</td>
+<td>Get trip link</td>
+<td>${RECEIVED_EMAIL}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Close the browser</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Open Browser</td>
+<td>${TRIP_LINK}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Clear the mailbox</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Ignore the ${TRIP_NAME} trip">Ignore the ${TRIP_NAME} trip</a></td>
+<td>Wait Until Page Contains Element</td>
+<td>${IGNORE_TRIP % "${TRIP_NAME}"}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>${IGNORE_TRIP % "${TRIP_NAME}"}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Open the trips application">Open the trips application</a></td>
+<td>Open the Trips app</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_open the gear section">open the gear section</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element Should Be Visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${VIEW_GEAR_SECTION}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click Element</td>
+<td>${VIEW_GEAR_SECTION}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Add the ${GEAR_NAME} to the trip gear list">Add the ${GEAR_NAME} to the trip gear list</a></td>
+<td>Drag And Drop</td>
+<td>${GEAR_INVENTORY_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td>target=${TRIP_PERSONAL_GEAR_LIST}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The ${GEAR_NAME} should be listed in the personal gear section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_open the gear inventory screen">open the gear inventory screen</a></td>
+<td>Click button</td>
+<td>${SELECT_GEAR}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>1.5</td>
+<td>1 ms</td>
+<td>Element Should Be Visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${GEAR_INVENTORY_SCREEN}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The ${GEAR_NAME} should be listed in the personal gear section">The ${GEAR_NAME} should be listed in the personal gear section</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element Should Contain</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${TRIP_PERSONAL_GEAR_LIST}</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Add a new ${GEAR_NAME} to the inventory">Add a new ${GEAR_NAME} to the inventory</a></td>
+<td>Click element</td>
+<td>${TRIP_INVENTORY_ADD_GEAR}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait until keyword succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${GEAR_ADD_FORM}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_EDIT_NAME_INPUT}</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_EDIT_WEIGHT_INPUT}</td>
+<td>20oz</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_EDIT_DESCRIPTION_INPUT}</td>
+<td>This is a new piece of gear</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Click element</td>
+<td>${GEAR_EDIT_SAVE_BUTTON}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Add ${FIRST_NAME}'s gear to the ${TRIP_NAME} trip">Add ${FIRST_NAME}'s gear to the ${TRIP_NAME} trip</a></td>
+<td>Add gear to trip for</td>
+<td>${TRIP_NAME}</td>
+<td>${FIRST_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Drag the ${GEAR_NAME} back to the inventory">Drag the ${GEAR_NAME} back to the inventory</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Drag And Drop</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td>target=${TRIP_GEAR_INVENTORY_LIST}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The ${GEAR_NAME} should not be in the personal trip gear">The ${GEAR_NAME} should not be in the personal trip gear</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Page Should Not Contain Element</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Share the ${GEAR_NAME} with the group">Share the ${GEAR_NAME} with the group</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element should be visible</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Drag And Drop</td>
+<td>${PERSONAL_TRIP_GEAR_ITEM_BY_NAME % '${GEAR_NAME}'}</td>
+<td>target=${TRIP_GROUP_GEAR_LIST}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The ${GEAR_NAME} should not be in the personal trip gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The ${GEAR_NAME} should be listed in the group gear section</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_The ${GEAR_NAME} should be listed in the group gear section">The ${GEAR_NAME} should be listed in the group gear section</a></td>
+<td>Wait Until Keyword Succeeds</td>
+<td>2</td>
+<td>.1</td>
+<td>Element Should Contain</td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>...</td>
+<td>${TRIP_GROUP_GEAR_LIST}</td>
+<td>${GEAR_NAME}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+</body>
+</html>
