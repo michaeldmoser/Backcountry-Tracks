@@ -40,5 +40,15 @@ GEAR_EDIT_SAVE_BUTTON = '''xpath=//div[contains(@class, 'gear_add_form')]//butto
 
 REGISTER_FORM_INPUT = '''xpath=//form[@id='register-form']//input[@name='%s']'''
 LOGIN_FORM = '''xpath=//div[@id='header']//form[@class='login-form']'''
+LOGIN_FORM_INPUT = '''xpath=//div[@id='header']//form[@class='login-form']//input[@name='%s']'''
 LOGIN_FORM_SUBMIT_BUTTON = '''xpath=//div[@id='header']//form[@class='login-form']//input[@type='submit']'''
+
+INVENTORY_ADD_BUTTON='''xpath=//*[@id='gear_manager']//button[contains(., 'Add Gear')]'''
+INVENTORY_ADD_MODAL='''xpath=//*[@id='gear_add_form']'''
+
+GEAR_NAME_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_name']'''
+GEAR_MAKEMODEL_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_make']'''
+GEAR_WEIGHT_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_weight']'''
+GEAR_WEIGHT_UNIT_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_weight_unit']'''
+GEAR_DESCRIPTION_INPUT='''xpath=//*[@id='gear_add_form']//*[@name='gear_description']'''
 

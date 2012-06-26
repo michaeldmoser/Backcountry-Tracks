@@ -298,4 +298,7 @@ varrun: /var/run/tripplanner
 	sudo mkdir /var/run/tripplanner
 	sudo chown `whoami` /var/run/tripplanner
 
+devreset:
+	sudo python testing/bin/start-services.py
+
 

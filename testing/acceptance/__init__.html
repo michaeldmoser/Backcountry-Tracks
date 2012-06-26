@@ -45,10 +45,10 @@ td.name, th.name {
   width: 10em;
 }
 </style>
-<title>Init</title>
+<title>Acceptance</title>
 </head>
 <body>
-<h1>Init</h1>
+<h1>Acceptance</h1>
 <table border="1" id="setting">
 <tr>
 <th class="name" colspan="5">Setting</th>
@@ -285,14 +285,14 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Input text</td>
-<td>xpath=//div[@id="login-wrapper"]/form/input[@name="email"]</td>
+<td>${LOGIN_FORM_INPUT % "email"}</td>
 <td>${USER.email}</td>
 <td></td>
 </tr>
 <tr>
 <td class="name"></td>
 <td>Input text</td>
-<td>xpath=//div[@id="login-wrapper"]/form/input[@name="password"]</td>
+<td>${LOGIN_FORM_INPUT % "password"}</td>
 <td>${USER.password}</td>
 <td></td>
 </tr>
@@ -306,7 +306,14 @@ td.name, th.name {
 <tr>
 <td class="name"></td>
 <td>Click button</td>
-<td>Login</td>
+<td>${LOGIN_FORM_SUBMIT_BUTTON}</td>
+<td>dont_wait=1</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Wait Until Page Contains</td>
+<td>Welcome</td>
 <td></td>
 <td></td>
 </tr>

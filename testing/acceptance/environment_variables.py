@@ -15,5 +15,5 @@ APPLICATION_HOME_PAGE = SITE_HOME_PAGE + "app/home"
 
 DATA = environ.data
 
-CLOSE_BROWSER = True
+CLOSE_BROWSER = environ.close_browser if hasattr(environ, 'close_browser') else True
 
