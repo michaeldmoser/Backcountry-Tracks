@@ -57,6 +57,7 @@
 				this.model = new g.GearItem;
 
 			$(this.el).html(this.template(this.model.toJSON()));
+			this.$('select[name="gear_weight_unit"]').val(this.model.get('weight_unit'));
 		},
 
 		open: function (model) {
@@ -76,6 +77,7 @@
 				'name': this.$('input[name="gear_name"]').val(),
 				'make': this.$('input[name="gear_make"]').val(),
 				'weight': this.$('input[name="gear_weight"]').val(),
+				'weight_unit': this.$('select[name="gear_weight_unit"]').val(),
 				'description': this.$('textarea[name="gear_description"]').val()
 			};
 
