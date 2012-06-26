@@ -717,3 +717,14 @@ div.form_date_range_row img {
 	margin-left: 5px;
 }
 
+div.form_row_weight input {
+	width: 370px;
+	border: 1px solid #999;
+	display:inline;
+}
+div.form_row_weight select {
+	border: 1px solid #999;
+	background: #fff;
+	width: 75px;
+}
+
