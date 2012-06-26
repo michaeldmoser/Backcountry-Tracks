@@ -1,6 +1,6 @@
 
 # Locates a piece of gear in the gear list. The xpath will return the <li> element representing the piece of gear
-GEAR_IN_LIST = """xpath=//div[@id="gear_list_view"]//li[contains(., "%s")]"""
+GEAR_IN_LIST = """xpath=//*[@id="gear_list_view"]//li[contains(., "%s")]"""
 
 TRIP_BY_NAME = """xpath=//.[@id='trip_list_view']//li[contains(.,'%s')]"""
 
@@ -45,6 +45,7 @@ LOGIN_FORM_SUBMIT_BUTTON = '''xpath=//div[@id='header']//form[@class='login-form
 
 INVENTORY_ADD_BUTTON='''xpath=//*[@id='gear_manager']//button[contains(., 'Add Gear')]'''
 INVENTORY_ADD_MODAL='''xpath=//*[@id='gear_add_form']'''
+INVENTORY_ADD_SUBMIT_BUTTON='''xpath=//*[@id='gear_add_form']/..//button[contains(.,'Save')]'''
 
 GEAR_NAME_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_name']'''
 GEAR_MAKEMODEL_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_make']'''

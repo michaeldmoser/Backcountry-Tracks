@@ -66,6 +66,70 @@ data:
             start: "2011-09-16"
             end: "2011-09-18"
             description: A two day hike on the Powwow trail in the Boundary Waters.
+            destination: BWCA, Minnesota
+            route_description: A loop through the southern portion of the Boundary Waters
+            trip_distance: 36 miles
+            elevation_gain: n/a
+            difficulty: moderate to easy
+            friends: []
+        - 
+            name: Gila Wilderness March 2011
+            start: "2011-03-21"
+            end: "2011-03-25"
+            description: A 5 day trip up the West Fork, over McKenna Park and the Diablo Range, and out Little Creek
+            destination: Gila Wilderness, New Mexico
+            route_description: A loop through the southern portion of the Boundary Waters
+            trip_distance: 36 miles
+            elevation_gain: n/a
+            difficulty: moderate to easy
+            friends: []
+        - 
+            name: GNP Nyack/Coal Creek 2010
+            start: "2010-09-16"
+            end: "2010-09-18"
+            description: A loop through the Nyack/Coal Creek area of Glacier National Park
+            destination: Glacier National Park, Montana
+            route_description: A loop through the southern portion of the Boundary Waters
+            trip_distance: 36 miles
+            elevation_gain: n/a
+            difficulty: moderate to easy
+            friends: []
+        - 
+            name: BWCA 2012
+            start: "2012-09-17"
+            end: "2012-09-23"
+            description: A 7 day trip through the Boundary Waters via Grand Marais
+            destination: BWCA, Minnesota
+            route_description: A loop through the southern portion of the Boundary Waters
+            trip_distance: 36 miles
+            elevation_gain: n/a
+            difficulty: moderate to easy
+            friends: []
+    gear:
+        - 
+            name: Backpack
+            description: A backpack for carrying things
+            weight: 3.1
+            weight_unit: lbs
+            make: Six Moon Designs
+        - 
+            name: Tarp
+            description: Shelter from the elements
+            weight: 509
+            weight_unit: g
+            make: Oware
+        - 
+            name: Alcohol stove
+            description: A small alcohol stove for boiling water
+            weight: 3
+            weight_unit: oz
+            make: Evernew
+        - 
+            name: Cook pot
+            description: Pot for boiling water, drinking, etc
+            weight: 5
+            weight_unit: oz
+            make: Snowpeak
 
 buckets:
     trips: trips

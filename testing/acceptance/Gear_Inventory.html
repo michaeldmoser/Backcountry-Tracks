@@ -116,6 +116,34 @@ td.name, th.name {
 </tr>
 <tr>
 <td class="name"></td>
+<td>enter details for a new piece of gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Save the gear</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>The gear list should have a Backpack in it</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>verify the Backpack is saved in the inventory</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
 <td></td>
 <td></td>
 <td></td>
@@ -257,6 +285,62 @@ td.name, th.name {
 <td>Page should contain element</td>
 <td>${GEAR_WEIGHT_UNIT_INPUT}//option[@value='kg']</td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_enter details for a new piece of gear">enter details for a new piece of gear</a></td>
+<td>Input text</td>
+<td>${GEAR_NAME_INPUT}</td>
+<td>${DATA['gear'][0]['name']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_MAKEMODEL_INPUT}</td>
+<td>${DATA['gear'][0]['make']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_DESCRIPTION_INPUT}</td>
+<td>${DATA['gear'][0]['description']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_WEIGHT_INPUT}</td>
+<td>${DATA['gear'][0]['weight']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td>Input text</td>
+<td>${GEAR_WEIGHT_UNIT_INPUT}</td>
+<td>${DATA['gear'][0]['weight_unit']}</td>
+<td></td>
+</tr>
+<tr>
+<td class="name"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td class="name"><a name="keyword_Save the gear">Save the gear</a></td>
+<td>Click button</td>
+<td>${INVENTORY_ADD_SUBMIT_BUTTON}</td>
+<td>dont_wait=1</td>
 <td></td>
 </tr>
 <tr>
