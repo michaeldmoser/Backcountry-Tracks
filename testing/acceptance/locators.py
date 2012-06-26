@@ -49,6 +49,6 @@ INVENTORY_ADD_MODAL='''xpath=//*[@id='gear_add_form']'''
 GEAR_NAME_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_name']'''
 GEAR_MAKEMODEL_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_make']'''
 GEAR_WEIGHT_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_weight']'''
-GEAR_WEIGHT_UNIT_INPUT='''xpath=//*[@id='gear_add_form']//input[@name='gear_weight_unit']'''
+GEAR_WEIGHT_UNIT_INPUT='''xpath=//*[@id='gear_add_form']//select[@name='gear_weight_unit']'''
 GEAR_DESCRIPTION_INPUT='''xpath=//*[@id='gear_add_form']//*[@name='gear_description']'''
 

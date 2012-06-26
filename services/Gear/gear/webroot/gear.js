@@ -6,6 +6,7 @@
 			'name': '',
 			'make': '',
 			'weight': '',
+			'weight_unit': 'oz',
 			'description': ''
 		},
 
