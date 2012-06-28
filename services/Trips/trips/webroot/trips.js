@@ -833,7 +833,7 @@ var DateRangeEditor = Backbone.View.extend({
 					default_value: 'Enter an elevation gain/loss'
 				},
 				'difficulty': {
-					input_selector: 'input[name="difficulty"]',
+					input_selector: 'select[name="difficulty"]',
 					label_selector: '#trip_difficulty',
 					field: 'difficulty',
 					default_value: 'Enter a difficulty...'
