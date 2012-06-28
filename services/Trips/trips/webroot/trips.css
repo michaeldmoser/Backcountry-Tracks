@@ -162,3 +162,15 @@
 	bottom: 0px;
 }
 
+#newgearweight {
+	display:inline;
+	width:262px;
+}
+#newgear_form_weight_unit {
+	width: 75px;
+	border: 1px solid #999;
+	background: #fff;
+	display:inline;
+	padding: 2px;
+}
+

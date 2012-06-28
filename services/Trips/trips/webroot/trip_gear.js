@@ -418,12 +418,14 @@ function TripGearViews() {
 			var gear_description = this.$('#newgeardescription').val();
 			var gear_weight = this.$('#newgearweight').val();
 			var gear_makemodel = this.$('#newgearmakemodel').val();
+			var gear_weight_unit = this.$('#newgear_form_weight_unit').val();
 
 			var gear = {
 				name: gear_name,
 				description: gear_description,
 				weight: gear_weight,
-				make: gear_makemodel
+				make: gear_makemodel,
+				weight_unit: gear_weight_unit
 			};
 
 			var model = new GearManager.GearItem(gear);
@@ -436,6 +438,7 @@ function TripGearViews() {
 			this.$('#newgeardescription').val('');
 			this.$('#newgearweight').val('');
 			this.$('#newgearmakemodel').val('');
+			this.$('#gear_form_weight_unit').val('oz');
 
 			var personal_item = model.clone();
 			personal_item.set({
