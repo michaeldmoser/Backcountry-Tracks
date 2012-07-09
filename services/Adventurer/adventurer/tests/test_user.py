@@ -7,6 +7,7 @@ from tornado.web import HTTPError
 
 from adventurer.tests.test_registration import FakeMailer
 from adventurer.user import UserHandler
+from adventurer.users import Users
 from adventurer.service import AdventurerRepository
 
 class TestUserHandlerGet(unittest.TestCase):
@@ -116,8 +117,8 @@ class TestMessageServiceGet(unittest.TestCase):
 
         albert = self.environ.albert
         albert.mark_registered()
-        self.bucket.add_document(albert.email, albert)
-        self.albert = albert
+        users = Users(self.bucket)
+        self.albert = users.save(albert)
 
         self.app = AdventurerRepository(
                 bucket_name = self.bucket_name, 

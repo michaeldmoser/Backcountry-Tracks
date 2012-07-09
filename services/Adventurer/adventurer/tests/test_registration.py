@@ -4,6 +4,7 @@ import types
 from tptesting import environment
 
 from adventurer.service import AdventurerRepository
+from adventurer.users import Users
 from tptesting.fakeriak import RiakClientFake
 from uuid import uuid4
 
@@ -14,6 +15,7 @@ class TestAdventurerRepository(unittest.TestCase):
         self.bucket_name = 'adventurer'
         self.bucket = self.riak.bucket(self.bucket_name)
         self.fakemail = FakeMailer()
+        self.users = Users(self.bucket)
 
         self.app = AdventurerRepository(
                 bucket_name = self.bucket_name, 
@@ -32,8 +34,9 @@ class TestAdventurerRepository(unittest.TestCase):
         expected_data = self.environ.albert.for_storage()
         expected_data['confirmation_key'] = 'generated_confirmation_key'
 
-        riak_object = self.bucket.get(self.environ.albert['email'])
-        actual_data = riak_object.get_data()
+        actual_data = self.users.get_by_email(user['email'])
+        del actual_data['key']
+        del actual_data['terms_agree']
 
         self.assertEquals(actual_data, expected_data)
 
@@ -76,11 +79,11 @@ class TestAdventurerRepository(unittest.TestCase):
         def confirmation_key_generator():
             return 'generated_confirmation_key'
         app.generate_confirmation_key = confirmation_key_generator
-        user = self.environ.albert.copy()
+        user = self.environ.albert.registration_data()
         user['password_again'] = user['password']
         app.register(**user)
 
-        expected_link = '%s/activate/%s/%s' % (
+        expected_link = '%s#activate/%s/%s' % (
                 trailhead_url,
                 user['email'],
                 'generated_confirmation_key'

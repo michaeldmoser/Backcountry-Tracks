@@ -5,6 +5,7 @@ log = logging.getLogger('Adventurer/service')
 
 from bctservices.crud import BasicCRUDService
 from .forms import LoginForm, RegisterForm
+from .users import Users
 
 class AdventurerRepository(BasicCRUDService):
 
@@ -21,6 +22,8 @@ class AdventurerRepository(BasicCRUDService):
         self.trailhead_url = trailhead_url
         self.mailer = mailer
         self.remoting = remoting
+
+        self.users = Users(self.bucket)
 
     def register(self, **data):
         '''
@@ -41,17 +44,18 @@ class AdventurerRepository(BasicCRUDService):
         del clean_data['password_again']
 
         #check that the user isn't already in the system
-        user_object = self.bucket.get(email)
-        user = user_object.get_data()
-        if user:
+        try:
+            user = self.users.get_by_email(email)
+        except KeyError:
+            pass
+        else:
             log.debug('Duplicate registration for %s' % user['email'])
             result = {'successful': False, 'messages': {
                 'form': ['This email address has already been registered.']
                 }}
             return result
 
-        new_registration = self.bucket.new(email, data = clean_data)
-        new_registration.store()
+        new_registration = self.users.save(clean_data)
 
         self.send_complete_registration_email(
                 email,
@@ -74,7 +78,7 @@ class AdventurerRepository(BasicCRUDService):
         return str(uuid.uuid4())
 
     def get(self, email):
-        user = BasicCRUDService.get(self, email)
+        user = self.users.get_by_email(email)
         del user['password']
         return user
 
@@ -120,8 +124,11 @@ class AdventurerRepository(BasicCRUDService):
                     'email': email
                     }
 
-        user_object = self.bucket.get(str(email))
-        user = user_object.get_data()
+        try:
+            user = self.users.get_by_email(email)
+        except KeyError:
+            user = None
+            logging.warn('No user found for %s', email)
 
         if not user:
             return {
@@ -139,7 +146,8 @@ class AdventurerRepository(BasicCRUDService):
         if user['password'] == password_hashed:
             return {
                     'successful': True,
-                    'email': email
+                    'email': email,
+                    'key': user['key'],
                     }
         else:
             return {

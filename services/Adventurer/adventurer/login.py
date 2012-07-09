@@ -51,7 +51,7 @@ class LoginHandler(BaseHandler):
     def respond_to_login(self, body):
         logging.debug('Got response for %s' % body)
         if body['successful'] == True:
-            self.set_secure_cookie("user", body['email'])
+            self.set_secure_cookie("user", body['key'])
             self.write({'location': '/app/home'})
             self.set_status(202)
         else:

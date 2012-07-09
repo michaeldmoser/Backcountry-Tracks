@@ -4,6 +4,7 @@ from copy import deepcopy
 
 from uuid import uuid4
 import json
+import base64
 
 from tptesting import environment
 
@@ -75,7 +76,7 @@ class TestTripStoreRoute(unittest.TestCase):
 
     def test_store_kml_route(self):
         '''Should store kml data for a route'''
-        gear = self.app.store_route(self.trip_id, KML_DOCUMENT)
+        gear = self.app.store_route(self.trip_id, base64.b64encode(KML_DOCUMENT))
 
         tripobj = self.bucket.get(str(self.trip_id))
         trip = tripobj.get_data()
@@ -85,7 +86,7 @@ class TestTripStoreRoute(unittest.TestCase):
 
     def test_store_kml_result(self):
         '''store_route should return true'''
-        gear = self.app.store_route(self.trip_id, KML_DOCUMENT)
+        gear = self.app.store_route(self.trip_id, base64.b64encode(KML_DOCUMENT))
         self.assertTrue(gear)
 
 

@@ -7,7 +7,6 @@ from bctmessaging.endpoints import MessagingEndPointController
 
 from .service import AdventurerRepository
 from .mailer import Mailer
-from .users import UserService
 
 class EntryPoint(object):
 
@@ -33,23 +32,6 @@ class EntryPoint(object):
                 remoting = self.remoting_client)
 
         return service
-
-class UsersEntryPoint(object):
-
-    def __init__(self, configuration, environ, remoting_client):
-        self.environ = environ
-        self.config = configuration
-        self.remoting_client = remoting_client
-
-    def __call__(self):
-        bucket_name = self.config['database']['bucket']
-        riak = RiakClient(self.config['database']['host'])
-
-        service = UserService(bucket_name = bucket_name,
-                db = riak, remoting = self.remoting_client)
-
-        return service
-
 
 class Templates(object):
 

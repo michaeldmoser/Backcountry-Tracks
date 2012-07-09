@@ -8,7 +8,6 @@ setup(
     entry_points = {
         'tripplanner.endpoint': [
             'adventurer = adventurer:EntryPoint',
-            'users = adventurer:UsersEntryPoint',
             ],
         'tripplanner.trailhead.handler': [
             'register = adventurer.register:RegisterHandler',

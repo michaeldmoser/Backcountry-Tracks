@@ -3,6 +3,7 @@ import unittest
 import json
 import pika
 import uuid
+import base64
 
 from tptesting import thandlers
 
@@ -92,7 +93,7 @@ class TestRouteHandlerPOST(thandlers.TornadoHandlerTestCase):
         return True
 
     def expected_rpc_request(self):
-        return 'store_route', [self.trip_id, KML_DOCUMENT]
+        return 'store_route', [self.trip_id, base64.b64encode(KML_DOCUMENT)]
 
     def expected_durability(self):
         return True

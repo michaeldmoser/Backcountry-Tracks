@@ -7,7 +7,7 @@ from bctmessaging.remoting import RemotingClient
 
 import uuid
 
-from adventurer.users import UserService
+from adventurer.users import Users
 
 class TestUserCreation(unittest.TestCase):
     def setUp(self):
@@ -20,12 +20,7 @@ class TestUserCreation(unittest.TestCase):
         channel = pika_connection._channel
         rpc_client = RemotingClient(channel)
 
-        app = UserService(
-                bucket_name = bucket_name, 
-                db = riak,
-                remoting = rpc_client
-                )
-
+        app = Users(bucket)
         self.app = app
         self.riak = riak
         self.bucket = bucket
@@ -86,11 +81,7 @@ class TestUserRetrieval(unittest.TestCase):
         channel = pika_connection._channel
         rpc_client = RemotingClient(channel)
 
-        app = UserService(
-                bucket_name = bucket_name, 
-                db = riak,
-                remoting = rpc_client
-                )
+        app = Users(bucket)
 
         self.app = app
         self.riak = riak

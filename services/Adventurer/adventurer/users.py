@@ -1,13 +1,10 @@
 import uuid
 import copy
 
-class UserService(object):
+class Users(object):
 
-    def __init__(self, db = None, bucket_name = None, remoting = None):
-        self.db = db
-        self.bucket_name = bucket_name
-        self.remoting = remoting
-        self.bucket = self.db.bucket(self.bucket_name)
+    def __init__(self, bucket = None):
+        self.bucket = bucket
 
     def get_by_id(self, user_id):
         '''Will retrieve a user by their id'''

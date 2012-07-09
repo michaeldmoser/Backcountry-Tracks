@@ -6,22 +6,24 @@ class Gear(object):
         self.geardb = self.environ.riak.get_database('personal_gear')
 
 
-    def add_item(self, owner=None, name=None, description=None, weight=None):
+    def add_item(self, **kwargs):
         """
         Add a new piece of gear to the user's inventory
         """
-        assert owner is not None, "You must provide a owner"
-        assert name is not None, "You must provide a name for the gear"
-        assert description is not None, "You must provide a description for the gear"
-        assert weight is not None, "You must provide a weight for the gear"
+        assert kwargs['owner'] is not None, "You must provide a owner"
+        assert kwargs['name'] is not None, "You must provide a name for the gear"
+        assert kwargs['description'] is not None, "You must provide a description for the gear"
+        assert kwargs['weight'] is not None, "You must provide a weight for the gear"
 
         gear_id = str(uuid.uuid4())
         gear_item = {
-                'name': name,
-                'description': description,
-                'weight': weight,
-                'owner': owner,
+                'name': kwargs['name'],
+                'description': kwargs['description'],
+                'weight': kwargs['weight'],
+                'owner': kwargs['owner'],
                 'id': gear_id,
+                'weight_unit': kwargs.get('weight_unit'),
+                'make': kwargs.get('make'),
                 }
         new_gear = self.geardb.new(gear_id, data=gear_item)
         new_gear.store()
@@ -43,7 +45,8 @@ class Gear(object):
 
         for gear in gear_list:
             gear_item = gear.copy()
-            gear_id = self.add_item(owner=user.email, **gear_item)
+            gear_item['owner'] = user.email
+            gear_id = self.add_item(**gear_item)
 
             gear_item.update({
                 'id': gear_id,

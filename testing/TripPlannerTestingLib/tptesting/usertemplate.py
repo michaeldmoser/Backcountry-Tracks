@@ -69,6 +69,7 @@ class UserTemplate(dict):
     def registration_data(self):
         registration = self.copy()
         registration['password_again'] = self['password']
+        registration['terms_agree'] = 1
 
         return registration
 

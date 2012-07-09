@@ -7,6 +7,7 @@ import urllib2
 import mailbox
 import pwd
 import grp
+import uuid
 
 import logging
 import logging.config
@@ -188,8 +189,17 @@ class TpEnvironment(object):
         user_data['registration_complete'] = True
 
         adventurers = self.riak.get_database('adventurers')
-        adventurer = adventurers.new(user.email, data=user_data)
+        user_data['key'] = str(uuid.uuid4())
+        adventurer = adventurers.new(user_data['key'], data=user_data)
         adventurer.store()
+
+        adventurer_ref = {
+                'key': user_data['key']
+                }
+        adv_ref = adventurers.new(user_data['email'], data=adventurer_ref)
+        adv_ref.store()
+
+        return user_data
 
     def clear_mbox(self):
         user = self.get_config_for('user')

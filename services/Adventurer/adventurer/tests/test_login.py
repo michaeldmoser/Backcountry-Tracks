@@ -9,6 +9,7 @@ from trailhead.tests.utils import setup_handler
 from adventurer.tests.test_registration import FakeMailer
 from adventurer.login import LoginHandler
 from adventurer.service import AdventurerRepository
+from adventurer.users import Users
 
 class TestLoginHTTPRequest(unittest.TestCase):
     def setUp(self):
@@ -103,6 +104,7 @@ class TestLoginReply(unittest.TestCase):
             'result': {
                 'successful': True,
                 'email': 'test@example.org',
+                'key': '1234'
                 },
             'id': self.pika.published_messages[0].properties.correlation_id
         })
@@ -177,7 +179,8 @@ class TestAdventurerRepositoryLogin(unittest.TestCase):
 
         albert = self.environ.albert
         albert.mark_registered()
-        self.bucket.add_document(albert.email, albert.for_storage())
+        users = Users(self.bucket)
+        self.albert = users.save(albert.for_storage())
 
         self.app = AdventurerRepository(
                 bucket_name = self.bucket_name, 
@@ -191,7 +194,8 @@ class TestAdventurerRepositoryLogin(unittest.TestCase):
                 password=self.environ.albert.password)
         expected_result = {
                 'successful': True,
-                'email': self.environ.albert.email
+                'email': self.environ.albert.email,
+                'key': self.albert['key'],
                 }
         self.assertEquals(expected_result, login_result)
 
@@ -212,6 +216,7 @@ class TestAdventurerRepositoryLogin(unittest.TestCase):
 
         expected_result = {
                 'successful': True,
+                'key': self.albert['key'],
                 'email': self.environ.albert.email
                 }
         self.assertEquals(expected_result, login_result)
@@ -219,7 +224,8 @@ class TestAdventurerRepositoryLogin(unittest.TestCase):
     def test_not_registered(self):
         '''User has not completed registration'''
         ramona = self.environ.ramona
-        self.bucket.add_document(ramona.email, ramona)
+        users = Users(self.bucket)
+        ramona = users.save(ramona)
 
         login_result = self.app.login(email=ramona.email, password=ramona.password)
         expected_result = {

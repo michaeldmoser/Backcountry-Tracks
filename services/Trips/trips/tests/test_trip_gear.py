@@ -187,7 +187,7 @@ class TestPutGroupGearBack(utils.TestTripFixture):
     def continueSetUp(self):
         def share_gear(item):
             gear_to_share = item.copy()
-            gear_to_share['id'] = str(uuid4())
+            gear_to_share['gear_id'] = str(uuid4())
             gear_to_share['owner'] = self.environ.douglas.email
 
             self.app.share_gear(self.trip_id, gear_to_share)
