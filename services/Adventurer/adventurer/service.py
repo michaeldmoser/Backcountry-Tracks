@@ -156,13 +156,15 @@ class AdventurerRepository(BasicCRUDService):
                     }
 
     def activate(self, email, confirmation_key):
-        user_object = self.bucket.get(str(email))
-        user = user_object.get_data()
+        try:
+            user = self.users.get_by_email(email)
+        except KeyError:
+            logging.warn('No such user <%s> found', email)
+            return {'successful': False}
 
         if user and confirmation_key == user['confirmation_key']:
             user['registration_complete'] = True
-            user_object.set_data(user)
-            user_object.store()
+            self.users.save(user_id=user['key'], user_data=user)
             return {'successful': True}
 
         return {'successful': False}
