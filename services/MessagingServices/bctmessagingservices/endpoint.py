@@ -1,6 +1,8 @@
+import pdb
 import pika
 import json
 import traceback
+import defer
 
 import logging
 
@@ -41,7 +43,38 @@ class MessagingEndpointServiceController(object):
                 body = json.dumps(reply)
                 )
 
+    def handle_method_exception(self, err, header, request):
+        reply = {
+            'jsonrpc': '2.0',
+            'id': header.correlation_id,
+            'error': {
+                'code': -32000,
+                'message': str(err)
+                }
+            }
+        trace_back = traceback.format_exc()
+        logging.error('Exception raised in method %s while processing %s',
+                request['method'], header.correlation_id)
+        logging.error(trace_back)
+
+        self.send_reply(reply, header.correlation_id, header.reply_to)
+
+    def handle_method_response(self, response, header):
+        reply = {
+                'jsonrpc': '2.0',
+                'result': response,
+                'id': header.correlation_id
+                }
+        self.send_reply(reply, header.correlation_id, header.reply_to)
+
+    def handle_method_error(self, err, header, request):
+        err.catch(Exception)
+        self.handle_method_exception(err, header, request)
+
     def process_request(self, channel, mq_method, header, data):
+        # TODO: We need to not automaticaly ack messages. Instead they should
+        # be ack'ed on permenant errors or succesful processing otherwise leave
+        # them unack'ed
         channel.basic_ack(delivery_tag=mq_method.delivery_tag)
 
         request = json.loads(data)
@@ -72,34 +105,19 @@ class MessagingEndpointServiceController(object):
 
         try:
             if isinstance(params, dict):
-                response = method(**request['params'])
+                deferred = defer.defer(method, **request['params'])
             elif isinstance(params, list):
-                response = method(*request['params'])
+                deferred = defer.defer(method, *request['params'])
         except Exception as err:
-            reply = {
-                'jsonrpc': '2.0',
-                'id': header.correlation_id,
-                'error': {
-                    'code': -32000,
-                    'message': str(err)
-                    }
-                }
-            trace_back = traceback.format_exc()
-            logging.error('Exception raised in method %s while processing %s',
-                    request['method'], header.correlation_id)
-            logging.error(trace_back)
-
-            self.send_reply(reply, header.correlation_id, header.reply_to)
+            self.handle_method_exception(err, header, request)
         else:
             if not header.correlation_id:
                 return
 
-            reply = {
-                    'jsonrpc': '2.0',
-                    'result': response,
-                    'id': header.correlation_id
-                    }
-            self.send_reply(reply, header.correlation_id, header.reply_to)
+            deferred.add_callback(self.handle_method_response, header)
+            deferred.add_errback(self.handle_method_error, header, request)
+
+
 
 class EntryPoint(object):
 
