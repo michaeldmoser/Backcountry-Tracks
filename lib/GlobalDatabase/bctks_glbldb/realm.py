@@ -26,6 +26,10 @@ class Realm(object):
 
     def store(self, document):
         document.__object__.store()
+        deferred = Deferred()
+        deferred.callback(document)
+
+        return deferred
 
     def Document(self):
         doc = self.bucket.new(str(uuid4()))

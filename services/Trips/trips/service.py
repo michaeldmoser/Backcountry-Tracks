@@ -2,10 +2,12 @@ import logging
 import time
 from datetime import datetime
 import base64
+import traceback
 
 import uuid
 
 from bctservices.crud import BasicCRUDService
+import bctks_glbldb.connection
 
 class TripsDb(BasicCRUDService):
     list_mapreduce = """
@@ -46,18 +48,17 @@ class TripsDb(BasicCRUDService):
         '''
         Add a new object
         '''
-        bucket = self.riak.bucket(self.bucket_name)
+        con = bctks_glbldb.connection.Connection(self.riak)
+        realm = con.Realm(self.bucket_name)
+        doc = realm.Document()
+        doc.update(obj)
+        doc['id'] = doc.key
+        doc['owner'] = owner
+        doc.object_type = 'trip'
 
-        key = str(uuid.uuid4())
-        data = obj.copy()
-        data['id'] = key
-        data['owner'] = owner
+        realm.store(doc)
 
-        riak_object = bucket.new(key, data=data)
-        riak_object.set_usermeta({'object_type': 'trip'})
-        riak_object.store()
-
-        return data
+        return dict(doc)
 
     def __send_invite_email(self, trip_id, trip_data, invite):
 # What is the link going to be?

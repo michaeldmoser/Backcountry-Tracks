@@ -49,12 +49,12 @@ class MessagingEndpointServiceController(object):
             'id': header.correlation_id,
             'error': {
                 'code': -32000,
-                'message': str(err)
+                'message': str(err),
                 }
             }
         trace_back = traceback.format_exc()
-        logging.error('Exception raised in method %s while processing %s',
-                request['method'], header.correlation_id)
+        logging.error('Exception (%s) raised in method %s while processing %s',
+                err, request['method'], header.correlation_id)
         logging.error(trace_back)
 
         self.send_reply(reply, header.correlation_id, header.reply_to)
@@ -68,8 +68,12 @@ class MessagingEndpointServiceController(object):
         self.send_reply(reply, header.correlation_id, header.reply_to)
 
     def handle_method_error(self, err, header, request):
-        err.catch(Exception)
-        self.handle_method_exception(err, header, request)
+        try:
+            err.raise_exception()
+        except Exception, e:
+            self.handle_method_exception(e, header, request)
+
+        return e
 
     def process_request(self, channel, mq_method, header, data):
         # TODO: We need to not automaticaly ack messages. Instead they should
