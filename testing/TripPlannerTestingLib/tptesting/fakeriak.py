@@ -25,7 +25,7 @@ from riak.mapreduce import RiakLink
 class RiakDocument(dict):
 
     def __init__(self, *args, **kwargs):
-        if args[0] is not None:
+        if len(args) > 0 and args[0] is not None:
             dict.__init__(self, *args, **kwargs)
         else:
             dict.__init__(self)
@@ -358,7 +358,7 @@ class RiakObjectFake(object):
 
     def get_usermeta(self):
         if not self.__data:
-            return {}
+            self.__data = RiakDocument()
 
         if 'usermeta' in self.__data.metadata:
           return deepcopy(self.__data.metadata['usermeta'])
@@ -376,7 +376,7 @@ class RiakObjectFake(object):
         :rtype: data
         """
         if not self.__data:
-            return self
+            self.__data = RiakDocument()
 
         self.__data.metadata['usermeta'] = deepcopy(usermeta)
         return self
