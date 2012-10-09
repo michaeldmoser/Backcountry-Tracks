@@ -6,6 +6,7 @@ from riak import RiakClient
 from bctplugins import entrypoint
 from bctmessaging.remoting import RemotingClient
 from gpsutils import GPSFormatConverter
+import bctks_glbldb.connection
 
 from .service import TripsDb
 
@@ -19,9 +20,10 @@ class EntryPoint(object):
     def __call__(self):
         bucket_name = self.config['database']['bucket']
         riak = RiakClient(self.config['database']['host'])
+        dbcon = bctks_glbldb.connection.Connection(riak)
 
         return TripsDb(self.remoting_client, riak, bucket_name, self.config['url'],
-                converter=GPSFormatConverter)
+                converter=GPSFormatConverter, db=dbcon)
 
 
 class Webroot(object):

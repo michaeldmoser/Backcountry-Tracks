@@ -7,7 +7,6 @@ import traceback
 import uuid
 
 from bctservices.crud import BasicCRUDService
-import bctks_glbldb.connection
 
 class TripsDb(BasicCRUDService):
     list_mapreduce = """
@@ -38,18 +37,21 @@ class TripsDb(BasicCRUDService):
         }
     """
 
-    def __init__(self, remote_client, riak, bucket_name, url, converter = None):
+    def __init__(self, remote_client, riak, bucket_name, url, converter = None, db = None):
         self.remoting = remote_client
         self.url = url
         self.converter = converter
+        self.db = db
         BasicCRUDService.__init__(self, riak, bucket_name)
+
+    def __get_default_realm(self):
+        return self.db.Realm(self.bucket_name)
 
     def create(self, owner, obj):
         '''
         Add a new object
         '''
-        con = bctks_glbldb.connection.Connection(self.riak)
-        realm = con.Realm(self.bucket_name)
+        realm = self.__get_default_realm()
         doc = realm.Document()
         doc.update(obj)
         doc['id'] = doc.key
