@@ -13,49 +13,44 @@ class TestDocumentStorageRetrieval(unittest.TestCase):
     def setUp(self):
         riak_client = fakeriak.RiakClientFake()
 
-        self.saved_document = {'test': 'test'}
         self.document_key = '1234'
+        self.saved_document = {'test': 'test', 'id': self.document_key}
 
         self.bucket = riak_client.bucket('adventurers')
         self.bucket.add_document(self.document_key, self.saved_document)
         conn = Connection(riak_client)
         self.realm = conn.Realm('adventurers') 
 
-    @defer.inline_callbacks
     def test_retrieve(self):
         '''Retrieve a document from a realm'''
-        document = yield self.realm.get(self.document_key)
+        document = self.realm.get(self.document_key)
         self.assertEquals(dict(document), self.saved_document)
 
-    @defer.inline_callbacks
     def test_unicode_key(self):
         '''Realm.get() properly handles unicode based strings as a key'''
-        document = yield self.realm.get(unicode(self.document_key))
+        document = self.realm.get(unicode(self.document_key))
         self.assertEquals(dict(document), self.saved_document)
 
-    @defer.inline_callbacks
     def test_keyvalue_document(self):
         '''Should return a KeyValueDocument when the content type is application/json'''
-        document = yield self.realm.get(self.document_key)
+        document = self.realm.get(self.document_key)
         self.assertIsInstance(document, KeyValueDocument)
 
-    @defer.inline_callbacks
     def test_save_document(self):
         '''Save over a document'''
-        document = yield self.realm.get(self.document_key)
+        document = self.realm.get(self.document_key)
         document['new'] = 'new'
 
-        yield self.realm.store(document)
+        self.realm.store(document)
 
         saved_object = self.bucket.get(self.document_key)
         saved_data = saved_object.get_data()
 
         self.assertEquals(document, saved_data)
 
-    @defer.inline_callbacks
     def test_document_doesnt_exist(self):
         '''The request document doesn't exist'''
-        document = yield self.realm.get('does not exist')
+        document = self.realm.get('does not exist')
         self.assertIsNone(document)
 
 class TestDocumentCreation(unittest.TestCase):

@@ -6,6 +6,8 @@ class KeyValueDocument(dict):
         if data is not None:
             dict.__init__(self, data)
 
+        self['id'] = self.__riak_object.get_key()
+
         usermeta_defaults = {'object_type': 'generic'}
         usermeta = self.__riak_object.get_usermeta()
         usermeta_defaults.update(usermeta)

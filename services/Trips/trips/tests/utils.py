@@ -13,6 +13,8 @@ from tptesting.fakeriak import RiakClientFake, RiakBinary
 from tptesting.fakepika import SelectConnectionFake
 from bctmessaging.remoting import RemotingClient
 
+from bctks_glbldb import Connection
+
 class TestTripFixture(unittest.TestCase):
 
     def setUp(self):
@@ -25,12 +27,14 @@ class TestTripFixture(unittest.TestCase):
         channel = pika_connection._channel
         self.channel = channel
         rpc_client = RemotingClient(channel)
+        dbcon = Connection(self.riak)
 
         self.app = TripsDb(
                 rpc_client,
                 self.riak, 
                 self.bucket_name, 
                 'http://test.com',
+                db=dbcon
                 )
 
 

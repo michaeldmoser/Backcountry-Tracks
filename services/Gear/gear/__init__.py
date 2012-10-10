@@ -2,7 +2,11 @@ from pkg_resources import resource_filename
 
 from bctplugins import entrypoint
 from bctservices.crud import BasicCRUDService
-from riak import RiakClient
+from riak import RiakClient, RiakPbcTransport
+
+from bctks_glbldb import Connection
+from gear.service import UserGearService
+from gear.objects import UserInventory
 
 class UserGear(BasicCRUDService):
     pass
@@ -15,8 +19,14 @@ class GearEntryPoint(object):
         self.remoting = remoting
 
     def __call__(self):
-        riak = RiakClient(host=self.config['database']['host'])
-        service = UserGear(riak, self.config['database']['bucket'])
+        riak = RiakClient(host=self.config['database']['host'], port=8087, transport_class=RiakPbcTransport)
+        dbcon = Connection(riak)
+        realm = dbcon.Realm(self.config['database']['bucket'])
+
+        def inventory_generator(user):
+            return UserInventory(realm, user)
+
+        service = UserGearService(inventory_generator)
 
         return service
 

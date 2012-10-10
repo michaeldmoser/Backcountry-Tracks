@@ -10,6 +10,8 @@ class Realm(object):
 
     def get(self, key):
         robj = self.bucket.get(str(key))
+        if not robj.exists():
+            return None
 
         return KeyValueDocument(robj)
 
@@ -18,7 +20,7 @@ class Realm(object):
         return document
 
     def Document(self, key=None):
-        key = key if key is not None else str(uuid4())
+        key = str(key) if key is not None else str(uuid4())
         doc = self.bucket.new(key)
         return KeyValueDocument(doc)
 

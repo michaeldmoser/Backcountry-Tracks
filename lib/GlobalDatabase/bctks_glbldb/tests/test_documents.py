@@ -37,6 +37,12 @@ class TestDocument(unittest.TestCase):
         obj = self.bucket.get(self.document.key)
         self.assertDictContainsSubset({'object_type': 'generic'}, obj.get_usermeta())
 
+    def test_save_key_as_id(self):
+        '''The key should be saved in the document as id'''
+        obj = self.bucket.get(self.document.key)
+        self.assertEquals(obj.get_data()['id'], self.document.key)
+
+
 if __name__ == '__main__':
     unittest.main()
 

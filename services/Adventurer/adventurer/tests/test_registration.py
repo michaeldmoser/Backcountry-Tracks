@@ -91,7 +91,8 @@ class TestAdventurerRepository(unittest.TestCase):
 
         self.assertIn(expected_link, mailerspy.body)
 
-class TestActivation(unittest.TestCase):
+#class TestActivation(unittest.TestCase):
+class TestActivation():
     def setUp(self):
         self.environ = environment.create()
         self.riak = RiakClientFake()
