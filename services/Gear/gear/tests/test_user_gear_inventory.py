@@ -7,9 +7,9 @@ from bctks_glbldb.connection import Connection
 from tptesting.fakeriak import RiakClientFake
 from tptesting import environment
 
-from gear.objects import UserInventory
+from gear.objects import AdventurerInventory
 
-class TestUserInventoryCreate(unittest.TestCase):
+class TestAdventurerInventoryCreate(unittest.TestCase):
 
     def setUp(self):
         environ = environment.create()
@@ -18,9 +18,9 @@ class TestUserInventoryCreate(unittest.TestCase):
         dbcon = Connection(riak)
         realm = dbcon.Realm('personal_gear')
 
-        self.user = str(uuid.uuid4())
+        self.adventurer = str(uuid.uuid4())
 
-        inventory = UserInventory(realm, self.user)
+        inventory = AdventurerInventory(realm, self.adventurer)
 
         self.piece_of_gear = inventory.PieceOfGear({
                 'name': 'Test',
@@ -45,8 +45,8 @@ class TestUserInventoryCreate(unittest.TestCase):
         self.assertEquals(riak_doc.metadata['usermeta']['object_type'], 'gear')
 
     def test_gear_added_to_index(self):
-        '''The gear should be added to the users gear index'''
-        riak_doc = self.bucket.documents[self.user]
+        '''The gear should be added to the adventurers gear index'''
+        riak_doc = self.bucket.documents[self.adventurer]
         self.assertIn(self.piece_of_gear.key, riak_doc['documents'])
 
 

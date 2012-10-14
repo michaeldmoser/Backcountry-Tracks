@@ -1,6 +1,6 @@
 
 
-class UserGearService(object):
+class AdventurerGearService(object):
 
     def __init__(self, inventory):
         self.inventory = inventory

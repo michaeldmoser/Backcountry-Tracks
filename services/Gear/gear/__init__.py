@@ -5,10 +5,10 @@ from bctservices.crud import BasicCRUDService
 from riak import RiakClient, RiakPbcTransport
 
 from bctks_glbldb import Connection
-from gear.service import UserGearService
-from gear.objects import UserInventory
+from gear.service import AdventurerGearService
+from gear.objects import AdventurerInventory
 
-class UserGear(BasicCRUDService):
+class AdventurerGear(BasicCRUDService):
     pass
 
 class GearEntryPoint(object):
@@ -23,10 +23,10 @@ class GearEntryPoint(object):
         dbcon = Connection(riak)
         realm = dbcon.Realm(self.config['database']['bucket'])
 
-        def inventory_generator(user):
-            return UserInventory(realm, user)
+        def inventory_generator(r):
+            return AdventurerInventory(realm, adventurer)
 
-        service = UserGearService(inventory_generator)
+        service = AdventurerGearService(inventory_generator)
 
         return service
 

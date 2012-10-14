@@ -1,10 +1,10 @@
 from bctks_glbldb.documents import KeyValueDocument
 
-class UserInventory(object):
+class AdventurerInventory(object):
 
-    def __init__(self, realm, user):
+    def __init__(self, realm, adventurer):
         self.realm = realm
-        self.user = user
+        self.adventurer = adventurer
 
     def PieceOfGear(self, gear_data):
         document = self.realm.Document()
@@ -13,10 +13,10 @@ class UserInventory(object):
         return document
 
     def __get_gear_index(self):
-        index = self.realm.get(self.user)
+        index = self.realm.get(self.adventurer)
 
         if index is None:
-            return self.realm.Document(key=self.user)
+            return self.realm.Document(key=self.adventurer)
 
         return index
 
