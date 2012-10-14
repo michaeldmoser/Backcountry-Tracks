@@ -23,7 +23,7 @@ class GearEntryPoint(object):
         dbcon = Connection(riak)
         realm = dbcon.Realm(self.config['database']['bucket'])
 
-        def inventory_generator(r):
+        def inventory_generator(adventurer):
             return AdventurerInventory(realm, adventurer)
 
         service = AdventurerGearService(inventory_generator)

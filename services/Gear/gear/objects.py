@@ -35,9 +35,9 @@ class AdventurerInventory(object):
         self.__add_gear_to_index(gear_document)
 
     def list_gear(self):
-        indexes = self.__get_gear_index()
+        index = self.__get_gear_index()
 
-        potential_gearlist = map(lambda index: self.realm.get(index), indexes['documents'])
+        potential_gearlist = map(lambda key: self.realm.get(key), index['documents'])
         final_gearlist = list()
         for piecegear in potential_gearlist:
             if piecegear is None:
@@ -46,6 +46,4 @@ class AdventurerInventory(object):
             final_gearlist.append(piecegear)
             
         return final_gearlist
-
-
 
