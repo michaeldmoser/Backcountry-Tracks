@@ -19,7 +19,9 @@ class AdventurerGearService(object):
         pass
 
     def list(self, owner):
-        return []
+        inventory = self.inventory(owner)
+        gear_list = inventory.list_gear()
+        return gear_list
 
     def get(self, obj_id):
         return None

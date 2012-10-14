@@ -1,26 +1,12 @@
 import unittest
 
-import uuid
-
-from bctks_glbldb.connection import Connection
-
-from tptesting.fakeriak import RiakClientFake
-from tptesting import environment
-
 from gear.objects import AdventurerInventory
+from gear.tests import utils
 
-class TestAdventurerInventoryCreate(unittest.TestCase):
+class TestAdventurerInventoryCreate(utils.AdventureInventoryTestCase):
 
-    def setUp(self):
-        environ = environment.create()
-        riak = RiakClientFake()
-        self.bucket = riak.bucket('personal_gear')
-        dbcon = Connection(riak)
-        realm = dbcon.Realm('personal_gear')
-
-        self.adventurer = str(uuid.uuid4())
-
-        inventory = AdventurerInventory(realm, self.adventurer)
+    def continueSetup(self):
+        inventory = AdventurerInventory(self.realm, self.adventurer)
 
         self.piece_of_gear = inventory.PieceOfGear({
                 'name': 'Test',
@@ -49,6 +35,71 @@ class TestAdventurerInventoryCreate(unittest.TestCase):
         riak_doc = self.bucket.documents[self.adventurer]
         self.assertIn(self.piece_of_gear.key, riak_doc['documents'])
 
+class TestAdventurerInventoryList(utils.AdventureInventoryTestCase):
+
+    def continueSetup(self):
+        gear_list = [
+                {
+                    'make': 'MSR Whipserlite International',
+                    'weight': '15',
+                    'weight_unit': 'oz',
+                    'description': 'test',
+                    },
+                {
+                    'make': 'Whipserlite International',
+                    'weight': '15',
+                    'weight_unit': 'oz',
+                    'description': 'test',
+                    },
+                {
+                    'make': 'International',
+                    'weight': '15',
+                    'weight_unit': 'oz',
+                    'description': 'test',
+                    },
+                ]
+        self.inventory = AdventurerInventory(self.realm, self.adventurer)
+
+        def create_gear_list(gearpiece):
+            piece_of_gear = self.inventory.PieceOfGear(gearpiece)
+            self.inventory.add_gear(piece_of_gear)
+            return piece_of_gear
+        self.expected_list = map(create_gear_list, gear_list)
+
+    def test_list_of_gear(self):
+        '''Return the list of gear'''
+        gearlist = self.inventory.list_gear()
+        self.assertEquals(self.expected_list, gearlist)
+
+    def test_piece_of_gear_missing(self):
+        '''The index contains a reference not in the database'''
+        obj = self.bucket.get(self.expected_list[0]['id'])
+        obj.delete()
+        del self.expected_list[0]
+
+        retrieved_list = self.inventory.list_gear()
+        self.assertEquals(self.expected_list, retrieved_list)
+
+
+class TestAdventurerInventoryListEmpty(utils.AdventureInventoryTestCase):
+
+    def test_empty_list(self):
+        '''Index has not items'''
+        index_doc = {'documents': []}
+        obj = self.bucket.new(self.adventurer, index_doc)
+        obj.store()
+
+        inventory = AdventurerInventory(self.realm, self.adventurer)
+        gearlist = inventory.list_gear()
+
+        self.assertEquals([], gearlist)
+
+    def test_no_index(self):
+        '''There is no gear index for the adventurer'''
+        inventory = AdventurerInventory(self.realm, self.adventurer)
+        gearlist = inventory.list_gear()
+
+        self.assertEquals([], gearlist)
 
 if __name__ == "__main__":
     unittest.main()
