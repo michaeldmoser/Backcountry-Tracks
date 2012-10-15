@@ -121,7 +121,7 @@ class ioloop(object):
 class HTTPRequestFake(object):
 
     def __init__(self, method, uri, version='HTTP/1.0', headers=None, body=None,
-            remote_ip=None, protocol=None, host=None, files=None, connection=None):
+            remote_ip='127.0.0.1', protocol=None, host=None, files=None, connection=None):
         self.__usage = list()
 
         self.method = method
@@ -136,6 +136,7 @@ class HTTPRequestFake(object):
         self.query = query
         self.arguments = cgi.parse_qs(query)
         self.files = files or {}
+        self.remote_ip = remote_ip
 
         self._output = ""
 
