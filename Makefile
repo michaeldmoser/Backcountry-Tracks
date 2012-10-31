@@ -9,9 +9,16 @@ install-libraries: install-messaging install-plugins install-servicelib install-
 
 install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel install-messagingservices
 
-install-dependencies: install-libyaml install-python-setproctitle 
+install-dependencies: install-libyaml install-python-setproctitle install-python-packages
 
 install-libyaml: /usr/lib/libyaml.so /usr/include/yaml.h /usr/include/python2.7/Python.h
+
+install-python-packages: python-defer
+
+python-defer: /usr/lib/python2.7/dist-packages/defer
+
+/usr/lib/python2.7/dist-packages/defer:
+	sudo apt-get -y install python-defer
 
 /usr/include/python2.7/Python.h:
 	sudo aptitude install python-dev
@@ -48,9 +55,9 @@ install-gpsbabel: /usr/bin/gpsbabel
 install-rabbitmq: /usr/sbin/rabbitmq-server
 
 /usr/sbin/rabbitmq-server: /usr/bin/erl
-	wget http://www.rabbitmq.com/releases/rabbitmq-server/v2.4.1/rabbitmq-server_2.4.1-1_all.deb
-	sudo dpkg -i rabbitmq-server_2.4.1-1_all.deb
-	rm rabbitmq-server_2.4.1-1_all.deb
+	wget http://www.rabbitmq.com/releases/rabbitmq-server/v2.8.7/rabbitmq-server_2.8.7-1_all.deb
+	sudo dpkg -i rabbitmq-server_2.8.7-1_all.deb
+	rm rabbitmq-server_2.8.7-1_all.deb
 
 /usr/bin/erl:
 	sudo apt-get -y install erlang-nox
@@ -58,9 +65,9 @@ install-rabbitmq: /usr/sbin/rabbitmq-server
 install-riak: /usr/sbin/riak
 	
 /usr/sbin/riak: /usr/bin/erl
-	wget http://downloads.basho.com/riak/CURRENT/riak_1.0.1-1_amd64.deb
-	sudo dpkg -i riak_1.0.1-1_amd64.deb
-	rm riak_1.0.1-1_amd64.deb
+	wget http://downloads.basho.com.s3-website-us-east-1.amazonaws.com/riak/CURRENT/ubuntu/precise/riak_1.2.1-1_amd64.deb
+	sudo dpkg -i riak_1.2.1-1_amd64.deb
+	rm riak_1.2.1-1_amd64.deb
 	sudo touch /usr/sbin/riak
 
 riak-config: config/riak/app.config

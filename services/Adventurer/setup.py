@@ -5,6 +5,9 @@ setup(
     version = '0.2',
     packages = ['adventurer'],
     test_suite = 'adventurer',
+    install_requires = '''
+	wtforms
+    ''',
     entry_points = {
         'tripplanner.endpoint': [
             'adventurer = adventurer:EntryPoint',

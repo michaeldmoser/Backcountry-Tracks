@@ -16,7 +16,7 @@ def create_fake_application():
 
 def make_user_authenticated(handler, user):
     handler.set_secure_cookie('user', user)
-    cookie_value = handler._new_cookies[0]
+    cookie_value = handler._new_cookie
     handler._cookies = Cookie.BaseCookie()
     handler.request.cookies['user'] = cookie_value['user'].value
 
