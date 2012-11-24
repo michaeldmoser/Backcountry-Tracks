@@ -13,7 +13,7 @@ class RiakFakeTestCase(unittest.TestCase):
         self.riak = RiakClientFake()
         self.bucket = self.riak.bucket(self.BUCKET)
         self.dbcon = Connection(self.riak)
-        self.realm = self.dbcon.Realm('personal_gear')
+        self.realm = self.dbcon.Realm(self.BUCKET)
 
         self.adventurer = str(uuid.uuid4())
 
