@@ -18,7 +18,7 @@
 	g.GearList = Backbone.Collection.extend({
 		model: g.GearItem,
 		url: function () {
-			return '/app/users/' + BackcountryTracks.current_user.get('email') + '/gear';
+			return '/app/gear';
 		},
 
 		comparator: function (gear) {
