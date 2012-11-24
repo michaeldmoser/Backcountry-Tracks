@@ -14,6 +14,7 @@ def convert_adventurers():
         adventurer_data = obj.get_data()
 
         adventurer_id = str(uuid.uuid4())
+        adventurer_data['key'] = adventurer_id
         adventurer_obj = bucket.new(adventurer_id, data=adventurer_data)
         adventurer_obj.store()
 
