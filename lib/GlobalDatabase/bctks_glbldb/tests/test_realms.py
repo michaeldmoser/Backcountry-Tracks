@@ -102,6 +102,23 @@ class TestDocumentCreation(unittest.TestCase):
         self.assertEquals(data, document2)
 
 
+class TestDocumentStorageRetrieval(unittest.TestCase):
+
+    def setUp(self):
+        riak_client = fakeriak.RiakClientFake()
+
+        self.document_key = '1234'
+        self.saved_document = {'test': 'test', 'id': self.document_key}
+
+        self.bucket = riak_client.bucket('adventurers')
+        self.bucket.add_document(self.document_key, self.saved_document)
+        conn = Connection(riak_client)
+        self.realm = conn.Realm('adventurers') 
+
+    def test_delete(self):
+        '''Remove a document from the database'''
+        self.realm.delete(self.document_key)
+        self.assertNotIn(self.saved_document, self.bucket.documents.keys())
 
 
 

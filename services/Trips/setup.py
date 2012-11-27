@@ -9,7 +9,10 @@ setup(
         pika
     ''',
     entry_points = {
-        'tripplanner.endpoint': ['trips = trips:EntryPoint'],
+        'tripplanner.endpoint': [
+            'trips = trips:EntryPoint',
+            'trips.core = trips:TripsCoreEntry',
+            ],
         'tripplanner.trailhead.handler': [
             'trips = trips.handlers:TripsHandler',
             'trip = trips.handlers:TripHandler',

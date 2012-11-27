@@ -162,10 +162,10 @@ function TripGearViews() {
             var friends = model.get('friends');
 
             var find_owner = function (friend) {
-                return friend.email == item.get('owner');
+                return friend.key == item.get('owner');
             }
             var owner = _.find(friends, find_owner);
-			if (BackcountryTracks.current_user.get('email') == owner.email)
+			if (BackcountryTracks.current_user.get('key') == owner.key)
 				gear_item['owner_name'] = 'me';
 			else
 				gear_item['owner_name'] = owner.first + " " + owner.last;
@@ -243,10 +243,10 @@ function TripGearViews() {
                 var friends = model.get('friends');
 
                 var find_owner = function (friend) {
-                    return friend.email == item.get('owner');
+                    return friend.key == item.get('owner');
                 }
                 var owner = _.find(friends, find_owner);
-				if (BackcountryTracks.current_user.get('email') == owner.email)
+				if (BackcountryTracks.current_user.get('key') == owner.key)
 					gear_item['owner_name'] = 'me';
 				else
 					gear_item['owner_name'] = owner.first + " " + owner.last;

@@ -29,6 +29,19 @@ class Catalog(object):
         index['documents'].append(item.key)
         self.realm.store(index)
 
+    def __remove_item_from_index(self, key):
+        index = self.__get_item_index()
+
+        if not index.has_key('documents'):
+            index['documents'] = list()
+
+        try:
+            index['documents'].remove(key)
+        except ValueError:
+            pass
+        else:
+            self.realm.store(index)
+
     def add_item(self, item_document):
         self.realm.store(item_document)
         self.__add_item_to_index(item_document)
@@ -45,4 +58,9 @@ class Catalog(object):
             final_itemlist.append(pieceitem)
             
         return final_itemlist
+
+    def delete(self, key):
+        self.realm.delete(key)
+        self.__remove_item_from_index(key)
+
 

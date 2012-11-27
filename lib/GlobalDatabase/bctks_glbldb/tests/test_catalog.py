@@ -1,5 +1,7 @@
 import unittest
+import copy
 from tptesting.testcases import RiakFakeTestCase
+import uuid
 
 from bctks_glbldb.catalog import Catalog
 
@@ -103,6 +105,61 @@ class TestCatalogListEmpty(RiakFakeTestCase):
         gearlist = inventory.list_items()
 
         self.assertEquals([], gearlist)
+
+class TestCatalogDeleteItem(RiakFakeTestCase):
+    BUCKET = 'gear'
+
+    def continueSetup(self):
+        gear_list = [
+                {
+                    'make': 'MSR Whipserlite International',
+                    'weight': '15',
+                    'weight_unit': 'oz',
+                    'description': 'test',
+                    },
+                {
+                    'make': 'Whipserlite International',
+                    'weight': '15',
+                    'weight_unit': 'oz',
+                    'description': 'test',
+                    },
+                {
+                    'make': 'International',
+                    'weight': '15',
+                    'weight_unit': 'oz',
+                    'description': 'test',
+                    },
+                ]
+        self.inventory = Catalog(self.realm, self.adventurer, object_type = self.BUCKET)
+
+        def create_gear_list(gearpiece):
+            piece_of_gear = self.inventory.Item(gearpiece)
+            self.inventory.add_item(piece_of_gear)
+            return piece_of_gear
+        self.gear_list = map(create_gear_list, gear_list)
+
+    def test_delete_item(self):
+        '''Delete an item from the catalog'''
+        self.inventory.delete(self.gear_list[0]['id'])
+
+        temp_gear_list = copy.deepcopy(self.gear_list)
+        del temp_gear_list[0]
+        expected_gear_list = sorted(temp_gear_list)
+        actual = sorted(self.inventory.list_items())
+        self.assertEquals(expected_gear_list, actual)
+
+    def test_delete_index_document(self):
+        '''Delete should remove item id from index document'''
+        self.inventory.delete(self.gear_list[0]['id'])
+
+        index_doc = self.bucket.documents[self.adventurer]
+        self.assertNotIn(self.gear_list[0]['id'], index_doc['documents'])
+
+    def test_delete_non_existant_item(self):
+        '''Delete an item that doesn't exist should do nothing'''
+        self.inventory.delete(str(uuid.uuid4()))
+
+
 
 if __name__ == "__main__":
     unittest.main()

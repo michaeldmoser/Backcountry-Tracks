@@ -19,6 +19,14 @@ class Realm(object):
         document.__object__.store()
         return document
 
+    def delete(self, key):
+        robj = self.bucket.get(str(key))
+        if not robj.exists():
+            return None
+
+        robj.delete()
+        
+
     def Document(self, key=None):
         key = str(key) if key is not None else str(uuid4())
         doc = self.bucket.new(key)

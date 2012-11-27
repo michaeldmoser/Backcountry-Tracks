@@ -12,7 +12,7 @@ class TripsBaseHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):
         BaseHandler.__init__(self, *args, **kwargs)
-        self.service = self.application.mq.remoting.service('Trips')
+        self.service = self.application.mq.remoting.service('Trips.Core')
         self.remoting = self.application.mq.remoting
 
     def json_rpc_request(self, method, params):

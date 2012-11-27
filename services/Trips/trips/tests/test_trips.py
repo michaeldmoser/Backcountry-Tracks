@@ -42,7 +42,7 @@ class TestTripCreate(thandlers.TornadoHandlerTestCase):
         return True
 
     def remote_service_name(self):
-        return 'Trips'
+        return 'Trips.Core'
 
     def http_request_body(self):
         return json.dumps(self.environ.data['trips'][0])
@@ -85,7 +85,7 @@ class TestTripUpdate(thandlers.TornadoHandlerTestCase):
         return True
 
     def remote_service_name(self):
-        return 'Trips'
+        return 'Trips.Core'
 
     def http_request_body(self):
         return json.dumps(self.trip)

@@ -192,7 +192,8 @@ var DateRangeEditor = Backbone.View.extend({
 			email: '',
 			first: '',
 			last: '',
-			invite_status: 'invited'
+			invite_status: 'invited',
+			key: ''
 		},
 
 		accept: function () {
@@ -477,7 +478,7 @@ var DateRangeEditor = Backbone.View.extend({
 						'invite_status': 'owner',
 						'first': BackcountryTracks.current_user.get('first_name'),
 						'last': BackcountryTracks.current_user.get('last_name'),
-						'id': BackcountryTracks.current_user.id,
+						'key': BackcountryTracks.current_user.get('key'),
 						'email': BackcountryTracks.current_user.get('email')
 					}
 				]
