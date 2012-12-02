@@ -7,7 +7,7 @@ from unittest import TestSuite, TestResult, TestLoader, TextTestRunner
 
 def is_testable(root, sub_dir):
     init_file_path = path.join(root, sub_dir, '__init__.py')
-    test_directory_path = path.join(root, sub_dir, 'tests', 'small')
+    test_directory_path = path.join(root, sub_dir, 'tests', 'medium')
 
     if '.egg-info' in sub_dir:
         return False

@@ -20,10 +20,10 @@ class TestCatalogCreate(RiakFakeTestCase):
                 'description': 'The description',
                 })
         
-        inventory.add_item(self.piece_of_gear)
+        inventory.store_item(self.piece_of_gear)
 
 
-    def test_add_item_to_inventory(self):
+    def test_store_item_to_inventory(self):
         '''Adding to inventory saves gear document to database'''
         riak_doc = self.bucket.documents[self.piece_of_gear.key]
         self.assertDictContainsSubset(self.piece_of_gear, riak_doc)
@@ -38,73 +38,36 @@ class TestCatalogCreate(RiakFakeTestCase):
         riak_doc = self.bucket.documents[self.adventurer]
         self.assertIn(self.piece_of_gear.key, riak_doc['documents'])
 
-class TestCatalogList(RiakFakeTestCase):
+class TestCatalogUpdate(RiakFakeTestCase):
     BUCKET = 'gear'
 
     def continueSetup(self):
-        gear_list = [
-                {
-                    'make': 'MSR Whipserlite International',
-                    'weight': '15',
-                    'weight_unit': 'oz',
-                    'description': 'test',
-                    },
-                {
-                    'make': 'Whipserlite International',
-                    'weight': '15',
-                    'weight_unit': 'oz',
-                    'description': 'test',
-                    },
-                {
-                    'make': 'International',
-                    'weight': '15',
-                    'weight_unit': 'oz',
-                    'description': 'test',
-                    },
-                ]
         self.inventory = Catalog(self.realm, self.adventurer, object_type = self.BUCKET)
 
-        def create_gear_list(gearpiece):
-            piece_of_gear = self.inventory.Item(gearpiece)
-            self.inventory.add_item(piece_of_gear)
-            return piece_of_gear
-        self.expected_list = map(create_gear_list, gear_list)
+        self.gear_data = {
+                'name': 'Test',
+                'weight': '1',
+                'weight_unit': 'oz',
+                'make': 'MSR',
+                'model': 'Test',
+                'description': 'The description',
+                }
+        self.piece_of_gear = self.inventory.Item(self.gear_data)
+        
+        self.inventory.store_item(self.piece_of_gear)
+        self.piece_of_gear['name'] = 'Test 2'
 
-    def test_list_of_gear(self):
-        '''Return the list of gear'''
-        gearlist = self.inventory.list_items()
-        self.assertEquals(self.expected_list, gearlist)
+    def test_update_item(self):
+        '''Item gets updated'''
+        self.inventory.store_item(self.piece_of_gear)
+        riak_doc = self.bucket.documents[self.piece_of_gear.key]
+        self.assertEquals(riak_doc['name'], self.piece_of_gear['name'])
 
-    def test_piece_of_gear_missing(self):
-        '''The index contains a reference not in the database'''
-        obj = self.bucket.get(self.expected_list[0]['id'])
-        obj.delete()
-        del self.expected_list[0]
+    def test_update_item_only_one_index(self):
+        self.inventory.store_item(self.piece_of_gear)
+        index_doc = self.bucket.documents[self.adventurer]
+        self.assertEquals(1, len(index_doc['documents']))
 
-        retrieved_list = self.inventory.list_items()
-        self.assertEquals(self.expected_list, retrieved_list)
-
-
-class TestCatalogListEmpty(RiakFakeTestCase):
-    BUCKET = 'gear'
-
-    def test_empty_list(self):
-        '''Index has not items'''
-        index_doc = {'documents': []}
-        obj = self.bucket.new(self.adventurer, index_doc)
-        obj.store()
-
-        inventory = Catalog(self.realm, self.adventurer, object_type=self.BUCKET)
-        gearlist = inventory.list_items()
-
-        self.assertEquals([], gearlist)
-
-    def test_no_index(self):
-        '''There is no gear index for the adventurer'''
-        inventory = Catalog(self.realm, self.adventurer, object_type=self.BUCKET)
-        gearlist = inventory.list_items()
-
-        self.assertEquals([], gearlist)
 
 class TestCatalogDeleteItem(RiakFakeTestCase):
     BUCKET = 'gear'
@@ -134,7 +97,7 @@ class TestCatalogDeleteItem(RiakFakeTestCase):
 
         def create_gear_list(gearpiece):
             piece_of_gear = self.inventory.Item(gearpiece)
-            self.inventory.add_item(piece_of_gear)
+            self.inventory.store_item(piece_of_gear)
             return piece_of_gear
         self.gear_list = map(create_gear_list, gear_list)
 
@@ -145,7 +108,9 @@ class TestCatalogDeleteItem(RiakFakeTestCase):
         temp_gear_list = copy.deepcopy(self.gear_list)
         del temp_gear_list[0]
         expected_gear_list = sorted(temp_gear_list)
-        actual = sorted(self.inventory.list_items())
+        docs = copy.deepcopy(self.bucket.documents)
+        del docs[self.adventurer]
+        actual = sorted(docs.values())
         self.assertEquals(expected_gear_list, actual)
 
     def test_delete_index_document(self):

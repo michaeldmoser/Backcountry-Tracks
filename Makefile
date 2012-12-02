@@ -35,6 +35,12 @@ test: testing/bin/run_make_test
 unittest: testing/bin/run_unittests.py
 	python testing/bin/run_unittests.py
 
+smalltests: testing/bin/run_unittests.py
+	python testing/bin/run_unittests.py
+
+mediumtests: testing/bin/run_mediumtests.py
+	python testing/bin/run_mediumtests.py
+
 systest: testing/system
 	cd testing/system && sudo python setup.py test
 

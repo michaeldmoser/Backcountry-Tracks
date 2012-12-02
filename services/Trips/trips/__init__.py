@@ -41,7 +41,7 @@ class TripsCoreEntry(object):
         def catalog_generator(adventurer):
             return Catalog(realm, adventurer)
 
-        return TripsCoreService(catalog_generator)
+        return TripsCoreService(riak, self.config['database']['bucket'])
 
 
 

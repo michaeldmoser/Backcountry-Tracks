@@ -1,8 +1,8 @@
 class Catalog(object):
 
-    def __init__(self, realm, adventurer, object_type = "item"):
+    def __init__(self, realm, index_doc_id, object_type = "item"):
         self.realm = realm
-        self.adventurer = adventurer
+        self.index_doc_id = index_doc_id
         self.object_type = object_type
 
     def Item(self, item_data):
@@ -12,10 +12,10 @@ class Catalog(object):
         return document
 
     def __get_item_index(self):
-        index = self.realm.get(self.adventurer)
+        index = self.realm.get(self.index_doc_id)
 
         if index is None:
-            index_doc = self.realm.Document(key=self.adventurer)
+            index_doc = self.realm.Document(key=self.index_doc_id)
             index_doc['documents'] = list()
             return index_doc
 
@@ -26,6 +26,10 @@ class Catalog(object):
 
         if not index.has_key('documents'):
             index['documents'] = list()
+
+        if item.key in index['documents']:
+            return
+
         index['documents'].append(item.key)
         self.realm.store(index)
 
@@ -42,22 +46,14 @@ class Catalog(object):
         else:
             self.realm.store(index)
 
-    def add_item(self, item_document):
+    def store_item(self, item_document):
         self.realm.store(item_document)
         self.__add_item_to_index(item_document)
 
     def list_items(self):
         index = self.__get_item_index()
-
-        potential_itemlist = map(lambda key: self.realm.get(key), index['documents'])
-        final_itemlist = list()
-        for pieceitem in potential_itemlist:
-            if pieceitem is None:
-                continue
-
-            final_itemlist.append(pieceitem)
-            
-        return final_itemlist
+        items = self.realm.get_list(index['documents'])
+        return items
 
     def delete(self, key):
         self.realm.delete(key)
