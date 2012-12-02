@@ -48,7 +48,7 @@ def discover(test_suite):
             if not is_testable(root, sub_dir):
                 continue
 
-            package_path = path.join(root, sub_dir)
+            package_path = path.join(root, sub_dir, 'tests', 'medium')
             top_level_dir = path.dirname(package_path)
             package_tests = loader.discover(package_path, top_level_dir=top_level_dir)
             test_suite.addTests(package_tests)
