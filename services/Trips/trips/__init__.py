@@ -9,7 +9,7 @@ from bctmessaging.remoting import RemotingClient
 from gpsutils import GPSFormatConverter
 
 from .service import TripsDb
-from .tripscoreservice import TripsCoreService
+from .coreservice import TripsCoreService
 
 class EntryPoint(object):
 

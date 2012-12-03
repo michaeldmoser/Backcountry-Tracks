@@ -7,10 +7,10 @@ class TripsCoreService(object):
         self.bucket = self.riak.bucket(bucket_name)
 
 
-    def _get_user_trip_index(self, user):
-        index_doc = self.bucket.get(str(user))
+    def _get_trip_index(self, owner):
+        index_doc = self.bucket.get(str(owner))
 
-        if index_doc.exists() is None:
+        if not index_doc.exists():
             index = dict()
             index['documents'] = list()
 
@@ -18,17 +18,28 @@ class TripsCoreService(object):
 
         return index_doc.get_data()
 
-    def create(self, owner, trip):
-        index = self._get_user_trip_index(owner)
+    def _update_trip_index(self, owner, trip_id):
+        index = self._get_trip_index(owner)
 
+        if trip_id in index['documents']:
+            return
+
+        index['documents'].append(trip_id)
+
+        index_doc = self.bucket.new(owner, index)
+        index_doc.store()
+
+    def create(self, owner, trip):
         trip_id = str(uuid.uuid4())
         trip['id'] = trip_id
+        trip['owner'] = owner
 
         trip_doc = self.bucket.new(trip_id, trip)
         trip_doc.store()
 
-        return trip
+        self._update_trip_index(owner, trip_id)
 
+        return trip
 
     def update(self, owner, obj_id, obj):
         catalog = self.catalog(owner)
