@@ -13,7 +13,7 @@ from tptesting.fakeriak import RiakClientFake, RiakBinary
 from tptesting.fakepika import SelectConnectionFake
 from bctmessaging.remoting import RemotingClient
 
-from trips.tests.test_route_handler import KML_DOCUMENT
+from trips.tests.small.test_route_handler import KML_DOCUMENT
 KML_DOCUMENT = unicode(KML_DOCUMENT)
 GPX_DOCUMENT = unicode('''<?xml version="1.0" encoding="UTF-8"?>
 <gpx
