@@ -415,11 +415,7 @@ class RiakObjectFake(object):
         return self.__data.metadata['links']
 
     def store(self, w=None, dw=None, return_body=True):
-        if self.bucket.documents.has_key(self.key) and \
-                self._vclock is None:
-            self.__data = self.bucket.documents[self.key]
-        else:
-            self.bucket.documents[self.key] = self.__data
+        self.bucket.documents[self.key] = self.__data
 
         self._exists = True
 
@@ -429,7 +425,10 @@ class RiakObjectFake(object):
 		raise NotImplementedError
 
     def delete(self, rw=None):
-        del self.bucket.documents[self.key]
+        try:
+            del self.bucket.documents[self.key]
+        except KeyError:
+            pass
 
     def clear(self) :
 		raise NotImplementedError
