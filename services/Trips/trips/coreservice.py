@@ -1,4 +1,5 @@
 import uuid
+from bctks_glbldb.indexdocs import IndexDoc
 
 class TripsCoreService(object):
 
@@ -8,37 +9,22 @@ class TripsCoreService(object):
 
 
     def _get_trip_index(self, owner):
-        index_doc = self.bucket.get(str(owner))
-
-        if not index_doc.exists():
-            index = dict()
-            index['documents'] = list()
-
-            return index
-
-        return index_doc.get_data()
+        return IndexDoc(owner, self.riak, self.bucket.get_name())
 
     def _update_trip_index(self, owner, trip_id):
         index = self._get_trip_index(owner)
-
-        if trip_id in index['documents']:
-            return
-
-        index['documents'].append(trip_id)
-
-        index_doc = self.bucket.new(owner, index)
-        index_doc.store()
+        index.append(trip_id)
+        index.store()
 
     def _remove_trip_from_index(self, owner, trip_id):
         index = self._get_trip_index(owner)
 
         try:
-            index['documents'].remove(trip_id)
+            index.remove(trip_id)
         except ValueError:
             return
 
-        index_doc = self.bucket.new(owner, index)
-        index_doc.store()
+        index.store()
 
     def _get_list(self, keys):
         map_js_function = '''
@@ -85,10 +71,10 @@ class TripsCoreService(object):
 
     def list(self, owner):
         index = self._get_trip_index(owner)
-        if len(index['documents']) < 1:
+        if len(index) < 1:
             return []
 
-        return self._get_list(index['documents'])
+        return self._get_list(index)
 
     def get(self, obj_id):
         return None

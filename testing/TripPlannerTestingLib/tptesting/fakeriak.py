@@ -171,7 +171,7 @@ class RiakBucketFake(object):
         self.__documents = dict()
 
     def get_name(self):
-		raise NotImplementedError
+		return self.name
 
     def get_r(self, r=None):
 		raise NotImplementedError

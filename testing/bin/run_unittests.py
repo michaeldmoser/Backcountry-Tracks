@@ -49,8 +49,7 @@ def discover(test_suite):
                 continue
 
             package_path = path.join(root, sub_dir, 'tests', 'small')
-            top_level_dir = path.dirname(package_path)
-            package_tests = loader.discover(package_path, top_level_dir=top_level_dir)
+            package_tests = loader.discover(package_path, top_level_dir=root)
             test_suite.addTests(package_tests)
 
 if __name__ == '__main__':
