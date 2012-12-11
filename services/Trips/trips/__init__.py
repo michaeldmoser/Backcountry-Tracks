@@ -10,6 +10,7 @@ from gpsutils import GPSFormatConverter
 
 from .service import TripsDb
 from .coreservice import TripsCoreService
+from .commentservice import TripCommentService
 
 class EntryPoint(object):
 
@@ -35,14 +36,21 @@ class TripsCoreEntry(object):
 
     def __call__(self):
         riak = RiakClient(host=self.config['database']['host'], port=8087, transport_class=RiakPbcTransport)
-        dbcon = Connection(riak)
-        realm = dbcon.Realm(self.config['database']['bucket'])
-
-        def catalog_generator(adventurer):
-            return Catalog(realm, adventurer)
 
         return TripsCoreService(riak, self.config['database']['bucket'])
 
+class TripsCommentsEntry(object):
+
+    def __init__(self, config, env, remoting_client):
+        self.config = config
+        self.env = env
+        self.remoting_client = remoting_client
+
+    def __call__(self):
+        riak = RiakClient(host=self.config['database']['host'], port=8087, transport_class=RiakPbcTransport)
+
+        return TripCommentService(riak, self.config['database']['trip_bucket'], 
+                self.config['database']['comment_bucket'])
 
 
 class Webroot(object):

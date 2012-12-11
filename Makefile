@@ -29,8 +29,7 @@ python-defer: /usr/lib/python2.7/dist-packages/defer
 /usr/include/yaml.h:
 	sudo aptitude install libyaml-dev
 
-test: testing/bin/run_make_test
-	sudo testing/bin/run_make_test
+test: smalltests mediumtests largetests 
 
 unittest: testing/bin/run_unittests.py
 	python testing/bin/run_unittests.py
@@ -40,6 +39,9 @@ smalltests: testing/bin/run_unittests.py
 
 mediumtests: testing/bin/run_mediumtests.py
 	sudo python testing/bin/run_mediumtests.py
+
+largetests: testing/bin/run_largetests.py
+	sudo python testing/bin/run_largetests.py
 
 systest: testing/system
 	cd testing/system && sudo python setup.py test

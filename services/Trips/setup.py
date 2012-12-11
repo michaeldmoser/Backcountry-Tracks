@@ -12,6 +12,7 @@ setup(
         'tripplanner.endpoint': [
             'trips = trips:EntryPoint',
             'trips.core = trips:TripsCoreEntry',
+            'trips.comments = trips:TripsCommentsEntry',
             ],
         'tripplanner.trailhead.handler': [
             'trips = trips.handlers:TripsHandler',
