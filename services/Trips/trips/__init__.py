@@ -49,8 +49,10 @@ class TripsCommentsEntry(object):
     def __call__(self):
         riak = RiakClient(host=self.config['database']['host'], port=8087, transport_class=RiakPbcTransport)
 
-        return TripCommentService(riak, self.config['database']['trip_bucket'], 
-                self.config['database']['comment_bucket'])
+        return TripCommentService(riak,
+                self.config['database']['trip_bucket'], 
+                self.config['database']['comment_bucket'],
+                self.config['database']['adventurer_bucket'])
 
 
 class Webroot(object):

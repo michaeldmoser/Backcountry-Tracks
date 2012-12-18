@@ -18,7 +18,7 @@ class CommentsHandler(BaseHandler):
     @web.asynchronous
     def post(self, trip_id):
         body = json.loads(self.request.body)
-        command = self.service.add(trip_id, body)
+        command = self.service.add(trip_id, self.get_current_user(), body)
         command.persistant = True
         self.remoting.call(command, self.handle_result)
 
