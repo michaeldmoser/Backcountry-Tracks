@@ -8,34 +8,6 @@ from tptesting import environment
 
 class TestTripsServiceCreate(unittest.TestCase):
 
-    def get_sut_trip(self):
-        trip_list_request = urllib2.Request(self.trip_url)
-        response = self.login_session.open(trip_list_request)
-        trips = json.loads(response.read())
-
-        return trips[0]
-
-    def create_request(self, url, data = None, method = 'GET'):
-        json_data = None if data is None else json.dumps(data)
-        trip_request = urllib2.Request(
-                self.trip_url + url,
-                data = json_data
-                )
-        trip_request.get_method = lambda: method
-
-        return trip_request
-
-    def do_request(self, url, data = None, method = 'GET'):
-        request = self.create_request(url, data = data, method = method)
-        self.response = self.login_session.open(request)
-        body = self.response.read()
-        if len(body) < 1:
-            return None
-
-        data = json.loads(body)
-
-        return data
-
     @classmethod
     def setUpClass(cls):
         cls.environ = environment.create()
@@ -43,8 +15,9 @@ class TestTripsServiceCreate(unittest.TestCase):
         cls.environ.bringup_infrastructure()
 
         trips = cls.environ.trips
-        albert = cls.environ.albert
-        cls.user = cls.environ.create_user(albert)
+        cls.albert = cls.environ.albert
+        cls.user = cls.environ.create_user(cls.albert)
+        cls.albert.login()
 
 
         cls.trip = {
@@ -58,30 +31,37 @@ class TestTripsServiceCreate(unittest.TestCase):
                 'end': '2012-12-05'
                 }
 
+
         cls.trip_url = cls.environ.trailhead_url + '/trips'
 
-        cls.login_session = albert.login()
+        cls.environ.trips.remove_all()
+        cls.created_trip = cls.albert.do_request(cls.trip_url, data = cls.trip, method = 'POST')
+        trip_id = cls.created_trip['id']
+        cls.comment_url = "%s/%s/comments" % (cls.trip_url, trip_id)
 
-    def setUp(self):
-        self.environ.trips.remove_all()
-        self.created_trip = self.do_request('', data = self.trip, method = 'POST')
-        trip_id = self.created_trip['id']
-        self.comment_url = "/%s/comments" % trip_id
+        cls.comment = {'comment': 'The first comment'}
+        cls.returned_comment = cls.albert.do_request(cls.comment_url, cls.comment, method = 'POST')
 
-    def post_the_comment(self, comment):
-        self.do_request(self.comment_url, comment, method = 'POST')
-
-    def get_stored_comment(self):
-        comments = self.do_request(self.comment_url,  method = 'GET')
-        return comments[0]
+        comments = cls.albert.do_request(cls.comment_url,  method = 'GET')
+        cls.stored_comment = comments[0]
 
     def test_comment_on_trip(self):
-        '''Post a comment to a trip'''
-        comment = {'comment': 'The first comment'}
-        
-        self.post_the_comment(comment)
-        stored_comment = self.get_stored_comment()
-        self.assertDictContainsSubset(comment, stored_comment)
+        '''The comment should be returned in the list of comments for a trip'''
+        self.assertDictContainsSubset(self.comment, self.stored_comment)
+
+    def test_date_recorded(self):
+        '''The proper date/time is recorded on the comment'''
+        assert self.stored_comment.has_key('date'), "Comment does not have date"
+
+    def test_owner_on_comment(self):
+        '''Check that the owner is listed on the comment'''
+        assert self.stored_comment.has_key('owner'), 'There is no owner listed on the comment'
+
+    def test_name_on_comment(self):
+        '''Check that the name of the owner is in the comment'''
+        name = {'first_name': self.albert.first_name, 'last_name': self.albert.last_name} 
+        self.assertDictContainsSubset(name, self.stored_comment)
+
 
 
 if __name__ == '__main__':

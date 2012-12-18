@@ -63,8 +63,30 @@ class UserTemplate(dict):
                 )
         response = opener.open(login_request)
         response.read()
+        self.login_session = opener
 
         return opener
+
+    def create_request(self, url, data = None, method = 'GET'):
+        json_data = None if data is None else json.dumps(data)
+        trip_request = urllib2.Request(
+                url,
+                data = json_data
+                )
+        trip_request.get_method = lambda: method
+
+        return trip_request
+
+    def do_request(self, url, data = None, method = 'GET'):
+        request = self.create_request(url, data = data, method = method)
+        self.response = self.login_session.open(request)
+        body = self.response.read()
+        if len(body) < 1:
+            return None
+
+        data = json.loads(body)
+
+        return data
 
     def registration_data(self):
         registration = self.copy()

@@ -72,7 +72,7 @@ class TestTripsComments(unittest.TestCase):
         comment = {
                 'comment': 'This is another comment',
                 }
-        self.service.add(self.trip['id'], comment)
+        self.service.add(self.trip['id'], self.user['key'], comment)
 
         comments = self.service.list(self.trip['id'])
         comments.sort()
@@ -82,6 +82,38 @@ class TestTripsComments(unittest.TestCase):
         expected_comments.sort()
 
         self.assertEquals(expected_comments, comments)
+
+class TestTripsCommentsEmpty(unittest.TestCase):
+
+    def setup_environment(self):
+        self.environ = environment.create()
+        self.environ.riak.stop()
+        self.environ.riak.make_pristine()
+        self.environ.riak.start()
+
+        self.trips = self.environ.data['trips']
+        albert = self.environ.albert
+        self.user = self.environ.create_user(albert)
+
+        self.login_session = albert.login()
+        self.trip_url = self.environ.trailhead_url + '/trips'
+        self.riak = RiakClient()
+        self.environ.trips.remove_all()
+
+    def test_trip_has_no_comments(self):
+        '''Get comments for a trip that has none'''
+        self.setup_environment()
+
+        core = TripsCoreService(self.riak, 'trips')
+        trip = core.create(self.user['key'], self.trips[0])
+
+        self.service = TripCommentService(self.riak, 'trips', 'comments')
+
+        comments = self.service.list(trip['id'])
+        self.assertEquals(comments, [])
+
+
+
 
 
 if __name__ == '__main__':
