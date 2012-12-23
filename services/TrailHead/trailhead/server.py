@@ -37,8 +37,7 @@ class TrailHead(object):
                 ]
         for handler_config in handler_configs:
             dist, name = handler_config[1].split('/')
-            handler_factory = self.environ.get_component('tripplanner.trailhead.handler', dist, name)
-            handler = handler_factory(self.environ)
+            handler = self.environ.get_component_factory('tripplanner.trailhead.handler', dist, name)
             handlers.append((handler_config[0], handler))
 
         return handlers
