@@ -10,7 +10,8 @@ class EntryPoint(object):
         self.config = configuration
 
     def start(self):
-        self.environ.open_messaging_channel(self.on_channel_opened)
+        messaging_builder = self.environ.get_component_factory('bctks.messaging', 'BackcountryTracks_Messaging', 'MessagingBuilder')
+        messaging_builder(self.on_channel_opened)
 
     def on_channel_opened(self, channel):
         self.channel = channel
@@ -37,7 +38,8 @@ class MessagingEntryPointFactory(object):
         raise NotImplementedError("An assemble_service() method must be provided")
 
     def start(self):
-        self.environ.open_messaging_channel(self.on_channel_opened)
+        messaging_builder = self.environ.get_component_factory('bctks.messaging', 'BackcountryTracks_Messaging', 'MessagingBuilder')
+        messaging_builder(self.on_channel_opened)
 
     def on_channel_opened(self, channel):
         self.channel = channel

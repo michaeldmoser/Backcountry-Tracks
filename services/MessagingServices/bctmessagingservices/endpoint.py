@@ -139,7 +139,8 @@ class EntryPoint(object):
         self.config = configuration
 
     def start(self):
-        self.environ.open_messaging_channel(self.on_service_channel_opened)
+        messaging_builder = self.environ.get_component_factory('bctks.messaging', 'BackcountryTracks_Messaging', 'MessagingBuilder')
+        messaging_builder(self.on_service_channel_opened)
 
     def on_service_channel_opened(self, channel):
         self.service_channel = channel

@@ -4,6 +4,8 @@ from setproctitle import setproctitle
 from lockfile.pidlockfile import PIDLockFile
 from os import kill
 
+from bctks.environment import BcTksEnvironment
+
 SERVICES_ENTRY_POINT_GROUP = 'tripplanner.service'
 CONFIG_PATH = '/etc/tripplanner/tpapp.yaml'
 
@@ -15,14 +17,11 @@ def build_daemonizer():
 
 def build_load_services(config):
     from .services import Services, ServiceBuilder, Service
-    from .environment import Environment
-    from bctmessaging.connection import MessagingBuilder
-    from pkg_resources import load_entry_point
+    # TODO: Environment needs to come from a core library, maybe rename to something else?
     from multiprocessing import Process
 
-    messaging = MessagingBuilder(config)
-    environ = Environment(config, messaging)
-    load_service = ServiceBuilder(load_entry_point, SERVICES_ENTRY_POINT_GROUP,
+    environ = BcTksEnvironment(config)
+    load_service = ServiceBuilder(SERVICES_ENTRY_POINT_GROUP,
             Service, Process, environ, setproctitle)
 
     return Services(load_service)

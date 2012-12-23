@@ -17,6 +17,8 @@ class TrailHead(object):
 
     def __init__(self, ioloop=None, webapp=None, mqclient=None,
             load_entry_point=load_entry_point, config={}):
+        # TODO: The environment needs to be passed in here, items like mqclient, load_entry_point, and config
+        # need to be part of the environment
         self.ioloop = ioloop
         self.webapp = webapp
         self.mqclient = mqclient
@@ -37,6 +39,8 @@ class TrailHead(object):
         for handler_config in handler_configs:
             dist, name = handler_config[1].split('/')
             handler = self.load_entry_point(dist, 'tripplanner.trailhead.handler', name)
+            # TODO: All handlers need to be converted into a Factory / DI Container, pass in 
+            # the enviroment
             handlers.append((handler_config[0], handler))
 
         return handlers

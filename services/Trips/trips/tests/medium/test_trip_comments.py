@@ -56,7 +56,7 @@ class TestTripsComments(unittest.TestCase):
 
         trip_doc.store()
 
-        self.service = TripCommentService(self.riak, 'trips', 'comments')
+        self.service = TripCommentService(self.riak, 'trips', 'comments', 'adventurers')
 
     def test_list_comments(self):
         '''Retrieve list of comments on a trip'''
@@ -107,7 +107,7 @@ class TestTripsCommentsEmpty(unittest.TestCase):
         core = TripsCoreService(self.riak, 'trips')
         trip = core.create(self.user['key'], self.trips[0])
 
-        self.service = TripCommentService(self.riak, 'trips', 'comments')
+        self.service = TripCommentService(self.riak, 'trips', 'comments', 'adventurers')
 
         comments = self.service.list(trip['id'])
         self.assertEquals(comments, [])

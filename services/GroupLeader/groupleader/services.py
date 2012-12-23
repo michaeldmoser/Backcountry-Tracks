@@ -3,6 +3,11 @@ import traceback
 import logging
 log = logging.getLogger('top')
 
+# TODO: Wording needs to be changed to indicate processes here. 
+# Service tends to indicate a network accessible service (think: SMTP, HTTP, etc)
+
+# TODO: This whole file could be move into a common framework library???
+
 class Service(object):
     def __init__(self, dist, name, entry_point, config, environ, setproctitle, process_name):
         log.debug('Created process for %s' % str(entry_point))
@@ -27,8 +32,7 @@ class Service(object):
 
 
 class ServiceBuilder(object):
-    def __init__(self, load_entry_point, group, Service, Process, environ, setproctitle):
-        self.load_entry_point = load_entry_point
+    def __init__(self, group, Service, Process, environ, setproctitle):
         self.group = group
         self.Service = Service
         self.Process = Process
@@ -37,7 +41,7 @@ class ServiceBuilder(object):
 
     def __call__(self, dist, name, config, process_name):
         logging.debug("Loading entry point: %s, %s, %s" % (dist, self.group, name))
-        entry_point = self.load_entry_point(dist, self.group, name)
+        entry_point = self.environ.get_component(self.group, dist, name)
         service = self.Service(dist, name, entry_point, config,
                 self.environ, self.setproctitle, process_name)
         return self.Process(target=service)
@@ -48,6 +52,7 @@ class Services(object):
         self.services = list()
 
     def __call__(self, config):
+
         self.config = config
         logging.debug('Start loading processes %s', self.config['processes'])
 

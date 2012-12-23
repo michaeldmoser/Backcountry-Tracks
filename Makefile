@@ -5,9 +5,9 @@ infrastructure-dev-config: django nginx-config riak-config app-config
 
 install-infrastructure: install-rabbitmq install-riak install-nginx
 
-install-libraries: install-messaging install-plugins install-servicelib install-gpsutils install-glbldb
+install-libraries: install-bctks install-messaging install-plugins install-servicelib install-gpsutils install-glbldb
 
-install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel install-messagingservices
+install-services: install-groupleader install-adventurer install-gear install-trailhead varrun install-smokesignal install-trips install-postoffice install-gpsbabel install-messagingservices 
 
 install-dependencies: install-libyaml install-python-setproctitle install-python-packages
 
@@ -265,6 +265,14 @@ services/SmokeSignal/setup.py:
 	
 services/SmokeSignal/SmokeSignal.egg-info:
 	cd services/SmokeSignal && sudo python setup.py develop
+
+install-bctks: lib/BcTks/setup.py lib/BcTks/BackcountryTracks_Infrastructure.egg-info
+
+lib/BcTks/setup.py:
+	cd lib/BcTks && sudo python setup.py develop
+	
+lib/BcTks/BackcountryTracks_Infrastructure.egg-info:
+	cd lib/BcTks && sudo python setup.py develop
 
 install-messaging: lib/Messaging/setup.py lib/Messaging/BackcountryTracks_Messaging.egg-info
 

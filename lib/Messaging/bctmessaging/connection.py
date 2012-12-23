@@ -1,3 +1,4 @@
+
 class MessagingBuilder(object):
     def __init__(self, config):
         self.connection = None
@@ -22,4 +23,8 @@ class MessagingBuilder(object):
     def on_channel_opened(self, channel):
         self.channel = channel
         self.on_channel_callback(self.channel)
+
+# FIXME: I don't like the location of this function.
+def messaging_builder_factory(environ):
+    return MessagingBuilder(environ.config)
 
