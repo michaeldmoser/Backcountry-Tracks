@@ -8,7 +8,7 @@ log = logging.getLogger('top')
 
 # TODO: This whole file could be move into a common framework library???
 
-class Service(object):
+class ProcessController(object):
     def __init__(self, dist, name, entry_point, config, environ, setproctitle, process_name):
         log.debug('Created process for %s' % str(entry_point))
         self.entry_point = entry_point
@@ -31,10 +31,10 @@ class Service(object):
             raise
 
 
-class ServiceBuilder(object):
-    def __init__(self, group, Service, Process, environ, setproctitle):
+class ProcessBuilder(object):
+    def __init__(self, group, ControllerClass, Process, environ, setproctitle):
         self.group = group
-        self.Service = Service
+        self.ControllerClass = ControllerClass
         self.Process = Process
         self.environ = environ
         self.setproctitle = setproctitle
@@ -42,11 +42,11 @@ class ServiceBuilder(object):
     def __call__(self, dist, name, config, process_name):
         logging.debug("Loading entry point: %s, %s, %s" % (dist, self.group, name))
         entry_point = self.environ.get_component(self.group, dist, name)
-        service = self.Service(dist, name, entry_point, config,
+        service = self.ControllerClass(dist, name, entry_point, config,
                 self.environ, self.setproctitle, process_name)
         return self.Process(target=service)
 
-class Services(object):
+class Processes(object):
     def __init__(self, load_service):
         self.load_service = load_service
         self.services = list()
@@ -78,3 +78,4 @@ class Services(object):
     def shutdown(self):
         for service in self.services:
             service.terminate()
+

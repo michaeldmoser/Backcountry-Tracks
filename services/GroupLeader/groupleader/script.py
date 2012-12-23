@@ -5,6 +5,7 @@ from lockfile.pidlockfile import PIDLockFile
 from os import kill
 
 from bctks.environment import BcTksEnvironment
+from bctks.processes import ProcessController, ProcessBuilder, Processes
 
 SERVICES_ENTRY_POINT_GROUP = 'tripplanner.service'
 CONFIG_PATH = '/etc/tripplanner/tpapp.yaml'
@@ -15,16 +16,14 @@ def build_daemonizer():
 
     return Daemonizer(DaemonContext, PIDLockFile)
 
-def build_load_services(config):
-    from .services import Services, ServiceBuilder, Service
-    # TODO: Environment needs to come from a core library, maybe rename to something else?
+def build_load_processes(config):
     from multiprocessing import Process
 
     environ = BcTksEnvironment(config)
-    load_service = ServiceBuilder(SERVICES_ENTRY_POINT_GROUP,
-            Service, Process, environ, setproctitle)
+    load_process = ProcessBuilder(SERVICES_ENTRY_POINT_GROUP,
+            ProcessController, Process, environ, setproctitle)
 
-    return Services(load_service)
+    return Processes(load_process)
 
 def build_logging():
     from logging.config import dictConfig
@@ -41,12 +40,12 @@ def load_config():
 def main():
     config = load_config()
     daemonizer = build_daemonizer()
-    load_services = build_load_services(config)
+    load_processes = build_load_processes(config)
     logging = build_logging()
 
     pidlockfile = PIDLockFile(config['pidfile'])
 
-    gl = GroupLeader(config, daemonizer, logging, load_services, setproctitle,
+    gl = GroupLeader(config, daemonizer, logging, load_processes, setproctitle,
             pidlockfile, kill)
 
     if len(sys.argv) < 2:
