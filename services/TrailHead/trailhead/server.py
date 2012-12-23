@@ -15,14 +15,14 @@ class RootHandler(RequestHandler):
 
 class TrailHead(object):
 
-    def __init__(self, ioloop=None, webapp=None, mqclient=None, environ=None):
+    def __init__(self, ioloop=None, webapp=None, mqclient=None, environ=None, config = {}):
         # TODO: The environment needs to be passed in here, items like mqclient, load_entry_point, and config
         # need to be part of the environment
         self.ioloop = ioloop
         self.webapp = webapp
         self.mqclient = mqclient
         self.environ = environ
-        self.config = self.environ.config['TrailHead']
+        self.config = config
 
         self.default_config = {
                 'cookie_secret': 'tde2HDb+R9evlg/vUMDlaBUTPSMF1kgtnpKhvkgOXNQ=',
