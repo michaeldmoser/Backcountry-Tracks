@@ -3,11 +3,6 @@ import traceback
 import logging
 log = logging.getLogger('top')
 
-# TODO: Wording needs to be changed to indicate processes here. 
-# Service tends to indicate a network accessible service (think: SMTP, HTTP, etc)
-
-# TODO: This whole file could be move into a common framework library???
-
 class ProcessController(object):
     def __init__(self, dist, name, entry_point, config, environ, setproctitle, process_name):
         log.debug('Created process for %s' % str(entry_point))
