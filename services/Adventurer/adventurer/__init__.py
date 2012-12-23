@@ -51,6 +51,3 @@ class Templates(object):
         return stylesheets
 
 
-
-
-

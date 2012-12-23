@@ -6,6 +6,9 @@ from tornado import web
 
 from trailhead.handlers import BaseHandler
 
+def create_routehandler(environ):
+    return RouteHandler
+
 class RouteHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):

@@ -8,6 +8,9 @@ import logging
 
 from trailhead.handlers import BaseHandler
 
+def create_usergearlist(environ):
+    return UserGearListHandler
+
 class UserGearListHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):

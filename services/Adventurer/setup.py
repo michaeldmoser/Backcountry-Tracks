@@ -13,12 +13,12 @@ setup(
             'adventurer = adventurer:EntryPoint',
             ],
         'tripplanner.trailhead.handler': [
-            'register = adventurer.register:RegisterHandler',
-            'activate = adventurer.register:ActivateHandler',
-            'user = adventurer.user:UserHandler',
-            'login = adventurer.login:LoginHandler',
-            'logout = adventurer.login:LogoutHandler',
-            'passreset = adventurer.passwordreset:PasswordResetHandler',
+            'register = adventurer.register:registerhandler_factory',
+            'activate = adventurer.register:registerhandler_factory',
+            'user = adventurer.user:userhandler_factory',
+            'login = adventurer.login:loginhandler_factory',
+            'logout = adventurer.login:logouthandler_factory',
+            'passreset = adventurer.passwordreset:passwordreset_factory'
             ],
         }
     )

@@ -8,6 +8,9 @@ from trailhead.handlers import BaseHandler
 
 from tornado import web
 
+def userhandler_factory(environ):
+    return UserHandler
+
 class UserHandler(BaseHandler):
 
     @web.asynchronous

@@ -8,7 +8,10 @@ from tornado import web, template
 
 from trailhead.handlers import BaseHandler
 
-class PasswordResetHandler(BaseHandler):
+def passwordreset_factory(environ):
+    return PasswordReset
+
+class PasswordReset(BaseHandler):
 
     def __init__(self, *args, **kwargs):
         BaseHandler.__init__(self, *args, **kwargs)

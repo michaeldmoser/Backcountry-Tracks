@@ -15,15 +15,14 @@ class RootHandler(RequestHandler):
 
 class TrailHead(object):
 
-    def __init__(self, ioloop=None, webapp=None, mqclient=None,
-            load_entry_point=load_entry_point, config={}):
+    def __init__(self, ioloop=None, webapp=None, mqclient=None, environ=None):
         # TODO: The environment needs to be passed in here, items like mqclient, load_entry_point, and config
         # need to be part of the environment
         self.ioloop = ioloop
         self.webapp = webapp
         self.mqclient = mqclient
-        self.config = config
-        self.load_entry_point = load_entry_point
+        self.environ = environ
+        self.config = self.environ.config['TrailHead']
 
         self.default_config = {
                 'cookie_secret': 'tde2HDb+R9evlg/vUMDlaBUTPSMF1kgtnpKhvkgOXNQ=',
@@ -38,9 +37,8 @@ class TrailHead(object):
                 ]
         for handler_config in handler_configs:
             dist, name = handler_config[1].split('/')
-            handler = self.load_entry_point(dist, 'tripplanner.trailhead.handler', name)
-            # TODO: All handlers need to be converted into a Factory / DI Container, pass in 
-            # the enviroment
+            handler_factory = self.environ.get_component('tripplanner.trailhead.handler', dist, name)
+            handler = handler_factory(self.environ)
             handlers.append((handler_config[0], handler))
 
         return handlers

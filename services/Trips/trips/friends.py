@@ -5,6 +5,9 @@ from tornado import web
 
 from trailhead.handlers import BaseHandler
 
+def create_friendshandler(environ):
+    return FriendsHandler
+
 class FriendsHandler(BaseHandler):
     '''
     Manages friends on a trip

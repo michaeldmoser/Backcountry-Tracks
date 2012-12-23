@@ -5,6 +5,9 @@ from tornado import web
 
 from trailhead.handlers import BaseHandler
 
+def create_gearhandler(environ):
+    return GearHandler
+
 class GearHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):

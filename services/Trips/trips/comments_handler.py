@@ -7,6 +7,9 @@ from tornado import web
 
 from trailhead.handlers import BaseHandler
 
+def create_commentshandler(environ):
+    return CommentsHandler
+
 class CommentsHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):

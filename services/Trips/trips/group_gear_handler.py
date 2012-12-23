@@ -6,6 +6,9 @@ from tornado import web
 
 from trailhead.handlers import BaseHandler
 
+def create_groupgearhandler(environ):
+    return GroupGearHandler
+
 class GroupGearHandler(BaseHandler):
 
     def __init__(self, *args, **kwargs):

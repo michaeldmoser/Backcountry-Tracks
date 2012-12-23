@@ -5,6 +5,9 @@ from tornado import web
 from tornado.web import RequestHandler
 from trailhead.handlers import BaseHandler
 
+def registerhandler_factory(environ):
+    return RegisterHandler
+
 class RegisterHandler(BaseHandler):
 
     def get(self):
@@ -33,6 +36,9 @@ class RegisterHandler(BaseHandler):
         self.write(reply)
         self.finish()
 
+def activatehandler_factory(environ):
+    return ActivateHandler
+
 class ActivateHandler(BaseHandler):
     @web.asynchronous
     def get(self, email, confirmation_code):
@@ -53,4 +59,6 @@ class ActivateHandler(BaseHandler):
             self.set_status(403)
             self.set_header('Location', '/')
         self.finish()
+
+
 

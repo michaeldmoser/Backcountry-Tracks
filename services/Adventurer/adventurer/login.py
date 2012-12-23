@@ -8,6 +8,8 @@ import logging
 
 from trailhead.handlers import BaseHandler
 
+def loginhandler_factory(environ):
+    return LoginHandler
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -60,6 +62,9 @@ class LoginHandler(BaseHandler):
             self.set_status(403)
 
         self.finish()
+
+def logouthandler_factory(environ):
+    return LogoutHandler
 
 class LogoutHandler(BaseHandler):
     def post(self):

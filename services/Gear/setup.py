@@ -10,7 +10,7 @@ setup(
     ''',
     entry_points = {
         'tripplanner.endpoint': ['gear = gear:GearEntryPoint'],
-        'tripplanner.trailhead.handler': ['gear = gear.handlers:UserGearListHandler'],
+        'tripplanner.trailhead.handler': ['gear = gear.handlers:create_usergearlist'],
         'tripplanner.web.files': ['gear = gear:Webroot'],
         },
     package_data = {

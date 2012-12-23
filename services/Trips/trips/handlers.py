@@ -47,7 +47,8 @@ class TripsBaseHandler(BaseHandler):
         self.write(json.dumps(body))
         self.finish()
 
-
+def create_tripshandler(environ):
+    return TripsHandler
 
 class TripsHandler(TripsBaseHandler):
     '''
@@ -68,6 +69,8 @@ class TripsHandler(TripsBaseHandler):
         command = self.service.list(self.current_user)
         self.remoting.call(command, self.handle_result)
 
+def create_triphandler(environ):
+    return TripHandler
 
 class TripHandler(TripsBaseHandler):
     '''
